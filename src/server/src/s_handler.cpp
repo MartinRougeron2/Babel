@@ -52,23 +52,23 @@ void handlePacket(std::string data, entity *ent)
     int size = 0;
     int id = -1;
 
-    if (data.length() == 0)
-        return;
-    if (data.find(" ") != std::string::npos) {
-        for (size_t pos = 0; (pos = data.find(" ")) != std::string::npos; size++) {
-            std::string token = data.substr(0, pos);
-            if (size == 0)
-                id = manageId(token);
-            else
-                args.push_back(token);
-            data.erase(0, pos + 1);
-        }
-        if (data.length())
-            args.push_back(data);
-    } else
-        id = manageId(data);
-    if (id >= 0 && id <= 17)
-        dispatchPacket(id, args, ent);
+    if (data.length() > 0) {
+        if (data.find(" ") != std::string::npos) {
+            for (size_t pos = 0; (pos = data.find(" ")) != std::string::npos; size++) {
+                std::string token = data.substr(0, pos);
+                if (size == 0)
+                    id = manageId(token);
+                else
+                    args.push_back(token);
+                data.erase(0, pos + 1);
+            }
+            if (data.length())
+                args.push_back(data);
+        } else
+            id = manageId(data);
+        if (id >= 0 && id <= 17)
+            dispatchPacket(id, args, ent);
+    }
 }
 
 int manageId(std::string data)
