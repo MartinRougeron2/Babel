@@ -5,19 +5,13 @@
 ** connectionHandler
 */
 
-// # Lib Imports
-
 #include <vector>
 #include <string>
-
-// # Local Imports
 
 #include "handler.hpp"
 #include "entity.hpp"
 #include "server.hpp"
 #include "logic.hpp"
-
-// # Methods
 
 // 000 {port} | New client say hello and give his port number for the Call Server
 void HandleWelcome(std::vector<std::string> args, entity *ent)
@@ -96,13 +90,12 @@ void HandleAcceptPending(std::vector<std::string> args, entity *ent)
 void HandleRefusePending(std::vector<std::string> args, entity *ent)
 {
     server *serv;
-    //entity *contact;
 
     if (args.size() == 0)
         return;
     serv = (server *)ent->serv;
     if (serv->isPseudoAvailable(args[0]))
         return;
-    //contact = serv->getClientByPseudo(args[0]);
+
     std::cout << ent->pseudo << " refused friend invitation from " << args[0] << std::endl;
 }
