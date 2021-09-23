@@ -1,35 +1,81 @@
-/*
-** EPITECH PROJECT, 2021
-** B-CPP-500-LYN-5-1-babel-martin.rougeron
-** File description:
-** babel
-*/
+#include <iostream>
+#include <asio.hpp>
 
-#include <QApplication>
-#include <QDesktopWidget>
-#include <QTextEdit>
-
-class Absolute : public QWidget {
-
-public:
-    Absolute(QWidget *parent = nullptr);
+enum class CustomMsgTypes : uint32_t
+{
+	ServerAccept,
+	ServerDeny,
+	ServerPing,
+	MessageAll,
+	ServerMessage,
 };
 
-Absolute::Absolute(QWidget *parent)
-        : QWidget(parent) {
 
-    auto *ledit = new QTextEdit(this);
-    ledit->setGeometry(5, 5, 200, 150);
-}
 
-int main(int argc, char *argv[]) {
+class CustomServer : public olc::net::server_interface<CustomMsgTypes>
+{
+public:
+	CustomServer(uint16_t nPort) : olc::net::server_interface<CustomMsgTypes>(nPort)
+	{
 
-    QApplication app(argc, argv);
+	}
 
-    Absolute window;
+protected:
+	virtual bool OnClientConnect(std::shared_ptr<olc::net::connection<CustomMsgTypes>> client)
+	{
+		olc::net::message<CustomMsgTypes> msg;
+		msg.header.id = CustomMsgTypes::ServerAccept;
+		client->Send(msg);
+		return true;
+	}
 
-    window.setWindowTitle("Absolute");
-    window.show();
+	// Called when a client appears to have disconnected
+	virtual void OnClientDisconnect(std::shared_ptr<olc::net::connection<CustomMsgTypes>> client)
+	{
+		std::cout << "Removing client [" << client->GetID() << "]\n";
+	}
 
-    return app.exec();
+	// Called when a message arrives
+	virtual void OnMessage(std::shared_ptr<olc::net::connection<CustomMsgTypes>> client, olc::net::message<CustomMsgTypes>& msg)
+	{
+		switch (msg.header.id)
+		{
+		case CustomMsgTypes::ServerPing:
+		{
+			std::cout << "[" << client->GetID() << "]: Server Ping\n";
+
+			// Simply bounce message back to client
+			client->Send(msg);
+		}
+		break;
+
+		case CustomMsgTypes::MessageAll:
+		{
+			std::cout << "[" << client->GetID() << "]: Message All\n";
+
+			// Construct a new message and send it to all clients
+			olc::net::message<CustomMsgTypes> msg;
+			msg.header.id = CustomMsgTypes::ServerMessage;
+			msg << client->GetID();
+			MessageAllClients(msg, client);
+
+		}
+		break;
+		}
+	}
+};
+
+int main()
+{
+	CustomServer server(60000); 
+	server.Start();
+
+	while (1)
+	{
+		server.Update(-1, true);
+	}
+	
+
+
+	return 0;
 }
