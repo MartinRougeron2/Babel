@@ -11,10 +11,10 @@
     #include <string>
     #include <vector>
 
-    #include "entity.hpp"
+    #include "entry.hpp"
 
-    void dispatchPacket(int id, std::vector<std::string> args, entity *ent);
-    void handlePacket(std::string data, entity *ent);
+    void dispatchPacket(int id, std::vector<std::string> args, entry *ent);
+    void handlePacket(std::string data, entry *ent);
     int manageId(std::string data);
 
 #endif /* !HANDLER_HPP_ */
