@@ -1,22 +1,18 @@
 /*
-** EPITECH PROJECT, 2019
-** logic.hpp
+** EPITECH PROJECT, 2021
+** B-CPP-500-LYN-5-1-babel-martin.rougeron
 ** File description:
-** logic
+** logic.hpp
 */
 
 #ifndef LOGIC_HPP_
     #define LOGIC_HPP_
 
-    // # Lib Imports
-
     #include <vector>
     #include <string>
 
-    // # Local Imports
-
-    #include "entity.hpp"
-    #include "c_handler.hpp"
+    #include "entry.hpp"
+    #include "connection.hpp"
 
     enum logicEnum {
         Welcome = 0,

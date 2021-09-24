@@ -1,8 +1,8 @@
 /*
-** EPITECH PROJECT, 2019
-** handler.cpp
+** EPITECH PROJECT, 2021
+** B-CPP-500-LYN-5-1-babel-martin.rougeron
 ** File description:
-** handler
+** s_handler.cpp
 */
 
 // # Lib Imports
@@ -12,13 +12,13 @@
 
 // # Local Imports
 
-#include "c_handler.hpp"
+#include "connection.hpp"
 #include "handler.hpp"
-#include "entity.hpp"
+#include "entry.hpp"
 
 // # Methods
 
-static void (*servHandlers[17])(std::vector<std::string> args, entity *ent) = {
+static void (*servHandlers[17])(std::vector<std::string> args, entry *ent) = {
     HandleWelcome,
     HandleConnect,
     NULL,
@@ -38,14 +38,14 @@ static void (*servHandlers[17])(std::vector<std::string> args, entity *ent) = {
     NULL
 };
 
-void dispatchPacket(int id, std::vector<std::string> args, entity *ent)
+void dispatchPacket(int id, std::vector<std::string> args, entry *ent)
 {
     if (servHandlers[id] == NULL)
         return;
-    servHandlers[id](args, (entity *)ent);
+    servHandlers[id](args, (entry *)ent);
 }
 
-void handlePacket(std::string data, entity *ent)
+void handlePacket(std::string data, entry *ent)
 {
     std::string token;
     std::vector<std::string> args;

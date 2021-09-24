@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2019
-** entity.cpp
+** entry.cpp
 ** File description:
-** entity
+** entry
 */
 
 #include <iostream>
@@ -10,52 +10,60 @@
 #include <thread>
 #include <bits/stdc++.h>
 
-#include "entity.hpp"
+#include "entry.hpp"
 #include "handler.hpp"
 #include "server.hpp"
+#include "logs.hpp"
 
-// # Builder / Destructor
-
-entity::entity(void *_serv, boost::asio::ip::tcp::socket *_sock)
+entry::entry(void *_serv, boost::asio::ip::tcp::socket *_sock)
 {
     serv = _serv;
     pseudo = std::string("undefined");
     address = _sock->remote_endpoint().address().to_string();
     port = -1;
-    sock = _sock;
+    socket_id = _sock;
     std::vector<std::string> vec;
-    sendToClient(0, vec); // Say Hello To Client
+
+    sendToClient(0, vec);
     asyncReceive();
 }
 
-entity::~entity()
+entry::~entry()
 {
     stop();
 }
 
-// # Methods
-
-void entity::stop()
+void entry::stop()
 {
-    sock->close();
+    socket_id->close();
 }
 
-void entity::procData(std::string data)
+
+void entry::procData(std::string data)
 {
     const size_t length = data.size();
-    for (size_t i = 0; i < length; ++i)
-        printf("%3d (0x%02X)\n", data[i], data[i]);
-    std::cout << "#Binary data : ";
-    for (std::size_t i = 0; i < data.size(); ++i)
-        std::cout << std::bitset<8>(data.c_str()[i]) << std::endl;
-    std::cout << "#Clear data : " << data << std::endl;
+
+    std::cout << std::endl;
+    std::cout << " dec | hexa | oct |  binary  " << std::endl;
+    std::cout << "-----|------|-----|----------" << std::endl;
+
+    for (size_t i = 0; i < length; ++i) {
+        if (data[i] != '\n') {
+            std::cout << " " << std::left << std::setw(4) << std::dec << (int)data[i];
+            std::cout << "| 0x" << std::left << std::setw(3) << std::hex << (int)data[i];
+            std::cout << "| " << std::left << std::setw(4) << std::oct << (int)data[i];
+            std::cout << "| " << std::left << std::setw(8) << std::bitset<8>(data.c_str()[i]) << std::endl;
+        }
+    }
+    std::cout << std::endl;
+    std::cout << COLOR_GREEN << ":: Clear data\n" << COLOR_RESET << std::endl << data << std::endl;
 }
 
-void entity::asyncReceive()
+void entry::asyncReceive()
 {
-    sock->async_receive(boost::asio::buffer(buffer, 512), [this](const boost::system::error_code &error, std::size_t bytesTransfered) {
+    socket_id->async_receive(boost::asio::buffer(buffer, 512), [this](const boost::system::error_code &error, std::size_t bytesTransfered) {
         if (error != boost::system::errc::success) {
-            std::cout << "Connection lost with user :" << pseudo << std::endl;
+            std::cout << pseudo << death.at(rand() % 32) << std::endl;
             server *s = (server*)serv;
             s->removeClient(pseudo);
             return;
@@ -63,7 +71,7 @@ void entity::asyncReceive()
             std::string data;
             for (unsigned int i = 0; i < bytesTransfered && buffer[i]; i++)
                 data += buffer[i];
-            std::cout << "Received: ";
+            std::cout << COLOR_CYAN << ":: Received: " << COLOR_RESET << std::endl;
             procData(data);
             handleData(data);
         }
@@ -71,17 +79,18 @@ void entity::asyncReceive()
     });
 }
 
-void entity::sendToClient(int id, std::vector<std::string> args)
+void entry::sendToClient(int id, std::vector<std::string> args)
 {
     std::string val = std::to_string(id);
+
     for (unsigned int i = 0; i < args.size(); i++)
         val += " " + args[i];
     std::cout << "Sent: ";
     procData(val);
-    sock->send(boost::asio::buffer(val, val.length()));
+    socket_id->send(boost::asio::buffer(val, val.length()));
 }
 
-void entity::handleData(std::string data)
+void entry::handleData(std::string data)
 {
     handlePacket(data, this);
 }

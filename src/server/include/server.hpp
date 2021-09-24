@@ -12,20 +12,20 @@
 
     #include <boost/asio.hpp>
     #include <boost/array.hpp>
-    #include "entity.hpp"
+    #include "entry.hpp"
     #include "network.hpp"
     #include "handler.hpp"
 
     class server {
         public:
-            std::vector<entity*> clients;
+            std::vector<entry*> clients;
             network *net;
             bool running;
 
             server(int _port);
             ~server();
-            entity *getClientByAddress(std::string);
-            entity *getClientByPseudo(std::string);
+            entry *getClientByAddress(std::string);
+            entry *getClientByPseudo(std::string);
             bool isPseudoAvailable(std::string);
             void acceptConnections();
             void handleClient();

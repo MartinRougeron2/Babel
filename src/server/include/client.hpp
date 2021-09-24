@@ -1,12 +1,12 @@
 /*
-** EPITECH PROJECT, 2019
-** client.hpp
+** EPITECH PROJECT, 2021
+** B-CPP-500-LYN-5-1-babel-martin.rougeron
 ** File description:
-** client
+** client.hpp
 */
 
-#ifndef ENTITY_HPP_
-    #define ENTITY_HPP_
+#ifndef entry_HPP_
+    #define entry_HPP_
 
     #include <vector>
     #include <string>
@@ -14,10 +14,10 @@
     #include <boost/asio.hpp>
     #include <boost/array.hpp>
 
-    class entity {
+    class entry {
         public:
-            entity(void *_serv, boost::asio::ip::tcp::socket *sock);
-            ~entity();
+            entry(void *_serv, boost::asio::ip::tcp::socket *sock);
+            ~entry();
 
             std::string pseudo;
             std::string address;
@@ -32,5 +32,5 @@
             void stop();
     };
 
-#endif /* !ENTITY_HPP_ */
+#endif /* !entry_HPP_ */
 
