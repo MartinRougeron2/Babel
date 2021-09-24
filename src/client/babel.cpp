@@ -8,6 +8,7 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QTextEdit>
+#include "client/Aportaudio.hpp"
 
 class Absolute : public QWidget {
 
