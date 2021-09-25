@@ -1,3 +1,7 @@
 $HOME/
 .idea/
 .vscode/
+build/
+cmake-build-debug/
+CMakeFiles/
+/.qmake.stash

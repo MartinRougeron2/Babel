@@ -5,31 +5,16 @@
 ** babel
 */
 
-#include <QApplication>
-#include <QDesktopWidget>
-#include <QTextEdit>
+#include <QtGui>
+#include "../../include/babel.hpp"
+#include "../../include/GUI/UserMenu.h"
 
-class Absolute : public QWidget {
-
-public:
-    Absolute(QWidget *parent = nullptr);
-};
-
-Absolute::Absolute(QWidget *parent)
-        : QWidget(parent) {
-
-    auto *ledit = new QTextEdit(this);
-    ledit->setGeometry(5, 5, 200, 150);
-}
-
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 
     QApplication app(argc, argv);
+    UserMenu menu;
 
-    Absolute window;
-
-    window.setWindowTitle("Absolute");
-    window.show();
-
-    return app.exec();
+    menu.show(); //show the widget and its children
+    return app.exec(); // execute the application
 }
