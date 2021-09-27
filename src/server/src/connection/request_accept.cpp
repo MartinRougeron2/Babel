@@ -23,9 +23,9 @@ void HandleAcceptPending(std::vector<std::string> args, entry *ent)
     if (args.size() == 0)
         return;
     serv = (server *)ent->serv;
-    if (serv->isPseudoAvailable(args[0]))
+    if (serv->check_username(args[0]))
         return;
-    contact = serv->getClientByPseudo(args[0]);
+    contact = serv->get_pseudo(args[0]);
     vec.push_back(contact->address);
     vec.push_back(std::to_string(contact->port));
     vec.push_back(contact->pseudo);

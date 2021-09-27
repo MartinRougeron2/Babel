@@ -50,7 +50,7 @@ void network::accept()
                     std::cout << "Can't accept connection, error occured" << std::endl;
                 } else {
                     server *obj = (server *)serv;
-                    obj->handleClient();
+                    obj->handler();
                 }
                 accept();
             }

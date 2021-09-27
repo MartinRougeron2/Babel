@@ -24,12 +24,12 @@
 
             server(int _port);
             ~server();
-            entry *getClientByAddress(std::string);
-            entry *getClientByPseudo(std::string);
-            bool isPseudoAvailable(std::string);
-            void acceptConnections();
-            void handleClient();
-            void removeClient(std::string);
+            entry *get_address(std::string);
+            entry *get_pseudo(std::string);
+            bool check_username(std::string);
+            void accept_connection();
+            void handler();
+            void remove_username(std::string);
             void stop();
     };
 

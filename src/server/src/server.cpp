@@ -19,7 +19,7 @@ server::~server()
     stop();
 }
 
-entry *server::getClientByAddress(std::string address)
+entry *server::get_address(std::string address)
 {
     for (unsigned int i = 0; i < clients.size(); i++)
         if (clients[i]->address == address)
@@ -27,7 +27,7 @@ entry *server::getClientByAddress(std::string address)
     return (NULL);
 }
 
-entry *server::getClientByPseudo(std::string pseudo)
+entry *server::get_pseudo(std::string pseudo)
 {
     for (unsigned int i = 0; i < clients.size(); i++)
         if (clients[i]->pseudo.size() == pseudo.size() && clients[i]->pseudo == pseudo)
@@ -35,7 +35,7 @@ entry *server::getClientByPseudo(std::string pseudo)
     return (NULL);
 }
 
-bool server::isPseudoAvailable(std::string pseudo)
+bool server::check_username(std::string pseudo)
 {
     for (unsigned int i = 0; i < clients.size(); i++)
         if (clients[i]->pseudo.size() == pseudo.size() && clients[i]->pseudo == pseudo)
@@ -43,21 +43,21 @@ bool server::isPseudoAvailable(std::string pseudo)
     return (true);
 }
 
-void server::removeClient(std::string pseudo)
+void server::remove_username(std::string pseudo)
 {
-    entry *ent = getClientByPseudo(pseudo);
+    entry *ent = get_pseudo(pseudo);
 
     if (ent->pseudo.size())
         clients.erase(std::remove(clients.begin(), clients.end(), ent), clients.end());
 }
 
-void server::acceptConnections()
+void server::accept_connection()
 {
     running = true;
     net->start();
 }
 
-void server::handleClient()
+void server::handler()
 {
     std::cout << "New client connected." << std::endl;
     clients.push_back(new entry(this, net->sockets.back()));

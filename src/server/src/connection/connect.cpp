@@ -22,7 +22,7 @@ void HandleConnect(std::vector<std::string> args, entry *ent)
         ent->sendToClient(FailConnect, vec);
     } else {
         server *serv = (server *)ent->serv;
-        if (serv->isPseudoAvailable(args[0])) {
+        if (serv->check_username(args[0])) {
             ent->pseudo = args[0];
             std::cout << COLOR_GREEN << LOGIN_SUCCESS << COLOR_RESET << ent->pseudo << std::endl;
             ent->sendToClient(SuccessConnect, vec);
