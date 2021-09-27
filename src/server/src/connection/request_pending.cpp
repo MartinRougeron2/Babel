@@ -22,8 +22,8 @@ void HandlePendingRequest(std::vector<std::string> args, entry *ent)
         return;
     }
     server *serv = (server *)ent->serv;
-    if (!serv->isPseudoAvailable(args[0])) {
-        entry *contact = serv->getClientByPseudo(args[0]);
+    if (!serv->check_username(args[0])) {
+        entry *contact = serv->get_pseudo(args[0]);
         vec.push_back(ent->pseudo);
         contact->sendToClient(PendingInfo, vec);
         vec.clear();

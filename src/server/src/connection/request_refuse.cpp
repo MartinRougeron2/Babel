@@ -21,7 +21,7 @@ void HandleRefusePending(std::vector<std::string> args, entry *ent)
     if (args.size() == 0)
         return;
     serv = (server *)ent->serv;
-    if (serv->isPseudoAvailable(args[0]))
+    if (serv->check_username(args[0]))
         return;
 
     std::cout << ent->pseudo << REQUEST_REFUSED << args[0] << std::endl;

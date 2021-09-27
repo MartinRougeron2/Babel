@@ -25,7 +25,7 @@ int main(int ac, char **argv)
     sigemptyset(&sigIntHandler.sa_mask);
     sigIntHandler.sa_flags = 0;
     sigaction(SIGINT, &sigIntHandler, NULL);
-    servInst->acceptConnections();
+    servInst->accept_connection();
     
     return (SUCCESS);
 }

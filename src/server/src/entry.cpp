@@ -62,7 +62,7 @@ void entry::asyncReceive()
         if (error != boost::system::errc::success) {
             std::cout << pseudo << death.at(rand() % 32) << std::endl;
             server *s = (server*)serv;
-            s->removeClient(pseudo);
+            s->remove_username(pseudo);
             return;
         } else {
             std::string data;
