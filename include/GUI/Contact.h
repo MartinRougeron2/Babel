@@ -9,6 +9,7 @@
 #define BABEL_CONTACT_H
 
 #include "constants.h"
+#include "../common/User.h"
 
 #include <QDialog>
 #include <QLineEdit>
@@ -27,8 +28,8 @@ class Contact {
 
         Contact(std::string username, std::string address = "", bool in_list =
             false);
-        std::string call();
-        QString addToList();
+        Contact call();
+        Contact addToList();
         void removeFromList();
         void removeFromCall();
 
@@ -43,8 +44,8 @@ class Contact {
 
         void update();
 
-        QString username;
-        std::string address;
+        QLabel *name_label;
+        User user;
 
         QPushButton *call;
         QPushButton *remove_from_call;
@@ -54,7 +55,7 @@ class Contact {
         QGridLayout *contactLayout;
 
         Context contact_context;
-        State contact_state;
+        ContactState contact_state;
 };
 
 #endif //BABEL_CONTACT_H
