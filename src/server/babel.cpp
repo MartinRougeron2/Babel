@@ -7,14 +7,14 @@
 
 #include <QtGui>
 #include "../../include/babel.hpp"
-#include "../../include/GUI/UserMenu.h"
+#include "../../include/GUI/App.h"
 
 int main(int argc, char *argv[])
 {
 
     QApplication app(argc, argv);
-    UserMenu menu;
+    App main_app;
 
-    menu.show(); //show the widget and its children
+    main_app.show(); //show the widget and its children
     return app.exec(); // execute the application
 }

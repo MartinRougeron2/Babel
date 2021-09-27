@@ -5,20 +5,21 @@
 ** babel
 */
 
-
+#include <QtGui>
 #include "../../include/GUI/App.h"
 
-App::App()
+App::App(QWidget *parent) : QWidget(parent)
+{
+    setWindowTitle("Babel");
+
+}
+
+void App::call(User contact_to_call)
 {
 
 }
 
-void App::call(Contact contact_to_call)
-{
-
-}
-
-void App::acceptCall(Contact contact_from)
+void App::acceptCall(User contact_from)
 {
 
 }
@@ -33,23 +34,26 @@ void App::dismiss()
 
 }
 
-void App::addContactToCall(Contact contact_to_add)
+void App::addContactToCall(User contact_to_add)
 {
 
 }
 
-void App::removeContactToCall(Contact contact_to_remove)
+void App::removeContactToCall(User contact_to_remove)
 {
 
 }
 
-void App::addContact(Contact contact_to_add)
+void App::addContact(User contact_to_add)
 {
-    this->contact_list.push(contact_to_add);
+    this->contact_list.append(
+        new Contact(contact_to_add.username, contact_to_add.address, true)
+    );
+
 
 }
 
-void App::removeContact(Contact contact_to_remove)
+void App::removeContact(User contact_to_remove)
 {
 
 }
@@ -61,7 +65,8 @@ void App::fetchUsers()
 
 void App::login()
 {
-
+    // if (send(username, password))
+    // this->app_state = Menu
 }
 
 void App::update()

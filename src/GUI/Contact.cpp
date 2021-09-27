@@ -10,11 +10,11 @@
 Contact::Contact(std::string username, std::string address, bool in_list)
 {
     name_label = new QLabel(username.c_str());
-    call = new QPushButton("\uD83D\uDCDE");
-    remove_from_call = new QPushButton("-");
-    add_to_list = new QPushButton("+");
-    remove_from_list = new QPushButton("-");
-    QGridLayout *mainLayout = new QGridLayout;
+    call_btn = new QPushButton("Call");
+    remove_from_call_btn = new QPushButton("-");
+    add_to_list_btn = new QPushButton("+");
+    remove_from_list_btn = new QPushButton("-");
+    mainLayout = new QGridLayout;
 
     this->user.username = username;
     this->user.address = address;
@@ -24,32 +24,34 @@ Contact::Contact(std::string username, std::string address, bool in_list)
     else
         this->contact_state = None;
 
-    connect(call, SIGNAL(clicked()), this, SLOT(call()));
-    connect(remove_from_call, SIGNAL(clicked()), this, SLOT(removeFromCall()));
-    connect(add_to_list, SIGNAL(clicked()), this, SLOT(addToList()));
-    connect(remove_from_list, SIGNAL(clicked()), this, SLOT(removeFromList()));
+    connect(call_btn, SIGNAL(clicked()), this, SLOT(call()));
+    connect(remove_from_call_btn, SIGNAL(clicked()), this, SLOT(removeFromCall
+    ()));
+    connect(add_to_list_btn, SIGNAL(clicked()), this, SLOT(addToList()));
+    connect(remove_from_list_btn, SIGNAL(clicked()), this, SLOT(removeFromList
+    ()));
     update();
 }
 
 
-Contact Contact::call()
+User Contact::call()
 {
     contact_context = Call;
-    upadte();
-    return this;
+    update();
+    return this->user;
 }
 
-Contact Contact::addToList()
+User Contact::addToList()
 {
     contact_state = Added;
-    upadte();
-    return this;
+    update();
+    return this->user;
 }
 
 void Contact::removeFromList()
 {
     contact_state = None;
-    upadte();
+    update();
 }
 
 void Contact::removeFromCall()
@@ -59,29 +61,29 @@ void Contact::removeFromCall()
 void Contact::setContext(Context newContext)
 {
     this->contact_context = newContext;
-    upadte();
+    update();
 }
 
 void Contact::update()
 {
-    this->call->setEnabled(false);
-    this->add_to_list->setEnabled(false);
-    this->remove_from_list->setEnabled(false);
-    this->remove_from_call->setEnabled(false);
+    this->call_btn->setEnabled(false);
+    this->add_to_list_btn->setEnabled(false);
+    this->remove_from_list_btn->setEnabled(false);
+    this->remove_from_call_btn->setEnabled(false);
 
     mainLayout->addWidget(name_label, 0, 0);
     switch (contact_context) {
         case Menu:
         case Adding:
             if (contact_state == None) {
-                this->add_to_list->setEnabled(true);
-                mainLayout->addWidget(add_to_list, 0, 1)
+                this->add_to_list_btn->setEnabled(true);
+                mainLayout->addWidget(add_to_list_btn, 0, 1);
             }
             else {
-                this->remove_from_list->setEnabled(true);
-                this->call->setEnabled(true);
-                mainLayout->addWidget(remove_from_list, 0, 1);
-                mainLayout->addWidget(call, 0, 2);
+                this->remove_from_list_btn->setEnabled(true);
+                this->call_btn->setEnabled(true);
+                mainLayout->addWidget(remove_from_list_btn, 0, 1);
+                mainLayout->addWidget(call_btn, 0, 2);
             }
             break;
 
@@ -89,8 +91,8 @@ void Contact::update()
             // Nothing to do
             break;
         case ConfCall:
-            this->remove_from_call->setEnabled(true);
-            mainLayout->addWidget(remove_from_call, 0, 1);
+            this->remove_from_call_btn->setEnabled(true);
+            mainLayout->addWidget(remove_from_call_btn, 0, 1);
 
     }
 }
@@ -98,19 +100,19 @@ void Contact::update()
 
 QPushButton *Contact::get_call()
 {
-    return call;
+    return call_btn;
 }
 
 QPushButton *Contact::get_remove_from_call()
 {
-    return remove_from_call;
+    return remove_from_call_btn;
 }
 
 QPushButton *Contact::get_add_to_list()
 {
-    return add_to_list;
+    return add_to_list_btn;
 }
 
-QPushButton Contact::get_remove_from_list() {
-    return remove_from_list;
+QPushButton *Contact::get_remove_from_list() {
+    return remove_from_list_btn;
 }
