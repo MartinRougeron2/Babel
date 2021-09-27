@@ -7,19 +7,17 @@
 
 #include "server.hpp"
 
-static const int success = 0;
-static const int fail = 84;
-static const int port = 2000;
-server *servInst = new server(port);
+server *servInst = new server(PORT);
 
 void my_handler(int s)
 {
-    std::cout << "Shuting down..." << std::endl;
+    std::cout << "\b\bShuting down..." << std::endl;
     servInst->stop();
+
     exit(0);
 }
 
-int main(int ac, char **as)
+int main(int ac, char **argv)
 {
     struct sigaction sigIntHandler;
 
@@ -29,6 +27,6 @@ int main(int ac, char **as)
     sigaction(SIGINT, &sigIntHandler, NULL);
     servInst->acceptConnections();
     
-    return (success);
+    return (SUCCESS);
 }
 

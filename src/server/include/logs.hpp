@@ -31,4 +31,8 @@
     #define COLOR_MAGENTA "\033[0;35m"
     #define COLOR_CYAN "\033[0;36m"
 
+    #define SUCCESS 0
+    #define FAIL 84
+    #define PORT 2000
+
 #endif /* LOGS_HPP_ */

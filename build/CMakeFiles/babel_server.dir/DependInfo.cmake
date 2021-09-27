@@ -4,7 +4,16 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/babel.cpp" "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles/babel_server.dir/src/server/babel.cpp.o"
+  "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/connection/connect.cpp" "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles/babel_server.dir/src/server/src/connection/connect.cpp.o"
+  "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/connection/request_accept.cpp" "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles/babel_server.dir/src/server/src/connection/request_accept.cpp.o"
+  "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/connection/request_pending.cpp" "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles/babel_server.dir/src/server/src/connection/request_pending.cpp.o"
+  "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/connection/request_refuse.cpp" "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles/babel_server.dir/src/server/src/connection/request_refuse.cpp.o"
+  "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/connection/welcome.cpp" "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles/babel_server.dir/src/server/src/connection/welcome.cpp.o"
+  "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/entry.cpp" "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles/babel_server.dir/src/server/src/entry.cpp.o"
+  "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/main.cpp" "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles/babel_server.dir/src/server/src/main.cpp.o"
+  "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/network.cpp" "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles/babel_server.dir/src/server/src/network.cpp.o"
+  "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/s_handler.cpp" "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles/babel_server.dir/src/server/src/s_handler.cpp.o"
+  "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/server.cpp" "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles/babel_server.dir/src/server/src/server.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

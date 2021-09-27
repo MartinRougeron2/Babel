@@ -41,14 +41,14 @@ void network::start()
 
 void network::accept()
 {
-    if (running) {
+    if (running == true) {
         boost::asio::ip::tcp::socket *socket = new boost::asio::ip::tcp::socket(service);
         sockets.push_back(socket);
         acceptor->async_accept(*socket, [this](const boost::system::error_code &error) {
-            if (running) {
-                if (error)
+            if (running == true) {
+                if (error) {
                     std::cout << "Can't accept connection, error occured" << std::endl;
-                else {
+                } else {
                     server *obj = (server *)serv;
                     obj->handleClient();
                 }
