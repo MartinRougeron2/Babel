@@ -165,6 +165,7 @@ void UserMenu::cancel()
 void UserMenu::removeContact()
 {
     QString name = nameLine->text();
+
     QString address = addressText->toPlainText();
 
     if (contacts.contains(name)) {
