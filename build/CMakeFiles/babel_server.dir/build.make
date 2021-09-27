@@ -57,30 +57,165 @@ include CMakeFiles/babel_server.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/babel_server.dir/flags.make
 
-CMakeFiles/babel_server.dir/src/server/babel.cpp.o: CMakeFiles/babel_server.dir/flags.make
-CMakeFiles/babel_server.dir/src/server/babel.cpp.o: ../src/server/babel.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/babel_server.dir/src/server/babel.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/babel_server.dir/src/server/babel.cpp.o -c /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/babel.cpp
+CMakeFiles/babel_server.dir/src/server/src/connection/connect.cpp.o: CMakeFiles/babel_server.dir/flags.make
+CMakeFiles/babel_server.dir/src/server/src/connection/connect.cpp.o: ../src/server/src/connection/connect.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/babel_server.dir/src/server/src/connection/connect.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/babel_server.dir/src/server/src/connection/connect.cpp.o -c /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/connection/connect.cpp
 
-CMakeFiles/babel_server.dir/src/server/babel.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/babel_server.dir/src/server/babel.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/babel.cpp > CMakeFiles/babel_server.dir/src/server/babel.cpp.i
+CMakeFiles/babel_server.dir/src/server/src/connection/connect.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/babel_server.dir/src/server/src/connection/connect.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/connection/connect.cpp > CMakeFiles/babel_server.dir/src/server/src/connection/connect.cpp.i
 
-CMakeFiles/babel_server.dir/src/server/babel.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/babel_server.dir/src/server/babel.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/babel.cpp -o CMakeFiles/babel_server.dir/src/server/babel.cpp.s
+CMakeFiles/babel_server.dir/src/server/src/connection/connect.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/babel_server.dir/src/server/src/connection/connect.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/connection/connect.cpp -o CMakeFiles/babel_server.dir/src/server/src/connection/connect.cpp.s
+
+CMakeFiles/babel_server.dir/src/server/src/connection/request_accept.cpp.o: CMakeFiles/babel_server.dir/flags.make
+CMakeFiles/babel_server.dir/src/server/src/connection/request_accept.cpp.o: ../src/server/src/connection/request_accept.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/babel_server.dir/src/server/src/connection/request_accept.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/babel_server.dir/src/server/src/connection/request_accept.cpp.o -c /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/connection/request_accept.cpp
+
+CMakeFiles/babel_server.dir/src/server/src/connection/request_accept.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/babel_server.dir/src/server/src/connection/request_accept.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/connection/request_accept.cpp > CMakeFiles/babel_server.dir/src/server/src/connection/request_accept.cpp.i
+
+CMakeFiles/babel_server.dir/src/server/src/connection/request_accept.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/babel_server.dir/src/server/src/connection/request_accept.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/connection/request_accept.cpp -o CMakeFiles/babel_server.dir/src/server/src/connection/request_accept.cpp.s
+
+CMakeFiles/babel_server.dir/src/server/src/connection/request_pending.cpp.o: CMakeFiles/babel_server.dir/flags.make
+CMakeFiles/babel_server.dir/src/server/src/connection/request_pending.cpp.o: ../src/server/src/connection/request_pending.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/babel_server.dir/src/server/src/connection/request_pending.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/babel_server.dir/src/server/src/connection/request_pending.cpp.o -c /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/connection/request_pending.cpp
+
+CMakeFiles/babel_server.dir/src/server/src/connection/request_pending.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/babel_server.dir/src/server/src/connection/request_pending.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/connection/request_pending.cpp > CMakeFiles/babel_server.dir/src/server/src/connection/request_pending.cpp.i
+
+CMakeFiles/babel_server.dir/src/server/src/connection/request_pending.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/babel_server.dir/src/server/src/connection/request_pending.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/connection/request_pending.cpp -o CMakeFiles/babel_server.dir/src/server/src/connection/request_pending.cpp.s
+
+CMakeFiles/babel_server.dir/src/server/src/connection/request_refuse.cpp.o: CMakeFiles/babel_server.dir/flags.make
+CMakeFiles/babel_server.dir/src/server/src/connection/request_refuse.cpp.o: ../src/server/src/connection/request_refuse.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/babel_server.dir/src/server/src/connection/request_refuse.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/babel_server.dir/src/server/src/connection/request_refuse.cpp.o -c /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/connection/request_refuse.cpp
+
+CMakeFiles/babel_server.dir/src/server/src/connection/request_refuse.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/babel_server.dir/src/server/src/connection/request_refuse.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/connection/request_refuse.cpp > CMakeFiles/babel_server.dir/src/server/src/connection/request_refuse.cpp.i
+
+CMakeFiles/babel_server.dir/src/server/src/connection/request_refuse.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/babel_server.dir/src/server/src/connection/request_refuse.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/connection/request_refuse.cpp -o CMakeFiles/babel_server.dir/src/server/src/connection/request_refuse.cpp.s
+
+CMakeFiles/babel_server.dir/src/server/src/connection/welcome.cpp.o: CMakeFiles/babel_server.dir/flags.make
+CMakeFiles/babel_server.dir/src/server/src/connection/welcome.cpp.o: ../src/server/src/connection/welcome.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/babel_server.dir/src/server/src/connection/welcome.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/babel_server.dir/src/server/src/connection/welcome.cpp.o -c /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/connection/welcome.cpp
+
+CMakeFiles/babel_server.dir/src/server/src/connection/welcome.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/babel_server.dir/src/server/src/connection/welcome.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/connection/welcome.cpp > CMakeFiles/babel_server.dir/src/server/src/connection/welcome.cpp.i
+
+CMakeFiles/babel_server.dir/src/server/src/connection/welcome.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/babel_server.dir/src/server/src/connection/welcome.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/connection/welcome.cpp -o CMakeFiles/babel_server.dir/src/server/src/connection/welcome.cpp.s
+
+CMakeFiles/babel_server.dir/src/server/src/entry.cpp.o: CMakeFiles/babel_server.dir/flags.make
+CMakeFiles/babel_server.dir/src/server/src/entry.cpp.o: ../src/server/src/entry.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/babel_server.dir/src/server/src/entry.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/babel_server.dir/src/server/src/entry.cpp.o -c /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/entry.cpp
+
+CMakeFiles/babel_server.dir/src/server/src/entry.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/babel_server.dir/src/server/src/entry.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/entry.cpp > CMakeFiles/babel_server.dir/src/server/src/entry.cpp.i
+
+CMakeFiles/babel_server.dir/src/server/src/entry.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/babel_server.dir/src/server/src/entry.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/entry.cpp -o CMakeFiles/babel_server.dir/src/server/src/entry.cpp.s
+
+CMakeFiles/babel_server.dir/src/server/src/main.cpp.o: CMakeFiles/babel_server.dir/flags.make
+CMakeFiles/babel_server.dir/src/server/src/main.cpp.o: ../src/server/src/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/babel_server.dir/src/server/src/main.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/babel_server.dir/src/server/src/main.cpp.o -c /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/main.cpp
+
+CMakeFiles/babel_server.dir/src/server/src/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/babel_server.dir/src/server/src/main.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/main.cpp > CMakeFiles/babel_server.dir/src/server/src/main.cpp.i
+
+CMakeFiles/babel_server.dir/src/server/src/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/babel_server.dir/src/server/src/main.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/main.cpp -o CMakeFiles/babel_server.dir/src/server/src/main.cpp.s
+
+CMakeFiles/babel_server.dir/src/server/src/network.cpp.o: CMakeFiles/babel_server.dir/flags.make
+CMakeFiles/babel_server.dir/src/server/src/network.cpp.o: ../src/server/src/network.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/babel_server.dir/src/server/src/network.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/babel_server.dir/src/server/src/network.cpp.o -c /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/network.cpp
+
+CMakeFiles/babel_server.dir/src/server/src/network.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/babel_server.dir/src/server/src/network.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/network.cpp > CMakeFiles/babel_server.dir/src/server/src/network.cpp.i
+
+CMakeFiles/babel_server.dir/src/server/src/network.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/babel_server.dir/src/server/src/network.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/network.cpp -o CMakeFiles/babel_server.dir/src/server/src/network.cpp.s
+
+CMakeFiles/babel_server.dir/src/server/src/s_handler.cpp.o: CMakeFiles/babel_server.dir/flags.make
+CMakeFiles/babel_server.dir/src/server/src/s_handler.cpp.o: ../src/server/src/s_handler.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/babel_server.dir/src/server/src/s_handler.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/babel_server.dir/src/server/src/s_handler.cpp.o -c /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/s_handler.cpp
+
+CMakeFiles/babel_server.dir/src/server/src/s_handler.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/babel_server.dir/src/server/src/s_handler.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/s_handler.cpp > CMakeFiles/babel_server.dir/src/server/src/s_handler.cpp.i
+
+CMakeFiles/babel_server.dir/src/server/src/s_handler.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/babel_server.dir/src/server/src/s_handler.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/s_handler.cpp -o CMakeFiles/babel_server.dir/src/server/src/s_handler.cpp.s
+
+CMakeFiles/babel_server.dir/src/server/src/server.cpp.o: CMakeFiles/babel_server.dir/flags.make
+CMakeFiles/babel_server.dir/src/server/src/server.cpp.o: ../src/server/src/server.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/babel_server.dir/src/server/src/server.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/babel_server.dir/src/server/src/server.cpp.o -c /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/server.cpp
+
+CMakeFiles/babel_server.dir/src/server/src/server.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/babel_server.dir/src/server/src/server.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/server.cpp > CMakeFiles/babel_server.dir/src/server/src/server.cpp.i
+
+CMakeFiles/babel_server.dir/src/server/src/server.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/babel_server.dir/src/server/src/server.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/src/server.cpp -o CMakeFiles/babel_server.dir/src/server/src/server.cpp.s
 
 # Object files for target babel_server
 babel_server_OBJECTS = \
-"CMakeFiles/babel_server.dir/src/server/babel.cpp.o"
+"CMakeFiles/babel_server.dir/src/server/src/connection/connect.cpp.o" \
+"CMakeFiles/babel_server.dir/src/server/src/connection/request_accept.cpp.o" \
+"CMakeFiles/babel_server.dir/src/server/src/connection/request_pending.cpp.o" \
+"CMakeFiles/babel_server.dir/src/server/src/connection/request_refuse.cpp.o" \
+"CMakeFiles/babel_server.dir/src/server/src/connection/welcome.cpp.o" \
+"CMakeFiles/babel_server.dir/src/server/src/entry.cpp.o" \
+"CMakeFiles/babel_server.dir/src/server/src/main.cpp.o" \
+"CMakeFiles/babel_server.dir/src/server/src/network.cpp.o" \
+"CMakeFiles/babel_server.dir/src/server/src/s_handler.cpp.o" \
+"CMakeFiles/babel_server.dir/src/server/src/server.cpp.o"
 
 # External object files for target babel_server
 babel_server_EXTERNAL_OBJECTS =
 
-bin/babel_server: CMakeFiles/babel_server.dir/src/server/babel.cpp.o
+bin/babel_server: CMakeFiles/babel_server.dir/src/server/src/connection/connect.cpp.o
+bin/babel_server: CMakeFiles/babel_server.dir/src/server/src/connection/request_accept.cpp.o
+bin/babel_server: CMakeFiles/babel_server.dir/src/server/src/connection/request_pending.cpp.o
+bin/babel_server: CMakeFiles/babel_server.dir/src/server/src/connection/request_refuse.cpp.o
+bin/babel_server: CMakeFiles/babel_server.dir/src/server/src/connection/welcome.cpp.o
+bin/babel_server: CMakeFiles/babel_server.dir/src/server/src/entry.cpp.o
+bin/babel_server: CMakeFiles/babel_server.dir/src/server/src/main.cpp.o
+bin/babel_server: CMakeFiles/babel_server.dir/src/server/src/network.cpp.o
+bin/babel_server: CMakeFiles/babel_server.dir/src/server/src/s_handler.cpp.o
+bin/babel_server: CMakeFiles/babel_server.dir/src/server/src/server.cpp.o
 bin/babel_server: CMakeFiles/babel_server.dir/build.make
 bin/babel_server: CMakeFiles/babel_server.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable bin/babel_server"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking CXX executable bin/babel_server"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/babel_server.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

@@ -9,8 +9,6 @@
 #include "network.hpp"
 #include "handler.hpp"
 
-// # Builder / Destructor
-
 server::server(int port)
 {
     net = new network(this, port);
@@ -20,8 +18,6 @@ server::~server()
 {
     stop();
 }
-
-// # Methods
 
 entry *server::getClientByAddress(std::string address)
 {

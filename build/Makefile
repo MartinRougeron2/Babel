@@ -123,32 +123,275 @@ babel_server/fast:
 	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/build
 .PHONY : babel_server/fast
 
-src/server/babel.o: src/server/babel.cpp.o
+src/server/src/connection/connect.o: src/server/src/connection/connect.cpp.o
 
-.PHONY : src/server/babel.o
+.PHONY : src/server/src/connection/connect.o
 
 # target to build an object file
-src/server/babel.cpp.o:
-	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/babel.cpp.o
-.PHONY : src/server/babel.cpp.o
+src/server/src/connection/connect.cpp.o:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/connection/connect.cpp.o
+.PHONY : src/server/src/connection/connect.cpp.o
 
-src/server/babel.i: src/server/babel.cpp.i
+src/server/src/connection/connect.i: src/server/src/connection/connect.cpp.i
 
-.PHONY : src/server/babel.i
+.PHONY : src/server/src/connection/connect.i
 
 # target to preprocess a source file
-src/server/babel.cpp.i:
-	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/babel.cpp.i
-.PHONY : src/server/babel.cpp.i
+src/server/src/connection/connect.cpp.i:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/connection/connect.cpp.i
+.PHONY : src/server/src/connection/connect.cpp.i
 
-src/server/babel.s: src/server/babel.cpp.s
+src/server/src/connection/connect.s: src/server/src/connection/connect.cpp.s
 
-.PHONY : src/server/babel.s
+.PHONY : src/server/src/connection/connect.s
 
 # target to generate assembly for a file
-src/server/babel.cpp.s:
-	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/babel.cpp.s
-.PHONY : src/server/babel.cpp.s
+src/server/src/connection/connect.cpp.s:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/connection/connect.cpp.s
+.PHONY : src/server/src/connection/connect.cpp.s
+
+src/server/src/connection/request_accept.o: src/server/src/connection/request_accept.cpp.o
+
+.PHONY : src/server/src/connection/request_accept.o
+
+# target to build an object file
+src/server/src/connection/request_accept.cpp.o:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/connection/request_accept.cpp.o
+.PHONY : src/server/src/connection/request_accept.cpp.o
+
+src/server/src/connection/request_accept.i: src/server/src/connection/request_accept.cpp.i
+
+.PHONY : src/server/src/connection/request_accept.i
+
+# target to preprocess a source file
+src/server/src/connection/request_accept.cpp.i:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/connection/request_accept.cpp.i
+.PHONY : src/server/src/connection/request_accept.cpp.i
+
+src/server/src/connection/request_accept.s: src/server/src/connection/request_accept.cpp.s
+
+.PHONY : src/server/src/connection/request_accept.s
+
+# target to generate assembly for a file
+src/server/src/connection/request_accept.cpp.s:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/connection/request_accept.cpp.s
+.PHONY : src/server/src/connection/request_accept.cpp.s
+
+src/server/src/connection/request_pending.o: src/server/src/connection/request_pending.cpp.o
+
+.PHONY : src/server/src/connection/request_pending.o
+
+# target to build an object file
+src/server/src/connection/request_pending.cpp.o:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/connection/request_pending.cpp.o
+.PHONY : src/server/src/connection/request_pending.cpp.o
+
+src/server/src/connection/request_pending.i: src/server/src/connection/request_pending.cpp.i
+
+.PHONY : src/server/src/connection/request_pending.i
+
+# target to preprocess a source file
+src/server/src/connection/request_pending.cpp.i:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/connection/request_pending.cpp.i
+.PHONY : src/server/src/connection/request_pending.cpp.i
+
+src/server/src/connection/request_pending.s: src/server/src/connection/request_pending.cpp.s
+
+.PHONY : src/server/src/connection/request_pending.s
+
+# target to generate assembly for a file
+src/server/src/connection/request_pending.cpp.s:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/connection/request_pending.cpp.s
+.PHONY : src/server/src/connection/request_pending.cpp.s
+
+src/server/src/connection/request_refuse.o: src/server/src/connection/request_refuse.cpp.o
+
+.PHONY : src/server/src/connection/request_refuse.o
+
+# target to build an object file
+src/server/src/connection/request_refuse.cpp.o:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/connection/request_refuse.cpp.o
+.PHONY : src/server/src/connection/request_refuse.cpp.o
+
+src/server/src/connection/request_refuse.i: src/server/src/connection/request_refuse.cpp.i
+
+.PHONY : src/server/src/connection/request_refuse.i
+
+# target to preprocess a source file
+src/server/src/connection/request_refuse.cpp.i:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/connection/request_refuse.cpp.i
+.PHONY : src/server/src/connection/request_refuse.cpp.i
+
+src/server/src/connection/request_refuse.s: src/server/src/connection/request_refuse.cpp.s
+
+.PHONY : src/server/src/connection/request_refuse.s
+
+# target to generate assembly for a file
+src/server/src/connection/request_refuse.cpp.s:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/connection/request_refuse.cpp.s
+.PHONY : src/server/src/connection/request_refuse.cpp.s
+
+src/server/src/connection/welcome.o: src/server/src/connection/welcome.cpp.o
+
+.PHONY : src/server/src/connection/welcome.o
+
+# target to build an object file
+src/server/src/connection/welcome.cpp.o:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/connection/welcome.cpp.o
+.PHONY : src/server/src/connection/welcome.cpp.o
+
+src/server/src/connection/welcome.i: src/server/src/connection/welcome.cpp.i
+
+.PHONY : src/server/src/connection/welcome.i
+
+# target to preprocess a source file
+src/server/src/connection/welcome.cpp.i:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/connection/welcome.cpp.i
+.PHONY : src/server/src/connection/welcome.cpp.i
+
+src/server/src/connection/welcome.s: src/server/src/connection/welcome.cpp.s
+
+.PHONY : src/server/src/connection/welcome.s
+
+# target to generate assembly for a file
+src/server/src/connection/welcome.cpp.s:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/connection/welcome.cpp.s
+.PHONY : src/server/src/connection/welcome.cpp.s
+
+src/server/src/entry.o: src/server/src/entry.cpp.o
+
+.PHONY : src/server/src/entry.o
+
+# target to build an object file
+src/server/src/entry.cpp.o:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/entry.cpp.o
+.PHONY : src/server/src/entry.cpp.o
+
+src/server/src/entry.i: src/server/src/entry.cpp.i
+
+.PHONY : src/server/src/entry.i
+
+# target to preprocess a source file
+src/server/src/entry.cpp.i:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/entry.cpp.i
+.PHONY : src/server/src/entry.cpp.i
+
+src/server/src/entry.s: src/server/src/entry.cpp.s
+
+.PHONY : src/server/src/entry.s
+
+# target to generate assembly for a file
+src/server/src/entry.cpp.s:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/entry.cpp.s
+.PHONY : src/server/src/entry.cpp.s
+
+src/server/src/main.o: src/server/src/main.cpp.o
+
+.PHONY : src/server/src/main.o
+
+# target to build an object file
+src/server/src/main.cpp.o:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/main.cpp.o
+.PHONY : src/server/src/main.cpp.o
+
+src/server/src/main.i: src/server/src/main.cpp.i
+
+.PHONY : src/server/src/main.i
+
+# target to preprocess a source file
+src/server/src/main.cpp.i:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/main.cpp.i
+.PHONY : src/server/src/main.cpp.i
+
+src/server/src/main.s: src/server/src/main.cpp.s
+
+.PHONY : src/server/src/main.s
+
+# target to generate assembly for a file
+src/server/src/main.cpp.s:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/main.cpp.s
+.PHONY : src/server/src/main.cpp.s
+
+src/server/src/network.o: src/server/src/network.cpp.o
+
+.PHONY : src/server/src/network.o
+
+# target to build an object file
+src/server/src/network.cpp.o:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/network.cpp.o
+.PHONY : src/server/src/network.cpp.o
+
+src/server/src/network.i: src/server/src/network.cpp.i
+
+.PHONY : src/server/src/network.i
+
+# target to preprocess a source file
+src/server/src/network.cpp.i:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/network.cpp.i
+.PHONY : src/server/src/network.cpp.i
+
+src/server/src/network.s: src/server/src/network.cpp.s
+
+.PHONY : src/server/src/network.s
+
+# target to generate assembly for a file
+src/server/src/network.cpp.s:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/network.cpp.s
+.PHONY : src/server/src/network.cpp.s
+
+src/server/src/s_handler.o: src/server/src/s_handler.cpp.o
+
+.PHONY : src/server/src/s_handler.o
+
+# target to build an object file
+src/server/src/s_handler.cpp.o:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/s_handler.cpp.o
+.PHONY : src/server/src/s_handler.cpp.o
+
+src/server/src/s_handler.i: src/server/src/s_handler.cpp.i
+
+.PHONY : src/server/src/s_handler.i
+
+# target to preprocess a source file
+src/server/src/s_handler.cpp.i:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/s_handler.cpp.i
+.PHONY : src/server/src/s_handler.cpp.i
+
+src/server/src/s_handler.s: src/server/src/s_handler.cpp.s
+
+.PHONY : src/server/src/s_handler.s
+
+# target to generate assembly for a file
+src/server/src/s_handler.cpp.s:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/s_handler.cpp.s
+.PHONY : src/server/src/s_handler.cpp.s
+
+src/server/src/server.o: src/server/src/server.cpp.o
+
+.PHONY : src/server/src/server.o
+
+# target to build an object file
+src/server/src/server.cpp.o:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/server.cpp.o
+.PHONY : src/server/src/server.cpp.o
+
+src/server/src/server.i: src/server/src/server.cpp.i
+
+.PHONY : src/server/src/server.i
+
+# target to preprocess a source file
+src/server/src/server.cpp.i:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/server.cpp.i
+.PHONY : src/server/src/server.cpp.i
+
+src/server/src/server.s: src/server/src/server.cpp.s
+
+.PHONY : src/server/src/server.s
+
+# target to generate assembly for a file
+src/server/src/server.cpp.s:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/src/server.cpp.s
+.PHONY : src/server/src/server.cpp.s
 
 # Help Target
 help:
@@ -159,9 +402,36 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... babel_server"
-	@echo "... src/server/babel.o"
-	@echo "... src/server/babel.i"
-	@echo "... src/server/babel.s"
+	@echo "... src/server/src/connection/connect.o"
+	@echo "... src/server/src/connection/connect.i"
+	@echo "... src/server/src/connection/connect.s"
+	@echo "... src/server/src/connection/request_accept.o"
+	@echo "... src/server/src/connection/request_accept.i"
+	@echo "... src/server/src/connection/request_accept.s"
+	@echo "... src/server/src/connection/request_pending.o"
+	@echo "... src/server/src/connection/request_pending.i"
+	@echo "... src/server/src/connection/request_pending.s"
+	@echo "... src/server/src/connection/request_refuse.o"
+	@echo "... src/server/src/connection/request_refuse.i"
+	@echo "... src/server/src/connection/request_refuse.s"
+	@echo "... src/server/src/connection/welcome.o"
+	@echo "... src/server/src/connection/welcome.i"
+	@echo "... src/server/src/connection/welcome.s"
+	@echo "... src/server/src/entry.o"
+	@echo "... src/server/src/entry.i"
+	@echo "... src/server/src/entry.s"
+	@echo "... src/server/src/main.o"
+	@echo "... src/server/src/main.i"
+	@echo "... src/server/src/main.s"
+	@echo "... src/server/src/network.o"
+	@echo "... src/server/src/network.i"
+	@echo "... src/server/src/network.s"
+	@echo "... src/server/src/s_handler.o"
+	@echo "... src/server/src/s_handler.i"
+	@echo "... src/server/src/s_handler.s"
+	@echo "... src/server/src/server.o"
+	@echo "... src/server/src/server.i"
+	@echo "... src/server/src/server.s"
 .PHONY : help
 
 

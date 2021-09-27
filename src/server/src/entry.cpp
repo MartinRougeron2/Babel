@@ -43,17 +43,14 @@ void entry::procData(std::string data)
 {
     const size_t length = data.size();
 
-    std::cout << std::endl;
     std::cout << " dec | hexa | oct |  binary  " << std::endl;
     std::cout << "-----|------|-----|----------" << std::endl;
 
     for (size_t i = 0; i < length; ++i) {
-        if (data[i] != '\n') {
-            std::cout << " " << std::left << std::setw(4) << std::dec << (int)data[i];
-            std::cout << "| 0x" << std::left << std::setw(3) << std::hex << (int)data[i];
-            std::cout << "| " << std::left << std::setw(4) << std::oct << (int)data[i];
-            std::cout << "| " << std::left << std::setw(8) << std::bitset<8>(data.c_str()[i]) << std::endl;
-        }
+        std::cout << " " << std::left << std::setw(4) << std::dec << (int)data[i];
+        std::cout << "| 0x" << std::left << std::setw(3) << std::hex << (int)data[i];
+        std::cout << "| " << std::left << std::setw(4) << std::oct << (int)data[i];
+        std::cout << "| " << std::left << std::setw(8) << std::bitset<8>(data.c_str()[i]) << std::endl;
     }
     std::cout << std::endl;
     std::cout << COLOR_GREEN << ":: Clear data\n" << COLOR_RESET << std::endl << data << std::endl;
@@ -69,9 +66,9 @@ void entry::asyncReceive()
             return;
         } else {
             std::string data;
-            for (unsigned int i = 0; i < bytesTransfered && buffer[i]; i++)
+            for (size_t i = 0; i < bytesTransfered && buffer[i]; i++)
                 data += buffer[i];
-            std::cout << COLOR_CYAN << ":: Received: " << COLOR_RESET << std::endl;
+            std::cout << COLOR_CYAN << ":: Received\n" << COLOR_RESET << std::endl;
             procData(data);
             handleData(data);
         }
@@ -83,9 +80,9 @@ void entry::sendToClient(int id, std::vector<std::string> args)
 {
     std::string val = std::to_string(id);
 
-    for (unsigned int i = 0; i < args.size(); i++)
+    for (size_t i = 0; i < args.size(); i++)
         val += " " + args[i];
-    std::cout << "Sent: ";
+    std::cout << COLOR_RED << ":: Sent\n" << COLOR_RESET << std::endl;
     procData(val);
     socket_id->send(boost::asio::buffer(val, val.length()));
 }
@@ -94,4 +91,3 @@ void entry::handleData(std::string data)
 {
     handlePacket(data, this);
 }
-
