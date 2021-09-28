@@ -14,7 +14,7 @@ int main(int argc, char **argv)
     try
     {
         if (argc != 2) {
-            std::cerr << "Usage: async_udp_echo_server <port>" << std::endl;
+            std::cerr << "Usage: ./babel_server <port>" << std::endl;
             return (1);
         }
 
