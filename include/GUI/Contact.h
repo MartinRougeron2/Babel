@@ -48,7 +48,7 @@ public:
     private:
 
         void update();
-
+        void resetLayout() const;
         QLabel *name_label;
         User user;
 

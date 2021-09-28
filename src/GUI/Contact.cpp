@@ -64,14 +64,24 @@ void Contact::setContext(Context newContext)
     update();
 }
 
+void Contact::resetLayout() const
+{
+    QLayoutItem* item;
+
+    while ( ( item = mainLayout->takeAt( 0 ) ) != nullptr )
+    {
+        delete item->widget();
+        delete item;
+    }
+}
+
 void Contact::update()
 {
-    this->call_btn->setEnabled(false);
-    this->add_to_list_btn->setEnabled(false);
-    this->remove_from_list_btn->setEnabled(false);
-    this->remove_from_call_btn->setEnabled(false);
+
+    resetLayout();
 
     mainLayout->addWidget(name_label, 0, 0);
+
     switch (contact_context) {
         case Menu:
         case Adding:
