@@ -57,27 +57,27 @@ include CMakeFiles/babel_server.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/babel_server.dir/flags.make
 
-CMakeFiles/babel_server.dir/src/client/client.cpp.o: CMakeFiles/babel_server.dir/flags.make
-CMakeFiles/babel_server.dir/src/client/client.cpp.o: ../src/client/client.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/babel_server.dir/src/client/client.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/babel_server.dir/src/client/client.cpp.o -c /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/client/client.cpp
+CMakeFiles/babel_server.dir/src/server/main.cpp.o: CMakeFiles/babel_server.dir/flags.make
+CMakeFiles/babel_server.dir/src/server/main.cpp.o: ../src/server/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/babel_server.dir/src/server/main.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/babel_server.dir/src/server/main.cpp.o -c /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/main.cpp
 
-CMakeFiles/babel_server.dir/src/client/client.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/babel_server.dir/src/client/client.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/client/client.cpp > CMakeFiles/babel_server.dir/src/client/client.cpp.i
+CMakeFiles/babel_server.dir/src/server/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/babel_server.dir/src/server/main.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/main.cpp > CMakeFiles/babel_server.dir/src/server/main.cpp.i
 
-CMakeFiles/babel_server.dir/src/client/client.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/babel_server.dir/src/client/client.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/client/client.cpp -o CMakeFiles/babel_server.dir/src/client/client.cpp.s
+CMakeFiles/babel_server.dir/src/server/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/babel_server.dir/src/server/main.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/main.cpp -o CMakeFiles/babel_server.dir/src/server/main.cpp.s
 
 # Object files for target babel_server
 babel_server_OBJECTS = \
-"CMakeFiles/babel_server.dir/src/client/client.cpp.o"
+"CMakeFiles/babel_server.dir/src/server/main.cpp.o"
 
 # External object files for target babel_server
 babel_server_EXTERNAL_OBJECTS =
 
-bin/babel_server: CMakeFiles/babel_server.dir/src/client/client.cpp.o
+bin/babel_server: CMakeFiles/babel_server.dir/src/server/main.cpp.o
 bin/babel_server: CMakeFiles/babel_server.dir/build.make
 bin/babel_server: CMakeFiles/babel_server.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable bin/babel_server"

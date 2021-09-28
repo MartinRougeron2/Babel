@@ -6,15 +6,35 @@
 
 #IncludeRegexTransform: 
 
-/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/client/client.cpp
-boost/asio.hpp
+/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/include/client/Asio.hpp
+cstdlib
 -
-boost/array.hpp
--
-boost/bind.hpp
--
-thread
+deque
 -
 iostream
 -
+list
+-
+memory
+-
+set
+-
+utility
+-
+boost/asio.hpp
+-
+Chat.hpp
+/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/include/client/Chat.hpp
+
+/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/include/client/Chat.hpp
+cstdio
+-
+cstdlib
+-
+cstring
+-
+
+/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/client/main.cpp
+../../include/client/Asio.hpp
+/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/include/client/Asio.hpp
 
