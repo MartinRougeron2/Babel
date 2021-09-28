@@ -8,33 +8,33 @@
 #include "../../include/server/Asio.hpp"
 
 #include "../../include/server/Signals.hpp"
+#include "../../include/server/TCP.hpp"
+#include "../../include/server/UDP.hpp"
 
 typedef std::deque<chat_message> chat_message_queue;
 typedef std::shared_ptr<chat_participant> chat_participant_ptr;
 
-int main(int argc, char* argv[])
+int main(int ac, char **argv)
 {
     boost::asio::io_service io_service;
     std::list<chat_server> servers;
 
-    try
-    {
-        signals::handler();
-        if (argc < 2) {
+    signals::handler();
+    TCP tcp_server = TCP(ac, argv);
+    try {
+        if (ac < 2) {
             std::cerr << "Usage: babel_server <port> [<port> ...]" << std::endl;
             return (1);
         }
-        for (int i = 1; i < argc; i++) {
+        for (int i = 1; i < ac; i++) {
             tcp::endpoint endpoint(tcp::v4(), std::atoi(argv[i]));
             servers.emplace_back(io_service, endpoint);
         }
 
         io_service.run();
-    }
-    catch (std::exception& e)
-    {
+    } catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << std::endl;
     }
 
-  return 0;
+    return (0);
 }
