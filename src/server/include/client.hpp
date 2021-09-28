@@ -25,7 +25,7 @@
             boost::asio::ip::tcp::socket *sock;
             std::array<char, 512> buffer;
             void *serv;
-            void procData(std::string data);
+            void resume(std::string data);
             void sendToClient(int id, std::vector<std::string> args);
             void handleData(std::string);
             void asyncReceive(void);

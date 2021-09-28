@@ -14,7 +14,7 @@
     #include "entry.hpp"
 
     void dispatchPacket(int id, std::vector<std::string> args, entry *ent);
-    void handlePacket(std::string data, entry *ent);
-    int manageId(std::string data);
+    void packet_handler(std::string data, entry *ent);
+    int handler_id_manager(std::string data);
 
 #endif /* !HANDLER_HPP_ */

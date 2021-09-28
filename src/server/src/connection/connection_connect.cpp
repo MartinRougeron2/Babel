@@ -16,12 +16,13 @@
 
 void connection_connect(std::vector<std::string> args, entry *ent)
 {
+    server *serv = NULL;
     std::vector<std::string> vec;
 
     if (args.size() == 0 || args[0].size() == 0) {
         ent->sendToClient(FailConnect, vec);
     } else {
-        server *serv = (server *)ent->serv;
+        serv = (server *)ent->serv;
         if (serv->check_username(args[0])) {
             ent->pseudo = args[0];
             std::cout << COLOR_GREEN << LOGIN_SUCCESS << COLOR_RESET << ent->pseudo << std::endl;

@@ -24,6 +24,7 @@ entry *server::get_address(std::string address)
     for (unsigned int i = 0; i < clients.size(); i++)
         if (clients[i]->address == address)
             return (clients[i]);
+
     return (NULL);
 }
 
@@ -32,6 +33,7 @@ entry *server::get_pseudo(std::string pseudo)
     for (unsigned int i = 0; i < clients.size(); i++)
         if (clients[i]->pseudo.size() == pseudo.size() && clients[i]->pseudo == pseudo)
             return (clients[i]);
+
     return (NULL);
 }
 
@@ -40,6 +42,7 @@ bool server::check_username(std::string pseudo)
     for (unsigned int i = 0; i < clients.size(); i++)
         if (clients[i]->pseudo.size() == pseudo.size() && clients[i]->pseudo == pseudo)
             return (false);
+
     return (true);
 }
 
@@ -68,6 +71,7 @@ void server::stop()
 {
     net->stop();
     running = false;
+
     while (clients.size() != 0) {
         entry *entry = clients.back();
         entry->stop();
