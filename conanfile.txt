@@ -6,8 +6,15 @@ asio/1.19.2
 sqlite3/3.36.0
 [options]
 *:shared=True
+*:widget=True
+
 [imports]
 lib, *.so* -> lib
 include, *.h -> include/
+lib, *.so* -> bin
+bin, *.dll* -> bin
+
 [generators]
 cmake
+cmake_find_package
+qt

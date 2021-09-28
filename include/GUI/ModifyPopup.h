@@ -25,7 +25,7 @@ class ModifyPopup : public QDialog
         QString getFindText();
 
     public slots:
-                void findClicked();
+        void findClicked();
 
     private:
         QPushButton *findButton;

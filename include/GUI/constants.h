@@ -10,6 +10,6 @@
 
 enum Context { Menu, Call, ConfCall, Adding };
 enum ContactState { None, Added };
-enum AppState { ToLog, Menu, Calling, BeCalled, Call, ConfCall, Loading };
+enum AppState { ToLog, Menu_, Calling, BeCalled, Call_, ConfCall_, Loading };
 
 #endif //BABEL_CONSTANTS_H
