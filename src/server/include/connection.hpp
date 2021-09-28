@@ -14,10 +14,10 @@
     #include "entry.hpp"
     #include "server.hpp"
 
-    void HandleWelcome(std::vector<std::string> args, entry *ent);
-    void HandleConnect(std::vector<std::string> args, entry *ent);
-    void HandlePendingRequest(std::vector<std::string> args, entry *ent);
-    void HandleAcceptPending(std::vector<std::string> args, entry *ent);
-    void HandleRefusePending(std::vector<std::string> args, entry *ent);
+    void connection_welcome(std::vector<std::string> args, entry *ent);
+    void connection_connect(std::vector<std::string> args, entry *ent);
+    void connection_pending(std::vector<std::string> args, entry *ent);
+    void connection_pending_accept(std::vector<std::string> args, entry *ent);
+    void connection_pending_refuse(std::vector<std::string> args, entry *ent);
 
 #endif /* CONNECTION_HPP_ */

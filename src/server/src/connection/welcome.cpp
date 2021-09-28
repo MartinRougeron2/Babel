@@ -14,7 +14,7 @@
 #include "logic.hpp"
 #include "logs.hpp"
 
-void HandleWelcome(std::vector<std::string> args, entry *ent)
+void connection_welcome(std::vector<std::string> args, entry *ent)
 {
     if (args.size() < 1 || atoi(args[0].c_str()) <= 0)
         return;

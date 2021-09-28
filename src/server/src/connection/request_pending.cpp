@@ -14,7 +14,7 @@
 #include "logic.hpp"
 #include "logs.hpp"
 
-void HandlePendingRequest(std::vector<std::string> args, entry *ent)
+void connection_pending(std::vector<std::string> args, entry *ent)
 {
     std::vector<std::string> vec;
     if (args.size() == 0) {
