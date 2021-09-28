@@ -4,7 +4,7 @@
 #include <thread>
 #include <iostream>
 
-#define IPADDRESS "127.0.0.1" // "192.168.1.64"
+#define IPADDRESS "127.0.0.1"
 #define UDP_PORT 13251
 
 using boost::asio::ip::udp;

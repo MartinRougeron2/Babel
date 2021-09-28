@@ -6,7 +6,17 @@
 
 #IncludeRegexTransform: 
 
+/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/include/server/Aasio.hpp
+cstdlib
+-
+iostream
+-
+boost/bind.hpp
+-
+boost/asio.hpp
+-
+
 /home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/main.cpp
-../include/server/Aasio.hpp
-/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/include/server/Aasio.hpp
+../../include/server/Aasio.hpp
+/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/include/server/Aasio.hpp
 
