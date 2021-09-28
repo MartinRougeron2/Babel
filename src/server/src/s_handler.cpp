@@ -5,33 +5,27 @@
 ** s_handler.cpp
 */
 
-// # Lib Imports
-
 #include <iostream>
 #include <vector>
-
-// # Local Imports
 
 #include "connection.hpp"
 #include "handler.hpp"
 #include "entry.hpp"
 
-// # Methods
-
 static void (*servHandlers[17])(std::vector<std::string> args, entry *ent) = {
-    HandleWelcome,
-    HandleConnect,
+    connection_welcome,
+    connection_connect,
     NULL,
     NULL,
     NULL,
     NULL,
     NULL,
-    HandlePendingRequest,
+    connection_pending,
     NULL,
     NULL,
     NULL,
-    HandleAcceptPending,
-    HandleRefusePending,
+    connection_pending_accept,
+    connection_pending_refuse,
     NULL,
     NULL,
     NULL,

@@ -1,5 +1,5 @@
 /*
-** EPITECH PROJECT, 2019
+** EPITECH PROJECT, 2021
 ** server.cpp
 ** File description:
 ** server

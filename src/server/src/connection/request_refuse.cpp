@@ -14,7 +14,7 @@
 #include "logic.hpp"
 #include "logs.hpp"
 
-void HandleRefusePending(std::vector<std::string> args, entry *ent)
+void connection_pending_refuse(std::vector<std::string> args, entry *ent)
 {
     server *serv;
 

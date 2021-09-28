@@ -14,7 +14,7 @@
 #include "logic.hpp"
 #include "logs.hpp"
 
-void HandleConnect(std::vector<std::string> args, entry *ent)
+void connection_connect(std::vector<std::string> args, entry *ent)
 {
     std::vector<std::string> vec;
 
