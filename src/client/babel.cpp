@@ -5,32 +5,26 @@
 ** babel
 */
 
-#include <QApplication>
-#include <QDesktopWidget>
-#include <QTextEdit>
-#include "client/Aportaudio.hpp"
+#include "portaudio.h"
+#include <iostream>
 
-class Absolute : public QWidget {
+int main(int argc, char *argv[])
+{
+    PaError err = Pa_Initialize();
 
-public:
-    Absolute(QWidget *parent = nullptr);
-};
+    if (err == -1) {
+        std::cout << "PortAudio error:" << Pa_GetErrorText(err) << std::endl;
+        return 84;
+    }
+    // PaDeviceIndex input = Pa_GetDefaultInputDevice();
 
-Absolute::Absolute(QWidget *parent)
-        : QWidget(parent) {
-
-    auto *ledit = new QTextEdit(this);
-    ledit->setGeometry(5, 5, 200, 150);
-}
-
-int main(int argc, char *argv[]) {
-
-    QApplication app(argc, argv);
-
-    Absolute window;
-
-    window.setWindowTitle("Absolute");
-    window.show();
-
-    return app.exec();
+    // if (input == paNoDevice) {
+    //     std::cout << "PortAudio error input" << std::endl;
+    //     return 84;
+    // }
+    err = Pa_Terminate();
+    if (err == -1) {
+        std::cout << "PortAudio error:" << Pa_GetErrorText(err) << std::endl;
+        return 84;
+    }
 }
