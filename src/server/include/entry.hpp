@@ -62,7 +62,7 @@
                 " died from dehydration"
             };
 
-            void procData(std::string data);
+            void resume(std::string data);
             void sendToClient(int id, std::vector<std::string> args);
             void handleData(std::string);
             void asyncReceive(void);

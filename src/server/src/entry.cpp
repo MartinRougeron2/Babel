@@ -39,7 +39,7 @@ void entry::stop()
 }
 
 
-void entry::procData(std::string data)
+void entry::resume(std::string data)
 {
     const size_t length = data.size();
 
@@ -53,7 +53,7 @@ void entry::procData(std::string data)
         std::cout << "| " << std::left << std::setw(8) << std::bitset<8>(data.c_str()[i]) << std::endl;
     }
     std::cout << std::endl;
-    std::cout << COLOR_GREEN << ":: Clear data\n" << COLOR_RESET << std::endl << data << std::endl;
+    std::cout << COLOR_GREEN << "Clear data\n-----------------------------\n" << COLOR_RESET << std::endl << data << std::endl;
 }
 
 void entry::asyncReceive()
@@ -63,13 +63,12 @@ void entry::asyncReceive()
             std::cout << pseudo << death.at(rand() % 32) << std::endl;
             server *s = (server*)serv;
             s->remove_username(pseudo);
-            return;
         } else {
             std::string data;
             for (size_t i = 0; i < bytesTransfered && buffer[i]; i++)
                 data += buffer[i];
-            std::cout << COLOR_CYAN << ":: Received\n" << COLOR_RESET << std::endl;
-            procData(data);
+            std::cout << COLOR_CYAN << "\nReceived\n-----------------------------\n" << COLOR_RESET << std::endl;
+            resume(data);
             handleData(data);
         }
         asyncReceive();
@@ -82,12 +81,12 @@ void entry::sendToClient(int id, std::vector<std::string> args)
 
     for (size_t i = 0; i < args.size(); i++)
         val += " " + args[i];
-    std::cout << COLOR_RED << ":: Sent\n" << COLOR_RESET << std::endl;
-    procData(val);
+    std::cout << COLOR_RED << "Sent\n-----------------------------\n" << COLOR_RESET << std::endl;
+    resume(val);
     socket_id->send(boost::asio::buffer(val, val.length()));
 }
 
 void entry::handleData(std::string data)
 {
-    handlePacket(data, this);
+    packet_handler(data, this);
 }
