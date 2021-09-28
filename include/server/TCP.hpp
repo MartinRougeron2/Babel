@@ -30,10 +30,9 @@
     class TCP
     {
         public:
-            TCP(int, char **);
+            TCP();
             ~TCP();
 
-            bool check_args();
             bool build();
             bool build_init();
             bool build_socket();
@@ -42,9 +41,6 @@
             bool run();
 
         private:
-            int ac;
-            char **argv;
-
             // server settings
             int port;
             int server_socket;

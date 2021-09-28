@@ -9,7 +9,10 @@
 
 TCP::TCP()
 {
-    TCP::run();
+    this->server_ip = TCP_IP;
+    this->server_port = TCP_PORT;
+
+    TCP::build();
 }
 
 TCP::~TCP()
@@ -18,8 +21,6 @@ TCP::~TCP()
 
 bool TCP::build_init()
 {
-    this->server_ip = TCP_IP;
-    this->server_port = TCP_PORT;
     bzero((char*)&this->address, sizeof(this->address));
     this->host = gethostbyname(this->server_ip);
     this->address.sin_family = AF_INET; 
@@ -60,7 +61,7 @@ bool TCP::run()
     this->running = true;
 
     for (; this->running == true; ) {
-        std::cout << ">";
+        std::cout << ":: ";
         std::string data;
         std::getline(std::cin, data);
         memset(&msg, 0, sizeof(msg));

@@ -7,24 +7,15 @@
 
 #include "../../../include/server/TCP.hpp"
 
-TCP::TCP(int ac, char **argv)
+TCP::TCP()
 {
-    this->ac = ac;
-    this->argv = argv;
-
+    this->port = TCP_PORT;
     TCP::build();
 }
 
 TCP::~TCP()
 {
     
-}
-
-bool TCP::check_args()
-{
-    if (this->ac == 2)
-        return (true);
-    return (false);
 }
 
 bool TCP::build_socket()

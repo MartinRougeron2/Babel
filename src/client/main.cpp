@@ -7,13 +7,16 @@
 
 #include "../../include/client/Asio.hpp"
 
+#include "../../include/client/Signals.hpp"
 #include "../../include/client/TCP.hpp"
+#include "../../include/client/UDP.hpp"
 
-int main(int argc, char* argv[])
+int main(int argc, char **argv)
 {
     boost::asio::io_service io_service;
-    TCP client_tcp = TCP();
 
+    signals::handler();
+    TCP client_tcp = TCP();
     try
     {
         tcp::resolver resolver(io_service);
