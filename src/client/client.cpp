@@ -71,7 +71,6 @@ int main(int argc, char *argv[])
     std::cout << "Input is '" << input.c_str() << "'\nSending it to Sender Function...\n";
 
     for (int i = 0; i < 3; ++i) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
         Sender(input);
     }
 
