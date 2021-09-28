@@ -136,35 +136,59 @@ babel_server/fast:
 	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/build
 .PHONY : babel_server/fast
 
-src/client/client.o: src/client/client.cpp.o
+src/client/main.o: src/client/main.cpp.o
 
-.PHONY : src/client/client.o
+.PHONY : src/client/main.o
 
 # target to build an object file
-src/client/client.cpp.o:
-	$(MAKE) -f CMakeFiles/babel_client.dir/build.make CMakeFiles/babel_client.dir/src/client/client.cpp.o
-	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/client/client.cpp.o
-.PHONY : src/client/client.cpp.o
+src/client/main.cpp.o:
+	$(MAKE) -f CMakeFiles/babel_client.dir/build.make CMakeFiles/babel_client.dir/src/client/main.cpp.o
+.PHONY : src/client/main.cpp.o
 
-src/client/client.i: src/client/client.cpp.i
+src/client/main.i: src/client/main.cpp.i
 
-.PHONY : src/client/client.i
+.PHONY : src/client/main.i
 
 # target to preprocess a source file
-src/client/client.cpp.i:
-	$(MAKE) -f CMakeFiles/babel_client.dir/build.make CMakeFiles/babel_client.dir/src/client/client.cpp.i
-	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/client/client.cpp.i
-.PHONY : src/client/client.cpp.i
+src/client/main.cpp.i:
+	$(MAKE) -f CMakeFiles/babel_client.dir/build.make CMakeFiles/babel_client.dir/src/client/main.cpp.i
+.PHONY : src/client/main.cpp.i
 
-src/client/client.s: src/client/client.cpp.s
+src/client/main.s: src/client/main.cpp.s
 
-.PHONY : src/client/client.s
+.PHONY : src/client/main.s
 
 # target to generate assembly for a file
-src/client/client.cpp.s:
-	$(MAKE) -f CMakeFiles/babel_client.dir/build.make CMakeFiles/babel_client.dir/src/client/client.cpp.s
-	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/client/client.cpp.s
-.PHONY : src/client/client.cpp.s
+src/client/main.cpp.s:
+	$(MAKE) -f CMakeFiles/babel_client.dir/build.make CMakeFiles/babel_client.dir/src/client/main.cpp.s
+.PHONY : src/client/main.cpp.s
+
+src/server/main.o: src/server/main.cpp.o
+
+.PHONY : src/server/main.o
+
+# target to build an object file
+src/server/main.cpp.o:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/main.cpp.o
+.PHONY : src/server/main.cpp.o
+
+src/server/main.i: src/server/main.cpp.i
+
+.PHONY : src/server/main.i
+
+# target to preprocess a source file
+src/server/main.cpp.i:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/main.cpp.i
+.PHONY : src/server/main.cpp.i
+
+src/server/main.s: src/server/main.cpp.s
+
+.PHONY : src/server/main.s
+
+# target to generate assembly for a file
+src/server/main.cpp.s:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/main.cpp.s
+.PHONY : src/server/main.cpp.s
 
 # Help Target
 help:
@@ -176,9 +200,12 @@ help:
 	@echo "... babel_client"
 	@echo "... rebuild_cache"
 	@echo "... babel_server"
-	@echo "... src/client/client.o"
-	@echo "... src/client/client.i"
-	@echo "... src/client/client.s"
+	@echo "... src/client/main.o"
+	@echo "... src/client/main.i"
+	@echo "... src/client/main.s"
+	@echo "... src/server/main.o"
+	@echo "... src/server/main.i"
+	@echo "... src/server/main.s"
 .PHONY : help
 
 

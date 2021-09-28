@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/babel_client.dir/src/client/client.cpp.o"
+  "CMakeFiles/babel_client.dir/src/client/main.cpp.o"
   "bin/babel_client"
   "bin/babel_client.pdb"
 )

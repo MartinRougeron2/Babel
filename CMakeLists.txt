@@ -18,9 +18,9 @@ find_package(Qt5 COMPONENTS
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "src/server/*.cpp")
-file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "src/client/*.cpp")
-add_executable(babel_server ${SOURCES})
-add_executable(babel_client ${SOURCES})
+file(GLOB_RECURSE SERVER_SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "src/server/*.cpp")
+file(GLOB_RECURSE CLIENT_SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "src/client/*.cpp")
+add_executable(babel_server ${SERVER_SOURCES})
+add_executable(babel_client ${CLIENT_SOURCES})
 target_link_libraries(babel_server ${CONAN_LIBS})
 target_link_libraries(babel_client ${CONAN_LIBS})
