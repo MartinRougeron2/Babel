@@ -5,6 +5,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/main.cpp" "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles/babel_server.dir/src/server/main.cpp.o"
+  "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/server/signals/signals.cpp" "/home/neo/B-CPP-500-LYN-5-1-babel-martin.rougeron/build/CMakeFiles/babel_server.dir/src/server/signals/signals.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

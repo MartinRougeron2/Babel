@@ -3,5 +3,9 @@
 
 CMakeFiles/babel_server.dir/src/server/main.cpp.o: ../include/server/Asio.hpp
 CMakeFiles/babel_server.dir/src/server/main.cpp.o: ../include/server/Chat.hpp
+CMakeFiles/babel_server.dir/src/server/main.cpp.o: ../include/server/Signals.hpp
 CMakeFiles/babel_server.dir/src/server/main.cpp.o: ../src/server/main.cpp
+
+CMakeFiles/babel_server.dir/src/server/signals/signals.cpp.o: ../include/server/Signals.hpp
+CMakeFiles/babel_server.dir/src/server/signals/signals.cpp.o: ../src/server/signals/signals.cpp
 

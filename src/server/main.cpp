@@ -7,6 +7,8 @@
 
 #include "../../include/server/Asio.hpp"
 
+#include "../../include/server/Signals.hpp"
+
 typedef std::deque<chat_message> chat_message_queue;
 typedef std::shared_ptr<chat_participant> chat_participant_ptr;
 
@@ -17,6 +19,7 @@ int main(int argc, char* argv[])
 
     try
     {
+        signals::handler();
         if (argc < 2) {
             std::cerr << "Usage: babel_server <port> [<port> ...]" << std::endl;
             return (1);
