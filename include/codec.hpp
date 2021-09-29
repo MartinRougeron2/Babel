@@ -20,34 +20,37 @@
 
 namespace Codec
 {
+    typedef std::vector<unsigned char> PacketDataFormat;
+    typedef float * SoundFormat;
 
     class Encoder {
         public:
-            Encoder(int frameSize);
+            Encoder(const int frameSize);
             ~Encoder();
-            int EncodeAudioStream(const float *inputData);
-            std::vector<unsigned char>getOuput();
+            int EncodeAudioStream(const SoundFormat inputData);
+            PacketDataFormat getOuput();
 
         protected:
         private:
             OpusEncoder *state;
             int error_code;
             int frameSize;
-            std::vector<unsigned char> outputData;
+            PacketDataFormat outputData;
     };
 
     class Decoder {
         public:
-            Decoder(int sampleRate, std::string fileName);
+            Decoder(const int sampleRate, const std::string fileName);
             ~Decoder();
-            int initEncodeAudioStream(std::vector<unsigned char> data);
-            void encodeAudio();
+            int decodeData(const PacketDataFormat data, const int frameSize);
+            SoundFormat getOutput();
 
         protected:
         private:
             OpusDecoder *state;
             int error_code;
             FILE *fileOutput;
+            SoundFormat sound;
     };
 
     int CHANNELS = 2;
