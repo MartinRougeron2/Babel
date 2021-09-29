@@ -24,25 +24,6 @@ Codec::Encoder::~Encoder()
     opus_encoder_destroy(this->state);
 }
 
-Codec::Decoder::Decoder(const int sampleRate, const std::string fileName)
-{
-    state = opus_decoder_create(sampleRate, CHANNELS, &error_code);
-
-    if (error_code < 0)
-        fprintf(stderr, "failed to create decoder:\n");
-
-    fileOutput = fopen(fileName.c_str(), "r");
-
-    if (fileOutput == NULL)
-        fprintf(stderr, "failed to open input file: %s\n", strerror(errno));
-    
-}
-
-Codec::Decoder::~Decoder()
-{
-    opus_decoder_destroy(this->state);
-}
-
 int Codec::Encoder::EncodeAudioStream(const SoundFormat inputData)
 {
     // TODO : replace 500000...  
@@ -55,20 +36,7 @@ int Codec::Encoder::EncodeAudioStream(const SoundFormat inputData)
     return packetsSize;
 }
 
-int Codec::Decoder::decodeData(const PacketDataFormat input, const int frameSize)
-{
-    const unsigned char *inputFormatted = &input[0];
-    sound = static_cast<SoundFormat>(calloc(frameSize * CHANNELS, sizeof(float)));
-    // TODO: watch 0 function 
-    return opus_decode_float(this->state, inputFormatted, input.size(), sound, frameSize, 0);
-}
-
-Codec::PacketDataFormat Codec::Encoder::getOuput()
+Codec::PacketDataFormat Codec::Encoder::getOuput() const
 {
     return outputData;
-}
-
-Codec::SoundFormat Codec::Decoder::getOutput()
-{
-    return sound;
 }

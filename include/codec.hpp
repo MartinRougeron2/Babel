@@ -28,7 +28,7 @@ namespace Codec
             Encoder(const int frameSize);
             ~Encoder();
             int EncodeAudioStream(const SoundFormat inputData);
-            PacketDataFormat getOuput();
+            PacketDataFormat getOuput() const;
 
         protected:
         private:
@@ -40,10 +40,10 @@ namespace Codec
 
     class Decoder {
         public:
-            Decoder(const int sampleRate, const std::string fileName);
+            Decoder(const int sampleRate);
             ~Decoder();
             int decodeData(const PacketDataFormat data, const int frameSize);
-            SoundFormat getOutput();
+            SoundFormat getOutput() const;
 
         protected:
         private:
