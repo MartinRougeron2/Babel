@@ -190,6 +190,33 @@ src/server/main.cpp.s:
 	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/main.cpp.s
 .PHONY : src/server/main.cpp.s
 
+src/server/signals/signals.o: src/server/signals/signals.cpp.o
+
+.PHONY : src/server/signals/signals.o
+
+# target to build an object file
+src/server/signals/signals.cpp.o:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/signals/signals.cpp.o
+.PHONY : src/server/signals/signals.cpp.o
+
+src/server/signals/signals.i: src/server/signals/signals.cpp.i
+
+.PHONY : src/server/signals/signals.i
+
+# target to preprocess a source file
+src/server/signals/signals.cpp.i:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/signals/signals.cpp.i
+.PHONY : src/server/signals/signals.cpp.i
+
+src/server/signals/signals.s: src/server/signals/signals.cpp.s
+
+.PHONY : src/server/signals/signals.s
+
+# target to generate assembly for a file
+src/server/signals/signals.cpp.s:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/signals/signals.cpp.s
+.PHONY : src/server/signals/signals.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -206,6 +233,9 @@ help:
 	@echo "... src/server/main.o"
 	@echo "... src/server/main.i"
 	@echo "... src/server/main.s"
+	@echo "... src/server/signals/signals.o"
+	@echo "... src/server/signals/signals.i"
+	@echo "... src/server/signals/signals.s"
 .PHONY : help
 
 

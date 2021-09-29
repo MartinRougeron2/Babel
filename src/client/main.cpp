@@ -7,17 +7,18 @@
 
 #include "../../include/client/Asio.hpp"
 
-int main(int argc, char* argv[])
+#include "../../include/client/Signals.hpp"
+#include "../../include/client/TCP.hpp"
+#include "../../include/client/UDP.hpp"
+
+int main(int argc, char **argv)
 {
     boost::asio::io_service io_service;
 
+    signals::handler();
+    TCP client_tcp = TCP();
     try
     {
-        if (argc != 3) {
-            std::cerr << "Usage: chat_client <host> <port>\n";
-            return (1);
-        }
-
         tcp::resolver resolver(io_service);
         auto endpoint_iterator = resolver.resolve({ argv[1], argv[2] });
         chat_client c(io_service, endpoint_iterator);
