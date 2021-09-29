@@ -7,115 +7,180 @@
 
 #include "../../../include/server/TCP.hpp"
 
-TCP::TCP()
+// CHAT SERVER
+
+chat_server::chat_server(boost::asio::io_service& io_service, const tcp::endpoint& endpoint) : acceptor_(io_service, endpoint), socket_(io_service)
 {
-    this->port = TCP_PORT;
-    TCP::build();
+    chat_server::do_accept();
 }
 
-TCP::~TCP()
+chat_server::~chat_server()
 {
-    
+    return;
 }
 
-bool TCP::build_socket()
+void chat_server::do_accept()
 {
-    this->address.sin_family = AF_INET;
-    this->address.sin_addr.s_addr = htonl(INADDR_ANY);
-    this->address.sin_port = htons(this->port);
-    this->server_socket = socket(AF_INET, SOCK_STREAM, 0);
-    if (this->server_socket >= 0)
-        return (true);
-    std::cerr << "Error establishing the server socket" << std::endl;
-    return (false);
+    this->acceptor_.async_accept(socket_, [this](boost::system::error_code ec) {
+        if (!ec) {
+            std::make_shared<chat_session>(std::move(socket_), room_)->start();
+        }
+
+        do_accept();
+    });
 }
 
-bool TCP::build_bind()
+// CHAT SESSION
+
+chat_session::chat_session(tcp::socket socket, chat_room &room) : socket_(std::move(socket)), room_(room)
 {
-    this->server_bind = bind(this->server_socket, (struct sockaddr*) &this->address, sizeof(this->address));
-    if (this->server_bind >= 0)
-        return (true);
-    std::cerr << "Error binding socket to local address" << std::endl;
-    return (false);
+    return;
 }
 
-bool TCP::build_listen()
+chat_session::~chat_session()
 {
-    std::cout << "Waiting for a client to connect..." << std::endl;
-    listen(this->server_socket, 10);
-    this->server_udp_socket = socket(AF_INET, SOCK_DGRAM, 0);
-    if (this->server_socket < 0) {
-        std::cerr << "Error accepting request from client!" << std::endl;
+    return;
+}
+
+void chat_session::start()
+{
+    this->room_.join(shared_from_this());
+    do_read_header();
+}
+
+void chat_session::deliver(const chat_message &msg)
+{
+    bool write_in_progress = !write_msgs_.empty();
+
+    write_msgs_.push_back(msg);
+    if (!write_in_progress) {
+        do_write();
+    }
+}
+
+void chat_session::do_read_header()
+{
+    auto self(shared_from_this());
+
+    boost::asio::async_read(socket_, boost::asio::buffer(read_msg_.data(), chat_message::header_length), [this, self](boost::system::error_code ec, std::size_t /*length*/)
+    {
+        if (!ec && read_msg_.decode_header()) {
+            do_read_body();
+        } else {
+            room_.leave(shared_from_this());
+        }
+    });
+}
+
+void chat_session::do_read_body()
+{
+    auto self(shared_from_this());
+
+    boost::asio::async_read(socket_, boost::asio::buffer(read_msg_.body(), read_msg_.body_length()), [this, self](boost::system::error_code ec, std::size_t /*length*/)
+    {
+        if (!ec) {
+            room_.deliver(read_msg_);
+            do_read_header();
+        } else {
+            room_.leave(shared_from_this());
+        }
+    });
+}
+
+void chat_session::do_write()
+{
+    auto self(shared_from_this());
+
+    boost::asio::async_write(socket_, boost::asio::buffer(write_msgs_.front().data(), write_msgs_.front().length()), [this, self](boost::system::error_code ec, std::size_t /*length*/)
+    {
+        if (!ec) {
+            write_msgs_.pop_front();
+            if (!write_msgs_.empty()) {
+                do_write();
+            }
+        } else {
+            room_.leave(shared_from_this());
+        }
+    });
+}
+
+// CHAT MESSAGE
+
+chat_message::chat_message() : body_length_(0)
+{
+    return;
+}
+
+chat_message::~chat_message()
+{
+    return;
+}
+
+char *chat_message::data()
+{
+    return (this->data_);
+}
+
+std::size_t chat_message::length()
+{
+    return (this->header_length + this->body_length_);
+}
+
+char *chat_message::body()
+{
+    return (this->data_ + this->header_length);
+}
+
+std::size_t chat_message::body_length()
+{
+    return (this->body_length_);
+}
+
+void chat_message::body_length(std::size_t new_length)
+{
+    this->body_length_ = new_length;
+
+    if (this->body_length_ > this->max_body_length)
+        this->body_length_ = this->max_body_length;
+}
+
+bool chat_message::decode_header()
+{
+    char header[this->header_length + 1] = "";
+
+    std::strncat(header, this->data_, this->header_length);
+    this->body_length_ = std::atoi(header);
+    if (body_length_ > max_body_length) {
+        body_length_ = 0;
         return (false);
     }
-    std::cout << "Connected with client!" << std::endl;
-
     return (true);
 }
 
-bool TCP::build_accept()
+void chat_message::encode_header()
 {
-    int ready = 0;
+    char header[header_length + 1] = "";
 
-    FD_SET(this->server_socket, &this->rset);
-    ready = select(1, &this->rset, NULL, NULL, NULL);
-    if (FD_ISSET(this->server_socket, &this->rset)) {
-        this->server_socket = accept(this->server_socket, (sockaddr *)&this->socket_address, &this->socket_size);
-    }
-
-    return (true);
+    std::sprintf(header, "%4d", static_cast<int>(this->body_length_));
+    std::memcpy(this->data_, header, this->header_length);
 }
 
-bool TCP::run()
+// CHAT ROOM
+
+void chat_room::join(chat_participant_ptr participant)
 {
-    this->running = true;
-
-    for (; this->running == true; ) {
-        TCP::build_accept();
-        std::cout << "Awaiting client response..." << std::endl;
-        memset(&msg, 0, sizeof(msg));
-        recv(this->server_socket, (char*)&msg, sizeof(msg), 0);
-        if(!strcmp(msg, "exit")) {
-            std::cout << "Client has quit the session" << std::endl;
-            this->running = false;
-        }
-        std::cout << "Client: " << msg << std::endl;
-        std::cout << ":: ";
-        std::string data;
-        std::getline(std::cin, data);
-        memset(&msg, 0, sizeof(msg));
-        strcpy(msg, data.c_str());
-        if (data == "exit") {
-            send(this->server_socket, (char*)&msg, strlen(msg), 0);
-            this->running = false;
-        }
-        send(this->server_socket, (char*)&msg, strlen(msg), 0);
-    }
-    std::cout << "Closing TCP server..." << std::endl;
-    close(this->server_socket);
-    close(this->server_socket);
-    std::cout << "TCP server closed" << std::endl;
-
-    return (true);
+    this->participants_.insert(participant);
+    for (auto msg: recent_msgs_)
+        participant->deliver(msg);
 }
 
-bool TCP::build_init()
+void chat_room::leave(chat_participant_ptr participant)
 {
-    this->port = TCP_PORT;
-    this->server_socket = 0;
-    bzero((char*)&this->address, sizeof(this->address));
-    this->socket_size = sizeof(this->socket_address);
-
-    return (true);
+    std::cout << participant << " left" << std::endl;
+    this->participants_.erase(participant);
 }
 
-bool TCP::build()
+void chat_room::deliver(const chat_message &msg)
 {
-    TCP::build_init();
-    TCP::build_socket();
-    TCP::build_bind();
-    TCP::build_listen();
-    TCP::run();
-
-    return (true);
+    return;
 }

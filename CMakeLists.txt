@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.8.12)
 project(Babel)
 
 add_definitions("-std=c++11")
+add_definitions("-lboost_system")
+add_definitions("-pthread")
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
