@@ -38,6 +38,7 @@
             bool build_socket();
             bool build_bind();
             bool build_listen();
+            bool build_accept();
             bool run();
 
         private:
@@ -45,8 +46,11 @@
             int port;
             int server_socket;
             int server_bind;
+            int server_udp_socket;
             
             char msg[1500];
+            fd_set rset;
+            int max_sockets;
             
             sockaddr_in address;
             sockaddr_in socket_address;

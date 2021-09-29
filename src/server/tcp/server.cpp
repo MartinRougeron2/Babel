@@ -42,27 +42,39 @@ bool TCP::build_bind()
 bool TCP::build_listen()
 {
     std::cout << "Waiting for a client to connect..." << std::endl;
-    listen(this->server_socket, 5);
-    this->server_socket = accept(this->server_socket, (sockaddr *)&this->socket_address, &this->socket_size);
+    listen(this->server_socket, 10);
+    this->server_udp_socket = socket(AF_INET, SOCK_DGRAM, 0);
     if (this->server_socket < 0) {
         std::cerr << "Error accepting request from client!" << std::endl;
         return (false);
     }
     std::cout << "Connected with client!" << std::endl;
-    return (true);
 
+    return (true);
+}
+
+bool TCP::build_accept()
+{
+    int ready = 0;
+
+    FD_SET(this->server_socket, &this->rset);
+    ready = select(1, &this->rset, NULL, NULL, NULL);
+    if (FD_ISSET(this->server_socket, &this->rset)) {
+        this->server_socket = accept(this->server_socket, (sockaddr *)&this->socket_address, &this->socket_size);
+    }
+
+    return (true);
 }
 
 bool TCP::run()
 {
-    int bytesRead = 0;
-    int bytesWritten = 0;
     this->running = true;
 
     for (; this->running == true; ) {
+        TCP::build_accept();
         std::cout << "Awaiting client response..." << std::endl;
         memset(&msg, 0, sizeof(msg));
-        bytesRead += recv(this->server_socket, (char*)&msg, sizeof(msg), 0);
+        recv(this->server_socket, (char*)&msg, sizeof(msg), 0);
         if(!strcmp(msg, "exit")) {
             std::cout << "Client has quit the session" << std::endl;
             this->running = false;
@@ -77,7 +89,7 @@ bool TCP::run()
             send(this->server_socket, (char*)&msg, strlen(msg), 0);
             this->running = false;
         }
-        bytesWritten += send(this->server_socket, (char*)&msg, strlen(msg), 0);
+        send(this->server_socket, (char*)&msg, strlen(msg), 0);
     }
     std::cout << "Closing TCP server..." << std::endl;
     close(this->server_socket);
