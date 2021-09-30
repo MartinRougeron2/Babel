@@ -1,15 +1,15 @@
 ## Babel
 
 #### Build
-```
+```BASH
 ./RUN.sh
 ```
 
-### Server
+### Server TCP
 Default port: **2000**
 
 #### Run
-```
+```BASH
 ./RUN.sh server
 ```
 
@@ -26,6 +26,6 @@ Default port: **2000**
 Default port: **2000**
 
 #### Run
-```
+```BASH
 ./RUN.sh client
 ```

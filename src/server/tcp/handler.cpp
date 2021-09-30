@@ -7,37 +7,33 @@
 
 #include "../../../include/server/Server.hpp"
 
-server::server()
+std::string Handler::connect(int id)
 {
-    return;
+    std::cout << "connecting " << id << std::endl;
+
+    return ("");
 }
 
-server::~server()
+std::string Handler::disconnect(int id)
 {
-    return;
+    std::cout << "disconnecting " << id << std::endl;
+
+    return ("");
 }
 
-std::string server::connect(int id)
+std::string Handler::join(int id)
+{
+    std::cout << "joinning " << id << std::endl;
+
+    return ("");
+}
+
+std::string Handler::leave(int id)
 {
     return ("");
 }
 
-std::string server::disconnect(int id)
-{
-    return ("");
-}
-
-std::string server::join(int id)
-{
-    return ("");
-}
-
-std::string server::leave(int id)
-{
-    return ("");
-}
-
-std::string server::call(int id)
+std::string Handler::call(int id)
 {
     return ("");
 }
