@@ -27,7 +27,7 @@ Sound::Sound()
 {
     this->err = this->audio.Initialize();
 
-    if (this->err != 0)
+    if (this->err)
         this->errMsg = this->audio.GetErrorText(this->err);
 }
 
@@ -35,26 +35,26 @@ Sound::~Sound()
 {
     this->err = this->audio.Terminate();
 
-    if (this->err != 0)
+    if (this->err)
         this->errMsg = this->audio.GetErrorText(this->err);
 }
 
 void Sound::init()
 {
     this->err = this->audio.OpenDefaultStream(&this->stream, 1, 1, paFloat32, SAMPLE_RATE, FRAMES_PER_BUFFER, recordCallback, &this->data);
-    if (this->err != 0) {
+    if (this->err) {
         this->errMsg = this->audio.GetErrorText(this->err);
         return;
     }
 
     this->err = this->audio.StartStream(this->stream);
-    if (this->err != 0) {
+    if (this->err) {
         this->errMsg = this->audio.GetErrorText(this->err);
         return;
     }
 }
 
-std::vector<float> Sound::getSound()
+std::vector<float> Sound::getMic()
 {
     std::vector<float> tmp = this->data.record;
 
@@ -62,7 +62,7 @@ std::vector<float> Sound::getSound()
     return tmp;
 }
 
-void Sound::pickUpSound(std::vector<float> sample)
+void Sound::toSpeaker(std::vector<float> sample)
 {
     this->data.play.insert(this->data.play.end(), sample.begin(), sample.end() );
 }

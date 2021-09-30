@@ -45,7 +45,7 @@ PaHostApiIndex Aportaudio::HostApiTypeIdToHostApiIndex(PaHostApiTypeId type)
     return Pa_HostApiTypeIdToHostApiIndex(type);
 }
 
-PaDeviceIndex Aportaudio::HostApiDeviceIndexToDeviceIndex( PaHostApiIndex hostApi, int hostApiDeviceIndex)
+PaDeviceIndex Aportaudio::HostApiDeviceIndexToDeviceIndex(PaHostApiIndex hostApi, int hostApiDeviceIndex)
 {
     return Pa_HostApiDeviceIndexToDeviceIndex(hostApi, hostApiDeviceIndex);
 }
@@ -75,19 +75,36 @@ const PaDeviceInfo *Aportaudio::GetDeviceInfo(PaDeviceIndex device)
     return Pa_GetDeviceInfo(device);
 }
 
-PaError Aportaudio::IsFormatSupported(const PaStreamParameters *inputParameters, const PaStreamParameters *outputParameters, double sampleRate)
+PaError Aportaudio::IsFormatSupported(const PaStreamParameters *inputParameters,
+                                    const PaStreamParameters *outputParameters,
+                                    double sampleRate)
 {
     return Pa_IsFormatSupported(inputParameters, outputParameters, sampleRate);
 }
 
-PaError Aportaudio::OpenStream(PaStream **stream, const PaStreamParameters *inputParameters, const PaStreamParameters *outputParameters, double sampleRate, unsigned long framesPerBuffer, PaStreamFlags streamFlags, PaStreamCallback *streamCallback, void *userData)
+PaError Aportaudio::OpenStream(PaStream **stream,
+                            const PaStreamParameters *inputParameters,
+                            const PaStreamParameters *outputParameters,
+                            double sampleRate, unsigned long framesPerBuffer,
+                            PaStreamFlags streamFlags,
+                            PaStreamCallback *streamCallback,
+                            void *userData)
 {
-    return Pa_OpenStream(stream, inputParameters, outputParameters, sampleRate, framesPerBuffer, streamFlags, streamCallback, userData);
+    return Pa_OpenStream(stream, inputParameters, outputParameters, sampleRate,
+                            framesPerBuffer, streamFlags, streamCallback, userData);
 }
 
-PaError Aportaudio::OpenDefaultStream(PaStream** stream, int numInputChannels, int numOutputChannels, PaSampleFormat sampleFormat, double sampleRate, unsigned long framesPerBuffer, PaStreamCallback *streamCallback, void *userData)
+PaError Aportaudio::OpenDefaultStream(PaStream** stream, int numInputChannels,
+                                int numOutputChannels,
+                                PaSampleFormat sampleFormat,
+                                double sampleRate,
+                                unsigned long framesPerBuffer,
+                                PaStreamCallback *streamCallback,
+                                void *userData)
 {
-    return Pa_OpenDefaultStream(stream, numInputChannels, numOutputChannels, sampleFormat, sampleRate, framesPerBuffer, streamCallback, userData);
+    return Pa_OpenDefaultStream(stream, numInputChannels, numOutputChannels,
+                                sampleFormat, sampleRate, framesPerBuffer,
+                                streamCallback, userData);
 }
 
 PaError Aportaudio::CloseStream(PaStream *stream)

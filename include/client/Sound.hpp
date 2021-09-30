@@ -29,8 +29,8 @@ class Sound {
         ~Sound();
 
         void init(void);
-        std::vector<float> getSound();
-        void pickUpSound(std::vector<float> sample);
+        std::vector<float> getMic();
+        void toSpeaker(std::vector<float> sample);
 
         const std::string getErrorMsg() const;
 
