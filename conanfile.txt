@@ -8,5 +8,6 @@ portaudio/19.7.0@bincrafters/stable
 *:shared=True
 [imports]
 lib, *.so* -> lib
+include, *.h -> include/
 [generators]
 cmake
