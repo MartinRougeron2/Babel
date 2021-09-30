@@ -80,6 +80,7 @@ void chat_session::do_read_body()
 
     boost::asio::async_read(socket_, boost::asio::buffer(read_msg_.body(), read_msg_.body_length()), [this, self](boost::system::error_code ec, std::size_t /*length*/)
     {
+        std::cout << read_msg_.body() << std::endl;
         if (!ec) {
             room_.deliver(read_msg_);
             do_read_header();
@@ -120,7 +121,7 @@ chat_message::~chat_message()
 
 char *chat_message::data()
 {
-    std::cout << RECEIVED << this->data_ << std::endl;
+    std::cout << this->data_ << std::endl;
 
     return (this->data_);
 }
