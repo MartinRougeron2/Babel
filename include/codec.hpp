@@ -9,6 +9,7 @@
 #define COMPRESSOR_HPP_
 
 #include <opus.h>
+
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
@@ -22,6 +23,10 @@ namespace Codec
 {
     typedef std::vector<unsigned char> PacketDataFormat;
     typedef float * SoundFormat;
+
+    #define CHANNELS 2
+    #define MAX_FRAME_SIZE 2000
+    #define FRAME_COUNT 256
 
     class Encoder {
         public:
@@ -49,14 +54,8 @@ namespace Codec
         private:
             OpusDecoder *state;
             int error_code;
-            FILE *fileOutput;
             SoundFormat sound;
     };
-
-    int CHANNELS = 2;
-    int MAX_FRAME_SIZE = 2000;
-
-    int FRAME_COUNT = 256;
 
 }; // namespace Codec
 

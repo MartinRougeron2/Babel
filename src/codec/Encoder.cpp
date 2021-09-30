@@ -27,7 +27,7 @@ Codec::Encoder::~Encoder()
 int Codec::Encoder::EncodeAudioStream(const SoundFormat inputData)
 {
     // TODO : replace 500000...  
-    unsigned char *packets = static_cast<unsigned char *>(calloc(500000, sizeof(unsigned char)));
+    unsigned char *packets = new unsigned char[500000];
     int packetsSize = opus_encode_float(this->state, inputData, frameSize, packets, 500000);
 
     for (int i = 0; i < packetsSize; i++)
