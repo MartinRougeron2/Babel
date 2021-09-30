@@ -13,11 +13,11 @@ int main(int argc, char *argv[])
 {
     Asqlite3 db;
 
-    db.uploadData({"zzzzz", "deodeo", "127.0.0.1"});
+    db.uploadData({"ze", "deodeo", "127.0.0.1"});
     /*if (db.login({"a", "aa"}) == Asqlite3::SUCCESS) {
         std::cout << "yeah\n";
     }*/
-    db.getLinkedUser("zz");
     db.linkUser("zz", "ze");
-    /*std::cout << db.getUser("");*/
+    db.getLinkedUser("zz");
+    std::cout << db.getUser("");
 }
