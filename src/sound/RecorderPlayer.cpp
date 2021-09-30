@@ -9,9 +9,9 @@
 
 static int recordCallback(const void *input, void *output, unsigned long frameCount, const PaStreamCallbackTimeInfo *timeInfo, PaStreamCallbackFlags statusFlags, void *userData)
 {
-    Sound::data_t *data = (Sound::data_t *) userData;
-    float *out = (float *) output;
-    float *in = (float *) input;
+    Sound::data_t *data = static_cast<Sound::data_t *>(userData);
+    Sound::opusInputType out = static_cast<Sound::opusInputType>(output);
+    Sound::opusInputType in = static_cast<Sound::opusInputType>(input);
 
     for (size_t i = 0; i < frameCount; i++) {
         data->record.push_back(*in++);

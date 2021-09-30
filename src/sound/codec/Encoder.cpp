@@ -28,11 +28,12 @@ int Sound::Encoder::EncodeAudioStream(const SoundFormat inputData)
 {
     // TODO : replace 500000...  
     unsigned char *packets = new unsigned char[500000];
-    int packetsSize = opus_encode_float(this->state, inputData, frameSize, packets, 500000);
+    const opusInputType inputDataFormatted = &inputData[0];
+    int packetsSize;
+    
+    packetsSize = opus_encode_float(this->state, inputDataFormatted, frameSize, packets, 500000);
 
-    for (int i = 0; i < packetsSize; i++)
-        outputData.push_back(packets[i]);
-    free(packets);
+    outputData = &packets[0];
     return packetsSize;
 }
 

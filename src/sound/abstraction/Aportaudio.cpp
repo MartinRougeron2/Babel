@@ -6,6 +6,7 @@
 */
 
 #include <client/Aportaudio.hpp>
+#include "sound/Sound.hpp"
 
 Aportaudio::Aportaudio()
 {

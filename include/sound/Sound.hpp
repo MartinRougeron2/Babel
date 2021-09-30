@@ -27,7 +27,8 @@ namespace Sound
 {
 
     typedef std::vector<unsigned char> PacketDataFormat;
-    typedef float * SoundFormat;
+    typedef std::vector<float> SoundFormat;
+    typedef float * opusInputType;
 
     #define SAMPLE_RATE 48000
     #define FRAMES_PER_BUFFER 256
@@ -38,8 +39,8 @@ namespace Sound
 
     typedef struct data_s
     {
-        std::vector<float> record;
-        std::vector<float> play;
+        SoundFormat record;
+        SoundFormat play;
     } data_t;
 
     class RecorderPlayer
@@ -49,8 +50,8 @@ namespace Sound
             ~RecorderPlayer();
 
             void init(void);
-            std::vector<float> getMic();
-            void toSpeaker(std::vector<float> sample);
+            SoundFormat getMic();
+            void toSpeaker(SoundFormat sample);
 
             const std::string getErrorMsg() const;
 
@@ -69,7 +70,8 @@ namespace Sound
     // ** Codec **
 
 
-    class Encoder {
+    class Encoder
+    {
         public:
             Encoder(const int);
             ~Encoder();
@@ -90,7 +92,7 @@ namespace Sound
         public:
             Decoder(const int sampleRate);
             ~Decoder();
-            
+
             int decodeData(const PacketDataFormat data, const int frameSize);
             SoundFormat getOutput() const;
 
@@ -101,7 +103,6 @@ namespace Sound
             SoundFormat sound;
     };
 
-
-} // namespace Sound
+}; // namespace Sound
 
 #endif /* !SOUND_HPP_ */
