@@ -25,9 +25,14 @@ Sound::Decoder::~Decoder()
 int Sound::Decoder::decodeData(const PacketDataFormat input, const int frameSize)
 {
     const unsigned char *inputFormatted = &input[0];
-    sound = static_cast<SoundFormat>(calloc(frameSize * CHANNELS, sizeof(float)));
+    Sound::opusInputType soundFormatted = static_cast<Sound::opusInputType>(calloc(frameSize * CHANNELS, sizeof(float)));
+    int packetsSize;
     // TODO: watch 0 usage 
-    return opus_decode_float(this->state, inputFormatted, input.size(), sound, frameSize, 0);
+    packetsSize = opus_decode_float(this->state, inputFormatted, input.size(), soundFormatted, frameSize, 0);
+    
+    sound = {soundFormatted, soundFormatted + packetsSize};
+    
+    return packetsSize;
 }
 
 Sound::SoundFormat Sound::Decoder::getOutput() const

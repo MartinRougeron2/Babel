@@ -30,6 +30,7 @@ int udp__()
         boost::asio::ip::udp::endpoint sender;
         std::size_t bytes_transferred = socket.receive_from(boost::asio::buffer(buffer), sender);
         socket.send_to(boost::asio::buffer(buffer, bytes_transferred), sender);
-
+        std::cout << "Yze" << std::endl;
+    }
     return 0;
 }
