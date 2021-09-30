@@ -23,11 +23,13 @@ namespace Codec
     typedef std::vector<unsigned char> PacketDataFormat;
     typedef float * SoundFormat;
 
-    class Encoder {
+    class Encoder
+    {
         public:
-            Encoder(const int frameSize);
+            Encoder(const int);
             ~Encoder();
-            int EncodeAudioStream(const SoundFormat inputData);
+
+            int EncodeAudioStream(const SoundFormat);
             PacketDataFormat getOuput() const;
 
         protected:
@@ -38,10 +40,12 @@ namespace Codec
             PacketDataFormat outputData;
     };
 
-    class Decoder {
+    class Decoder
+    {
         public:
             Decoder(const int sampleRate);
             ~Decoder();
+            
             int decodeData(const PacketDataFormat data, const int frameSize);
             SoundFormat getOutput() const;
 

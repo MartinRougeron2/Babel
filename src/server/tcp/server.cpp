@@ -7,6 +7,8 @@
 
 #include "../../../include/server/TCP.hpp"
 
+#include "../../../include/server/Logs.hpp"
+
 // CHAT SERVER
 
 chat_server::chat_server(boost::asio::io_service& io_service, const tcp::endpoint& endpoint) : acceptor_(io_service, endpoint), socket_(io_service)
@@ -118,6 +120,8 @@ chat_message::~chat_message()
 
 char *chat_message::data()
 {
+    std::cout << RECEIVED << this->data_ << std::endl;
+
     return (this->data_);
 }
 
@@ -154,6 +158,7 @@ bool chat_message::decode_header()
         body_length_ = 0;
         return (false);
     }
+
     return (true);
 }
 
@@ -169,6 +174,7 @@ void chat_message::encode_header()
 
 void chat_room::join(chat_participant_ptr participant)
 {
+    std::cout << USER_JOINED << participant << std::endl;
     this->participants_.insert(participant);
     for (auto msg: recent_msgs_)
         participant->deliver(msg);
@@ -176,7 +182,7 @@ void chat_room::join(chat_participant_ptr participant)
 
 void chat_room::leave(chat_participant_ptr participant)
 {
-    std::cout << participant << " left" << std::endl;
+    std::cout << USER_LEFT << participant << std::endl;
     this->participants_.erase(participant);
 }
 
