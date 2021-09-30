@@ -32,10 +32,7 @@ namespace Sound
 
     #define SAMPLE_RATE 48000
     #define FRAMES_PER_BUFFER 256
-    #define CHANNEL_NUMBER 1
     #define CHANNELS 2
-    #define MAX_FRAME_SIZE 2000
-    #define FRAME_COUNT 256
 
     typedef struct data_s
     {

@@ -14,7 +14,7 @@ Sound::Decoder::Decoder(const int sampleRate)
 
     if (error_code < 0)
         fprintf(stderr, "failed to create decoder:\n");
-    
+
 }
 
 Sound::Decoder::~Decoder()
@@ -27,11 +27,11 @@ int Sound::Decoder::decodeData(const PacketDataFormat input, const int frameSize
     const unsigned char *inputFormatted = &input[0];
     Sound::opusInputType soundFormatted = static_cast<Sound::opusInputType>(calloc(frameSize * CHANNELS, sizeof(float)));
     int packetsSize;
-    // TODO: watch 0 usage 
+    // TODO: watch 0 usage
     packetsSize = opus_decode_float(this->state, inputFormatted, input.size(), soundFormatted, frameSize, 0);
-    
+
     sound = {soundFormatted, soundFormatted + packetsSize};
-    
+
     return packetsSize;
 }
 
