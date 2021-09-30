@@ -11,7 +11,7 @@ static int recordCallback(const void *input, void *output, unsigned long frameCo
 {
     Sound::data_t *data = static_cast<Sound::data_t *>(userData);
     Sound::opusInputType out = static_cast<Sound::opusInputType>(output);
-    Sound::opusInputType in = static_cast<Sound::opusInputType>(input);
+    const float *in = static_cast<const float *>(input);
 
     for (size_t i = 0; i < frameCount; i++) {
         data->record.push_back(*in++);
