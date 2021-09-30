@@ -44,7 +44,6 @@ class Aportaudio {
         PaError WriteStream(PaStream* stream, const void *buffer, unsigned long frames);
         signed long GetStreamReadAvailable(PaStream* stream);
         signed long GetStreamWriteAvailable(PaStream* stream);
-        PaHostApiTypeId GetStreamHostApiType(PaStream* stream);
         PaError GetSampleSize(PaSampleFormat format);
         void Sleep(long msec);
         const char *GetErrorText(PaError errorCode);

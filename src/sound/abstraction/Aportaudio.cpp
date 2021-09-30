@@ -178,11 +178,6 @@ signed long Aportaudio::GetStreamWriteAvailable(PaStream *stream)
     return Pa_GetStreamWriteAvailable(stream);
 }
 
-PaHostApiTypeId Aportaudio::GetStreamHostApiType(PaStream *stream)
-{
-    return Pa_GetStreamHostApiType(stream);
-}
-
 PaError Aportaudio::GetSampleSize(PaSampleFormat format)
 {
     return Pa_GetSampleSize(format);
