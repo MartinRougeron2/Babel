@@ -8,14 +8,21 @@
 class chat_message
 {
     public:
-        enum { header_length = 4 };
-        enum { max_body_length = 512 };
+        enum
+        {
+            header_length = 4
+        };
+
+        enum
+        {
+            max_body_length = 512
+        };
 
         chat_message() : body_length_(0)
         {
         }
 
-        const char* data() const
+        const char *data() const
         {
             return data_;
         }

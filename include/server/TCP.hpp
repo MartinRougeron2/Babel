@@ -42,7 +42,6 @@ class chat_message
         char *data();
         char *body();
 
-
         std::size_t length();
         std::size_t body_length();
         void body_length(std::size_t);

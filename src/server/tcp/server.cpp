@@ -154,6 +154,7 @@ bool chat_message::decode_header()
 
     std::strncat(header, this->data_, this->header_length);
     this->body_length_ = std::atoi(header);
+
     if (body_length_ > max_body_length) {
         body_length_ = 0;
         return (false);
@@ -175,6 +176,7 @@ void chat_message::encode_header()
 void chat_room::join(chat_participant_ptr participant)
 {
     std::cout << USER_JOINED << participant << std::endl;
+
     this->participants_.insert(participant);
     for (auto msg: recent_msgs_)
         participant->deliver(msg);
