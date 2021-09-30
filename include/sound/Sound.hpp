@@ -92,7 +92,7 @@ namespace Sound
         public:
             Decoder(const int sampleRate);
             ~Decoder();
-            
+
             int decodeData(const PacketDataFormat data, const int frameSize);
             SoundFormat getOutput() const;
 
