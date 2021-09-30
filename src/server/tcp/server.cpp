@@ -14,8 +14,8 @@
 chat_server::chat_server(boost::asio::io_service& io_service, const tcp::endpoint& endpoint) : acceptor_(io_service, endpoint), socket_(io_service)
 {
 
-    std::string s = socket_.remote_endpoint().address().to_string();
-    std::cout << s << std::endl;
+    // std::string s = socket_.remote_endpoint().address().to_string();
+    // std::cout << s << std::endl;
 
     chat_server::do_accept();
 }

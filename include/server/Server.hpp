@@ -14,7 +14,7 @@
     namespace Handler
     {
         typedef std::string (*function_type_0)(int);
-    
+
         std::string connect(int);
         std::string disconnect(int);
         std::string join(int);

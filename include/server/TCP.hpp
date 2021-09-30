@@ -19,8 +19,6 @@
 #include <utility>
 #include <boost/asio.hpp>
 
-#include "Server.hpp"
-
 #define TCP_PORT 2000
 
 using boost::asio::ip::tcp;
