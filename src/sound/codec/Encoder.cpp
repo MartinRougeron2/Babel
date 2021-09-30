@@ -5,9 +5,9 @@
 ** Encoder
 */
 
-#include "../../include/codec.hpp"
+#include "sound/Sound.hpp"
 
-Codec::Encoder::Encoder(const int frameSize)
+Sound::Encoder::Encoder(const int frameSize)
 {
     // TODO: replace 12000 -> sampling rate, 1 is channels, 64000 -> Bitrate
     state = opus_encoder_create(12000, CHANNELS, OPUS_APPLICATION_VOIP, &error_code);
@@ -19,12 +19,12 @@ Codec::Encoder::Encoder(const int frameSize)
     this->frameSize = frameSize;
 }
 
-Codec::Encoder::~Encoder()
+Sound::Encoder::~Encoder()
 {
     opus_encoder_destroy(this->state);
 }
 
-int Codec::Encoder::EncodeAudioStream(const SoundFormat inputData)
+int Sound::Encoder::EncodeAudioStream(const SoundFormat inputData)
 {
     // TODO : replace 500000...  
     unsigned char *packets = new unsigned char[500000];
@@ -36,7 +36,7 @@ int Codec::Encoder::EncodeAudioStream(const SoundFormat inputData)
     return packetsSize;
 }
 
-Codec::PacketDataFormat Codec::Encoder::getOuput() const
+Sound::PacketDataFormat Sound::Encoder::getOuput() const
 {
     return outputData;
 }

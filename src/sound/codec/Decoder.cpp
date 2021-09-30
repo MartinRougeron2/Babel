@@ -5,9 +5,10 @@
 ** Decoder
 */
 
-#include "../../include/codec.hpp"
+#include "sound/Sound.hpp"
 
-Codec::Decoder::Decoder(const int sampleRate)
+
+Sound::Decoder::Decoder(const int sampleRate)
 {
     state = opus_decoder_create(sampleRate, CHANNELS, &error_code);
 
@@ -16,12 +17,12 @@ Codec::Decoder::Decoder(const int sampleRate)
     
 }
 
-Codec::Decoder::~Decoder()
+Sound::Decoder::~Decoder()
 {
     opus_decoder_destroy(this->state);
 }
 
-int Codec::Decoder::decodeData(const PacketDataFormat input, const int frameSize)
+int Sound::Decoder::decodeData(const PacketDataFormat input, const int frameSize)
 {
     const unsigned char *inputFormatted = &input[0];
     sound = static_cast<SoundFormat>(calloc(frameSize * CHANNELS, sizeof(float)));
@@ -29,7 +30,7 @@ int Codec::Decoder::decodeData(const PacketDataFormat input, const int frameSize
     return opus_decode_float(this->state, inputFormatted, input.size(), sound, frameSize, 0);
 }
 
-Codec::SoundFormat Codec::Decoder::getOutput() const
+Sound::SoundFormat Sound::Decoder::getOutput() const
 {
     return sound;
 }

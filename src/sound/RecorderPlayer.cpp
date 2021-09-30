@@ -5,11 +5,11 @@
 ** test
 */
 
-#include "client/Sound.hpp"
+#include "sound/Sound.hpp"
 
 static int recordCallback(const void *input, void *output, unsigned long frameCount, const PaStreamCallbackTimeInfo *timeInfo, PaStreamCallbackFlags statusFlags, void *userData)
 {
-    data_t *data = (data_t *) userData;
+    Sound::data_t *data = (Sound::data_t *) userData;
     float *out = (float *) output;
     float *in = (float *) input;
 
@@ -23,7 +23,7 @@ static int recordCallback(const void *input, void *output, unsigned long frameCo
     return 0;
 }
 
-Sound::Sound()
+Sound::RecorderPlayer::RecorderPlayer()
 {
     this->err = this->audio.Initialize();
 
@@ -31,7 +31,7 @@ Sound::Sound()
         this->errMsg = this->audio.GetErrorText(this->err);
 }
 
-Sound::~Sound()
+Sound::RecorderPlayer::~RecorderPlayer()
 {
     this->err = this->audio.Terminate();
 
@@ -39,7 +39,7 @@ Sound::~Sound()
         this->errMsg = this->audio.GetErrorText(this->err);
 }
 
-void Sound::init()
+void Sound::RecorderPlayer::init()
 {
     this->err = this->audio.OpenDefaultStream(&this->stream, 1, 1, paFloat32, SAMPLE_RATE, FRAMES_PER_BUFFER, recordCallback, &this->data);
     if (this->err) {
@@ -54,7 +54,7 @@ void Sound::init()
     }
 }
 
-std::vector<float> Sound::getMic()
+std::vector<float> Sound::RecorderPlayer::getMic()
 {
     std::vector<float> tmp = this->data.record;
 
@@ -62,12 +62,12 @@ std::vector<float> Sound::getMic()
     return tmp;
 }
 
-void Sound::toSpeaker(std::vector<float> sample)
+void Sound::RecorderPlayer::toSpeaker(std::vector<float> sample)
 {
     this->data.play.insert(this->data.play.end(), sample.begin(), sample.end() );
 }
 
-const std::string Sound::getErrorMsg() const
+const std::string Sound::RecorderPlayer::getErrorMsg() const
 {
     return this->errMsg;
 }
