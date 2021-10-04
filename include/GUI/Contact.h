@@ -9,6 +9,7 @@
 #define BABEL_CONTACT_H
 
 #include "constants.h"
+#include "../common/User.h"
 
 #include <QDialog>
 #include <QLineEdit>
@@ -18,43 +19,48 @@
 #include <QMessageBox>
 #include <QList>
 #include <QGridLayout>
+#include <QtWidgets>
+#include <QWidget>
 
 
-class Contact {
+class Contact : public QWidget {
     Q_OBJECT
 
-    public:
+    // virtual ~App() {};
+public:
 
         Contact(std::string username, std::string address = "", bool in_list =
             false);
-        std::string call();
-        QString addToList();
+        User call();
+        User addToList();
         void removeFromList();
         void removeFromCall();
 
-        QPushButton get_call();
-        QPushButton get_remove_from_call();
-        QPushButton get_add_to_list();
-        QPushButton get_remove_from_list();
+        QPushButton *get_call();
+        QPushButton *get_remove_from_call();
+        QPushButton *get_add_to_list();
+        QPushButton *get_remove_from_list();
+
+        QGridLayout *mainLayout;
 
         void setContext(Context newContext);
 
     private:
 
         void update();
+        void resetLayout() const;
+        QLabel *name_label;
+        User user;
 
-        QString username;
-        std::string address;
-
-        QPushButton *call;
-        QPushButton *remove_from_call;
-        QPushButton *add_to_list;
-        QPushButton *remove_from_list;
+        QPushButton *call_btn;
+        QPushButton *remove_from_call_btn;
+        QPushButton *add_to_list_btn;
+        QPushButton *remove_from_list_btn;
 
         QGridLayout *contactLayout;
 
         Context contact_context;
-        State contact_state;
+        ContactState contact_state;
 };
 
 #endif //BABEL_CONTACT_H

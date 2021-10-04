@@ -9,6 +9,7 @@
 #define BABEL_CONSTANTS_H
 
 enum Context { Menu, Call, ConfCall, Adding };
-enum State { None, Added };
+enum ContactState { None, Added };
+enum AppState { ToLog, Menu_, Calling, BeCalled, Call_, ConfCall_, Loading };
 
 #endif //BABEL_CONSTANTS_H
