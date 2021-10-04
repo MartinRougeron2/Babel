@@ -6,7 +6,7 @@
 */
 
 #include "server/TCP.hpp"
-#include "server/UDP.hpp"
+#include "server/UdpServer.hpp"
 
 int main(int argc, char **argv)
 {
