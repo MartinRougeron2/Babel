@@ -7,8 +7,6 @@
 
 #include "../../include/server/TCP.hpp"
 
-#include "../../include/server/Signals.hpp"
-
 int main(int argc, char **argv)
 {
     boost::asio::io_service io_service;

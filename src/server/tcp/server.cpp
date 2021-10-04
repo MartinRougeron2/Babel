@@ -7,9 +7,6 @@
 
 #include "../../../include/server/TCP.hpp"
 
-#include "../../../include/server/Logs.hpp"
-#include "../../../include/server/Handler.hpp"
-
 // CHAT SERVER
 
 chat_server::chat_server(boost::asio::io_service &io_service, const tcp::endpoint &endpoint) : acceptor_(io_service, endpoint), socket_(io_service)
@@ -18,6 +15,7 @@ chat_server::chat_server(boost::asio::io_service &io_service, const tcp::endpoin
     std::string s = socket_.remote_endpoint().address().to_string();
     std::cout << s << std::endl;
     */
+    this->handler = Handler();
 
     chat_server::do_accept();
 }
@@ -31,7 +29,7 @@ void chat_server::do_accept()
 {
     this->acceptor_.async_accept(socket_, [this](boost::system::error_code ec) {
         if (!ec) {
-            std::make_shared<chat_session>(std::move(socket_), room_)->start();
+            std::make_shared<chat_session>(std::move(socket_), room_, this->handler)->start();
         }
 
         do_accept();
@@ -40,8 +38,10 @@ void chat_server::do_accept()
 
 // CHAT SESSION
 
-chat_session::chat_session(tcp::socket socket, chat_room &room) : socket_(std::move(socket)), room_(room)
+chat_session::chat_session(tcp::socket socket, chat_room &room, Handler handler) : socket_(std::move(socket)), room_(room)
 {
+    this->handler = handler;
+
     return;
 }
 
@@ -127,7 +127,12 @@ chat_message::~chat_message()
 char *chat_message::data()
 {
     std::cout << this->data_ << std::endl;
-    Handler::mapped.at(this->data_);
+    if (this->handler.mapped.count(this->data_) > 0) {
+        std::cout << "command handled in mapped" << std::endl;
+        this->handler.mapped.at(this->data_);
+        std::cout << "command ended" << std::endl;
+    } else
+        std::cout << "command not handled in mapped" << std::endl;
 
     return (this->data_);
 }

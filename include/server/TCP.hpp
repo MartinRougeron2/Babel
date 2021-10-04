@@ -19,6 +19,10 @@
     #include <utility>
     #include <boost/asio.hpp>
 
+    #include "Signals.hpp"
+    #include "Logs.hpp"
+    #include "Handler.hpp"
+
     #define TCP_PORT 2000
 
     using boost::asio::ip::tcp;
@@ -47,6 +51,8 @@
             void body_length(std::size_t);
             bool decode_header();
             void encode_header();
+
+            Handler handler;
 
         private:
             char data_[header_length + max_body_length];
@@ -83,7 +89,7 @@
     class chat_session : public chat_participant, public std::enable_shared_from_this<chat_session>
     {
         public:
-            chat_session(tcp::socket, chat_room &);
+            chat_session(tcp::socket, chat_room &, Handler);
             ~chat_session();
 
             void start();
@@ -94,6 +100,8 @@
             chat_room& room_;
             chat_message read_msg_;
             chat_message_queue write_msgs_;
+
+            Handler handler;
 
             void do_read_header();
             void do_read_body();
@@ -110,6 +118,8 @@
             tcp::acceptor acceptor_;
             tcp::socket socket_;
             chat_room room_;
+
+            Handler handler;
 
             void do_accept();
     };

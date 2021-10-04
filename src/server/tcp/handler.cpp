@@ -5,7 +5,17 @@
 ** Handler.cpp
 */
 
-#include "../../../include/server/Handler.hpp"
+#include "../../../include/server/TCP.hpp"
+
+Handler::Handler()
+{
+    return;
+}
+
+Handler::~Handler()
+{
+    return;
+}
 
 std::string Handler::connect(int id)
 {
@@ -35,5 +45,12 @@ std::string Handler::leave(int id)
 
 std::string Handler::call(int id)
 {
+    return ("");
+}
+
+std::string Handler::ping(int id)
+{
+    std::cout << "pong" << std::endl;
+
     return ("");
 }

@@ -11,23 +11,29 @@
     #include <iostream>
     #include <map>
 
-    namespace Handler
+    class Handler
     {
-        typedef std::string (*function_type)(int);
+        public:
+            Handler();
+            ~Handler();
 
-        std::string connect(int);
-        std::string disconnect(int);
-        std::string join(int);
-        std::string leave(int);
-        std::string call(int);
+            typedef std::string (Handler::*function_type)(int);
 
-        std::map<std::string, function_type> mapped = {
-            { "/connect", &connect },
-            { "/disconnect", &disconnect },
-            { "/join", &join },
-            { "/leave", &leave },
-            { "/call", &call }
-        };
+            std::map<std::string, function_type> mapped = {
+                { "/connect", &Handler::connect },
+                { "/disconnect", &Handler::disconnect },
+                { "/join", &Handler::join },
+                { "/leave", &Handler::leave },
+                { "/call", &Handler::call },
+                { "ping", &Handler::ping }
+            };
+
+            std::string connect(int);
+            std::string disconnect(int);
+            std::string join(int);
+            std::string leave(int);
+            std::string call(int);
+            std::string ping(int);
     };
 
 #endif /* HANDLER_HPP */
