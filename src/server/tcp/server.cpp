@@ -126,15 +126,15 @@ chat_message::~chat_message()
 
 char *chat_message::data()
 {
-    std::string data(this->data_);
+    std::string converted(this->data_);
 
-    data = data.substr(0, data.find('\n'));
-    std::cout << data << std::endl;
+    converted = converted.substr(0, converted.find('\n'));
+    std::cout << converted << std::endl;
 
-    std::cout << "command: '" << data << "'" << std::endl;
-    if (this->handler.mapped.find(data) != this->handler.mapped.end()) {
+    std::cout << "command: '" << converted << "'" << std::endl;
+    if (this->handler.mapped.find(converted) != this->handler.mapped.end()) {
         std::cout << "command found" << std::endl;
-        this->handler.mapped.at(data);
+        this->handler.mapped.at(converted);
     } else
         std::cout << "command not found" << std::endl;
 
