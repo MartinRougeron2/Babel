@@ -5,7 +5,7 @@
 ** server.cpp
 */
 
-#include "../../../include/client/TCP.hpp"
+#include "client/TCP.hpp"
 
 TCP::TCP()
 {

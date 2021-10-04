@@ -5,7 +5,7 @@
 ** server.cpp
 */
 
-#include "../../../include/server/TCP.hpp"
+#include "server/TCP.hpp"
 
 // CHAT SERVER
 

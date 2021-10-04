@@ -5,7 +5,8 @@
 ** main.cpp
 */
 
-#include "../../include/server/TCP.hpp"
+#include "server/TCP.hpp"
+#include "server/UDP.hpp"
 
 int main(int argc, char **argv)
 {
