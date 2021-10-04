@@ -13,6 +13,7 @@ int main(int argc, char **argv)
     boost::asio::io_service io_service;
     std::list<chat_server> servers;
     tcp::endpoint endpoint(tcp::v4(), TCP_PORT);
+    UdpServer audioServer = UdpServer(io_service);
 
     try {
         servers.emplace_back(io_service, endpoint);
