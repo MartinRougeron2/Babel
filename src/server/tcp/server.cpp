@@ -126,7 +126,9 @@ chat_message::~chat_message()
 
 char *chat_message::data()
 {
+    this->data_ = this->data_.substr(0, std::find(std::to_string(this->data_), '\n'));
     std::cout << this->data_ << std::endl;
+
     if (this->handler.mapped.count(this->data_) > 0) {
         std::cout << "command handled in mapped" << std::endl;
         this->handler.mapped.at(this->data_);
