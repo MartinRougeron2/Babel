@@ -5,7 +5,7 @@
 ** UDP.cpp
 */
 
-#include "server/UDP.hpp"
+#include "server/UdpServer.hpp"
 
 UdpServer::UdpServer(boost::asio::io_service &io_service) :
     socket_(io_service, udp::endpoint(udp::v4(), UDP_PORT)) {
