@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named babel_client
+
+# Build rule for target.
+babel_client: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 babel_client
+.PHONY : babel_client
+
+# fast build rule for target.
+babel_client/fast:
+	$(MAKE) -f CMakeFiles/babel_client.dir/build.make CMakeFiles/babel_client.dir/build
+.PHONY : babel_client/fast
+
+#=============================================================================
 # Target rules for targets named babel_server
 
 # Build rule for target.
@@ -123,140 +136,86 @@ babel_server/fast:
 	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/build
 .PHONY : babel_server/fast
 
-src/GUI/App.o: src/GUI/App.cpp.o
+src/client/main.o: src/client/main.cpp.o
 
-.PHONY : src/GUI/App.o
-
-# target to build an object file
-src/GUI/App.cpp.o:
-	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/GUI/App.cpp.o
-.PHONY : src/GUI/App.cpp.o
-
-src/GUI/App.i: src/GUI/App.cpp.i
-
-.PHONY : src/GUI/App.i
-
-# target to preprocess a source file
-src/GUI/App.cpp.i:
-	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/GUI/App.cpp.i
-.PHONY : src/GUI/App.cpp.i
-
-src/GUI/App.s: src/GUI/App.cpp.s
-
-.PHONY : src/GUI/App.s
-
-# target to generate assembly for a file
-src/GUI/App.cpp.s:
-	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/GUI/App.cpp.s
-.PHONY : src/GUI/App.cpp.s
-
-src/GUI/Contact.o: src/GUI/Contact.cpp.o
-
-.PHONY : src/GUI/Contact.o
+.PHONY : src/client/main.o
 
 # target to build an object file
-src/GUI/Contact.cpp.o:
-	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/GUI/Contact.cpp.o
-.PHONY : src/GUI/Contact.cpp.o
+src/client/main.cpp.o:
+	$(MAKE) -f CMakeFiles/babel_client.dir/build.make CMakeFiles/babel_client.dir/src/client/main.cpp.o
+.PHONY : src/client/main.cpp.o
 
-src/GUI/Contact.i: src/GUI/Contact.cpp.i
+src/client/main.i: src/client/main.cpp.i
 
-.PHONY : src/GUI/Contact.i
+.PHONY : src/client/main.i
 
 # target to preprocess a source file
-src/GUI/Contact.cpp.i:
-	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/GUI/Contact.cpp.i
-.PHONY : src/GUI/Contact.cpp.i
+src/client/main.cpp.i:
+	$(MAKE) -f CMakeFiles/babel_client.dir/build.make CMakeFiles/babel_client.dir/src/client/main.cpp.i
+.PHONY : src/client/main.cpp.i
 
-src/GUI/Contact.s: src/GUI/Contact.cpp.s
+src/client/main.s: src/client/main.cpp.s
 
-.PHONY : src/GUI/Contact.s
+.PHONY : src/client/main.s
 
 # target to generate assembly for a file
-src/GUI/Contact.cpp.s:
-	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/GUI/Contact.cpp.s
-.PHONY : src/GUI/Contact.cpp.s
+src/client/main.cpp.s:
+	$(MAKE) -f CMakeFiles/babel_client.dir/build.make CMakeFiles/babel_client.dir/src/client/main.cpp.s
+.PHONY : src/client/main.cpp.s
 
-src/GUI/ModifyPopup.o: src/GUI/ModifyPopup.cpp.o
+src/server/main.o: src/server/main.cpp.o
 
-.PHONY : src/GUI/ModifyPopup.o
+.PHONY : src/server/main.o
 
 # target to build an object file
-src/GUI/ModifyPopup.cpp.o:
-	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/GUI/ModifyPopup.cpp.o
-.PHONY : src/GUI/ModifyPopup.cpp.o
+src/server/main.cpp.o:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/main.cpp.o
+.PHONY : src/server/main.cpp.o
 
-src/GUI/ModifyPopup.i: src/GUI/ModifyPopup.cpp.i
+src/server/main.i: src/server/main.cpp.i
 
-.PHONY : src/GUI/ModifyPopup.i
+.PHONY : src/server/main.i
 
 # target to preprocess a source file
-src/GUI/ModifyPopup.cpp.i:
-	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/GUI/ModifyPopup.cpp.i
-.PHONY : src/GUI/ModifyPopup.cpp.i
+src/server/main.cpp.i:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/main.cpp.i
+.PHONY : src/server/main.cpp.i
 
-src/GUI/ModifyPopup.s: src/GUI/ModifyPopup.cpp.s
+src/server/main.s: src/server/main.cpp.s
 
-.PHONY : src/GUI/ModifyPopup.s
+.PHONY : src/server/main.s
 
 # target to generate assembly for a file
-src/GUI/ModifyPopup.cpp.s:
-	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/GUI/ModifyPopup.cpp.s
-.PHONY : src/GUI/ModifyPopup.cpp.s
+src/server/main.cpp.s:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/main.cpp.s
+.PHONY : src/server/main.cpp.s
 
-src/GUI/UserMenu.o: src/GUI/UserMenu.cpp.o
+src/server/signals/signals.o: src/server/signals/signals.cpp.o
 
-.PHONY : src/GUI/UserMenu.o
+.PHONY : src/server/signals/signals.o
 
 # target to build an object file
-src/GUI/UserMenu.cpp.o:
-	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/GUI/UserMenu.cpp.o
-.PHONY : src/GUI/UserMenu.cpp.o
+src/server/signals/signals.cpp.o:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/signals/signals.cpp.o
+.PHONY : src/server/signals/signals.cpp.o
 
-src/GUI/UserMenu.i: src/GUI/UserMenu.cpp.i
+src/server/signals/signals.i: src/server/signals/signals.cpp.i
 
-.PHONY : src/GUI/UserMenu.i
-
-# target to preprocess a source file
-src/GUI/UserMenu.cpp.i:
-	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/GUI/UserMenu.cpp.i
-.PHONY : src/GUI/UserMenu.cpp.i
-
-src/GUI/UserMenu.s: src/GUI/UserMenu.cpp.s
-
-.PHONY : src/GUI/UserMenu.s
-
-# target to generate assembly for a file
-src/GUI/UserMenu.cpp.s:
-	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/GUI/UserMenu.cpp.s
-.PHONY : src/GUI/UserMenu.cpp.s
-
-src/server/babel.o: src/server/babel.cpp.o
-
-.PHONY : src/server/babel.o
-
-# target to build an object file
-src/server/babel.cpp.o:
-	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/babel.cpp.o
-.PHONY : src/server/babel.cpp.o
-
-src/server/babel.i: src/server/babel.cpp.i
-
-.PHONY : src/server/babel.i
+.PHONY : src/server/signals/signals.i
 
 # target to preprocess a source file
-src/server/babel.cpp.i:
-	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/babel.cpp.i
-.PHONY : src/server/babel.cpp.i
+src/server/signals/signals.cpp.i:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/signals/signals.cpp.i
+.PHONY : src/server/signals/signals.cpp.i
 
-src/server/babel.s: src/server/babel.cpp.s
+src/server/signals/signals.s: src/server/signals/signals.cpp.s
 
-.PHONY : src/server/babel.s
+.PHONY : src/server/signals/signals.s
 
 # target to generate assembly for a file
-src/server/babel.cpp.s:
-	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/babel.cpp.s
-.PHONY : src/server/babel.cpp.s
+src/server/signals/signals.cpp.s:
+	$(MAKE) -f CMakeFiles/babel_server.dir/build.make CMakeFiles/babel_server.dir/src/server/signals/signals.cpp.s
+.PHONY : src/server/signals/signals.cpp.s
 
 # Help Target
 help:
@@ -265,23 +224,18 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
+	@echo "... babel_client"
 	@echo "... rebuild_cache"
 	@echo "... babel_server"
-	@echo "... src/GUI/App.o"
-	@echo "... src/GUI/App.i"
-	@echo "... src/GUI/App.s"
-	@echo "... src/GUI/Contact.o"
-	@echo "... src/GUI/Contact.i"
-	@echo "... src/GUI/Contact.s"
-	@echo "... src/GUI/ModifyPopup.o"
-	@echo "... src/GUI/ModifyPopup.i"
-	@echo "... src/GUI/ModifyPopup.s"
-	@echo "... src/GUI/UserMenu.o"
-	@echo "... src/GUI/UserMenu.i"
-	@echo "... src/GUI/UserMenu.s"
-	@echo "... src/server/babel.o"
-	@echo "... src/server/babel.i"
-	@echo "... src/server/babel.s"
+	@echo "... src/client/main.o"
+	@echo "... src/client/main.i"
+	@echo "... src/client/main.s"
+	@echo "... src/server/main.o"
+	@echo "... src/server/main.i"
+	@echo "... src/server/main.s"
+	@echo "... src/server/signals/signals.o"
+	@echo "... src/server/signals/signals.i"
+	@echo "... src/server/signals/signals.s"
 .PHONY : help
 
 

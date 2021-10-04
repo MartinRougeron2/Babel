@@ -7,7 +7,7 @@
 
 
 #include <QtGui>
-#include "../../include/GUI/ModifyPopup.h"
+#include "GUI/ModifyPopup.h"
 
 ModifyPopup::ModifyPopup(QWidget *parent)
         : QDialog(parent)

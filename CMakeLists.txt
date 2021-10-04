@@ -1,52 +1,21 @@
-cmake_minimum_required(VERSION 3.8)
-project(CPP_babel_2018)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/")
-set(RUNTIME_OUTPUT_DIRECTORY build)
-set(CMAKE_CXX_STANDARD 17)
-if (WIN32)
-    add_definitions("")
-else()
-    add_definitions(" -g -Wextra -Wall")
-endif()
+cmake_minimum_required(VERSION 2.8.12)
+project(Babel)
 
-set(THREADS_PREFER_PTHREAD_FLAG ON)
-find_package(Threads REQUIRED)
-set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
-set(CMAKE_AUTOMOC TRUE)
-set(CMAKE_AUTOUIC TRUE)
+add_definitions("-std=c++11")
 
-include(build/conanbuildinfo.cmake)
-include(build/conan_paths.cmake)
-conan_basic_setup(KEEP_RPATHS)
-include_directories(${CMAKE_INCLUDE_PATH})
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
 
-set(CLIENT
-        src/*.cpp
-        include/*.h
-    )
+add_compile_options(-Wall -Wextra -g3)
 
-add_executable(babel_client ${CLIENT})
+include_directories(include/)
+file(GLOB_RECURSE SERVER_SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "src/server/*/*.cpp" "src/server/*.cpp" "src/sound/*.cpp")
+# file(GLOB_RECURSE CLIENT_SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "src/client/*.cpp")
 
+add_executable(babel_server ${SERVER_SOURCES})
+# add_executable(babel_client ${CLIENT_SOURCES})
 
-find_package(Qt5Widgets CONFIG REQUIRED)
-find_package(Qt5Network CONFIG REQUIRED)
-find_package(Qt5Core CONFIG REQUIRED)
-find_package(Qt5Gui CONFIG REQUIRED)
-find_package(portaudio REQUIRED)
-
-target_link_libraries(babel_client Qt5::Widgets Qt5::Network Qt5::Core Qt5::Gui)
-target_link_libraries(babel_client boost_system Threads::Threads opus)
-
-if (WIN32)
-    target_link_libraries(babel_client portaudio_x64)
-else()
-    target_link_libraries(babel_client portaudio)
-endif()
-
-if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-    target_link_libraries(babel_client jack asound)
-endif()
-
-#if bug serverPropertiesSwitcher
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/bin/qt.conf "[Paths]\nPrefix = ")
-file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/bin/qt.conf ${CONAN_QT_ROOT})
+target_link_libraries(babel_server ${CONAN_LIBS})
+find_package(Boost REQUIRED COMPONENTS thread)
+target_link_libraries(babel_server Boost::thread)
+# target_link_libraries(babel_client ${CONAN_LIBS})

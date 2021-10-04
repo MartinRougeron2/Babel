@@ -6,7 +6,7 @@
 */
 
 #include <QtGui>
-#include "../../include/GUI/UserMenu.h"
+#include "GUI/UserMenu.h"
 
 std::string tr(std::string s) {
     return s;
