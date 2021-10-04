@@ -132,12 +132,11 @@ char *chat_message::data()
     std::cout << data << std::endl;
 
     std::cout << "command: '" << data << "'" << std::endl;
-    if (this->handler.mapped.count(data) > 0) {
-        std::cout << "command handled in mapped" << std::endl;
+    if (this->handler.mapped.find(data) != this->handler.mapped.end()) {
+        std::cout << "command found" << std::endl;
         this->handler.mapped.at(data);
-        std::cout << "command ended" << std::endl;
     } else
-        std::cout << "command not handled in mapped" << std::endl;
+        std::cout << "command not found" << std::endl;
 
     return (this->data_);
 }
