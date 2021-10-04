@@ -15,13 +15,10 @@
 #include <string>
 #include <vector>
 
-
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
 #include <stdio.h>
-
-
 
 namespace Sound
 {

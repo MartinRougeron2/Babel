@@ -15,7 +15,7 @@
     #define CALL "/call "
     #define RECEIVED "/received "
 
-    #define BEGIN "/begin\n"
+    #define BEGIN "/begin"
     #define END "/end"
 
 #endif /* LOGS_HPP */

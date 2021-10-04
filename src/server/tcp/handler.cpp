@@ -2,10 +2,10 @@
 ** EPITECH PROJECT, 2021
 ** B-CPP-500-LYN-5-1-babel-martin.rougeron
 ** File description:
-** handler.cpp
+** Handler.cpp
 */
 
-#include "../../../include/server/Server.hpp"
+#include "../../../include/server/Handler.hpp"
 
 std::string Handler::connect(int id)
 {
