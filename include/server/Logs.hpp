@@ -18,4 +18,7 @@
     #define BEGIN "/begin"
     #define END "/end"
 
+    #define COMMAND_NF "command not found: "
+    #define COMMAND_F "command found: "
+
 #endif /* LOGS_HPP */

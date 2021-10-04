@@ -133,10 +133,10 @@ char *chat_message::data()
 
     std::cout << "command: '" << converted << "'" << std::endl;
     if (this->handler.mapped.find(converted) != this->handler.mapped.end()) {
-        std::cout << "command found" << std::endl;
+        std::cout << COMMAND_F << converted << std::endl;
         this->handler.mapped.at(converted);
     } else
-        std::cout << "command not found" << std::endl;
+        std::cout << COMMAND_NF << converted << std::endl;
 
     return (this->data_);
 }
