@@ -7,204 +7,128 @@
 
 #include "server/TCP.hpp"
 
-// CHAT SERVER
+#include "Colors.hpp"
 
-chat_server::chat_server(boost::asio::io_service &io_service, const tcp::endpoint &endpoint) : acceptor_(io_service, endpoint), socket_(io_service)
-{
-    /*
-    std::string s = socket_.remote_endpoint().address().to_string();
-    std::cout << s << std::endl;
-    */
-    this->handler = Handler();
-
-    chat_server::do_accept();
-}
-
-chat_server::~chat_server()
+Session::Session(boost::asio::io_service &ios) : socket(ios)
 {
     return;
 }
 
-void chat_server::do_accept()
+tcp::socket &Session::get_socket()
 {
-    this->acceptor_.async_accept(socket_, [this](boost::system::error_code ec) {
-        if (!ec) {
-            std::make_shared<chat_session>(std::move(socket_), room_, this->handler)->start();
+    return socket;
+}
+
+void Session::start()
+{
+    socket.async_read_some(
+        boost::asio::buffer(data, max_length),
+        boost::bind(
+            &Session::handle_read, this,
+            shared_from_this(),
+            boost::asio::placeholders::error,
+            boost::asio::placeholders::bytes_transferred)
+        );
+}
+
+void Session::handle_read(std::shared_ptr<Session> &s, const boost::system::error_code &err, std::size_t bytes_transferred)
+{
+    std::string new_data(data);
+
+    if (!err) {
+        new_data = new_data.substr(0, new_data.find('\n'));
+
+        if (this->mapped.find(new_data) != this->mapped.end()) {
+            std::cout << colors::cyan << DONE << "command found: " << new_data << colors::reset << std::endl;
+            (this->*this->mapped.at(new_data))(0);
+        } else {
+            std::cout << colors::red << FAIL << "command not found: " << new_data << colors::reset << std::endl;
         }
-
-        do_accept();
-    });
-}
-
-// CHAT SESSION
-
-chat_session::chat_session(tcp::socket socket, chat_room &room, Handler handler) : socket_(std::move(socket)), room_(room)
-{
-    this->handler = handler;
-
-    return;
-}
-
-chat_session::~chat_session()
-{
-    return;
-}
-
-void chat_session::start()
-{
-    this->room_.join(shared_from_this());
-    do_read_header();
-}
-
-void chat_session::deliver(const chat_message &msg)
-{
-    bool write_in_progress = !write_msgs_.empty();
-
-    write_msgs_.push_back(msg);
-    if (!write_in_progress) {
-        do_write();
+        socket.async_read_some(
+            boost::asio::buffer(data, max_length),
+            boost::bind(
+                &Session::handle_read, this,
+                shared_from_this(),
+                boost::asio::placeholders::error,
+                boost::asio::placeholders::bytes_transferred)
+            );
+    } else {
+        std::cerr << colors::bold << FAIL << "err (recv): " << err.message() << colors::reset << std::endl;
     }
 }
 
-void chat_session::do_read_header()
+Server::Server(boost::asio::io_service &ios, short port) : ios(ios), acceptor(ios, tcp::endpoint(tcp::v4(), port))
 {
-    auto self(shared_from_this());
-
-    boost::asio::async_read(socket_, boost::asio::buffer(read_msg_.data(), chat_message::header_length), [this, self](boost::system::error_code ec, std::size_t /*length*/)
-    {
-        if (!ec && read_msg_.decode_header()) {
-            do_read_body();
-        } else {
-            room_.leave(shared_from_this());
-        }
-    });
+    std::shared_ptr<Session> session = std::make_shared<Session>(ios);
+    acceptor.async_accept(
+        session->get_socket(),
+        boost::bind(
+            &Server::handle_accept,
+            this,
+            session,
+            boost::asio::placeholders::error
+        )
+    );
 }
 
-void chat_session::do_read_body()
+void Server::handle_accept(std::shared_ptr<Session> session, const boost::system::error_code &err)
 {
-    auto self(shared_from_this());
-
-    boost::asio::async_read(socket_, boost::asio::buffer(read_msg_.body(), read_msg_.body_length()), [this, self](boost::system::error_code ec, std::size_t /*length*/)
-    {
-        if (!ec) {
-            room_.deliver(read_msg_);
-            do_read_header();
-        } else {
-            room_.leave(shared_from_this());
-        }
-    });
-}
-
-void chat_session::do_write()
-{
-    auto self(shared_from_this());
-
-    boost::asio::async_write(socket_, boost::asio::buffer(write_msgs_.front().data(), write_msgs_.front().length()), [this, self](boost::system::error_code ec, std::size_t /*length*/)
-    {
-        if (!ec) {
-            write_msgs_.pop_front();
-            if (!write_msgs_.empty()) {
-                do_write();
-            }
-        } else {
-            room_.leave(shared_from_this());
-        }
-    });
-}
-
-// CHAT MESSAGE
-
-chat_message::chat_message() : body_length_(0)
-{
-    return;
-}
-
-chat_message::~chat_message()
-{
-    return;
-}
-
-char *chat_message::data()
-{
-    std::string converted(this->data_);
-
-    converted = converted.substr(0, converted.find('\n'));
-    std::cout << converted << std::endl;
-
-    std::cout << "command: '" << converted << "'" << std::endl;
-    if (this->handler.mapped.find(converted) != this->handler.mapped.end()) {
-        std::cout << COMMAND_F << converted << std::endl;
-        this->handler.mapped.at(converted);
-    } else
-        std::cout << COMMAND_NF << converted << std::endl;
-
-    return (this->data_);
-}
-
-std::size_t chat_message::length()
-{
-    return (this->header_length + this->body_length_);
-}
-
-char *chat_message::body()
-{
-    return (this->data_ + this->header_length);
-}
-
-std::size_t chat_message::body_length()
-{
-    return (this->body_length_);
-}
-
-void chat_message::body_length(std::size_t new_length)
-{
-    this->body_length_ = new_length;
-
-    if (this->body_length_ > this->max_body_length)
-        this->body_length_ = this->max_body_length;
-}
-
-bool chat_message::decode_header()
-{
-    char header[this->header_length + 1] = "";
-
-    std::strncat(header, this->data_, this->header_length);
-    this->body_length_ = std::atoi(header);
-
-    if (body_length_ > max_body_length) {
-        body_length_ = 0;
-        return (false);
+    if (!err) {
+        session->start();
+        session = std::make_shared<Session>(ios);
+        acceptor.async_accept(
+            session->get_socket(),
+            boost::bind(
+                &Server::handle_accept,
+                this,
+                session,
+                boost::asio::placeholders::error
+            )
+        );
+    } else {
+        std::cerr << colors::bold << FAIL << "err: " << err.message() << colors::reset << std::endl;
+        session.reset();
     }
-
-    return (true);
 }
 
-void chat_message::encode_header()
+bool Session::login(int id)
 {
-    char header[header_length + 1] = "";
+    std::cout << colors::green << DONE << "logged: " << id << colors::reset << std::endl;
 
-    std::sprintf(header, "%4d", static_cast<int>(this->body_length_));
-    std::memcpy(this->data_, header, this->header_length);
+    return (false);
 }
 
-// CHAT ROOM
-
-void chat_room::join(chat_participant_ptr participant)
+bool Session::logout(int id)
 {
-    std::cout << USER_JOINED << participant << std::endl;
+    std::cout << colors::green << DONE << "logout: " << id << colors::reset << std::endl;
 
-    this->participants_.insert(participant);
-    for (auto msg: recent_msgs_)
-        participant->deliver(msg);
+    return (false);
 }
 
-void chat_room::leave(chat_participant_ptr participant)
+bool Session::join(int id)
 {
-    std::cout << USER_LEFT << participant << std::endl;
-    this->participants_.erase(participant);
+    std::cout << "joinned: " << id << std::endl;
+
+    return (false);
 }
 
-void chat_room::deliver(const chat_message &msg)
+bool Session::leave(int id)
 {
-    return;
+    std::cout << "left: " << id << std::endl;
+
+    return (false);
+}
+
+bool Session::call(int id)
+{
+    std::cout << "called: " << id << std::endl;
+
+    return (false);
+}
+
+bool Session::ping(int id)
+{
+    std::cout << "pong" << id << std::endl;
+
+    return (false);
 }

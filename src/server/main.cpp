@@ -10,15 +10,11 @@
 
 int main(int argc, char **argv)
 {
-    boost::asio::io_service io_service;
-    std::list<chat_server> servers;
-    tcp::endpoint endpoint(tcp::v4(), TCP_PORT);
-    UdpServer udpServer(io_service);
+    boost::asio::io_service ios;
+    Server s(ios, TCP_PORT);
 
     try {
-        servers.emplace_back(io_service, endpoint);
         signals::handler();
-        io_service.run();
     } catch (std::exception &e) {
         std::cerr << "Exception: " << e.what() << std::endl;
     }
