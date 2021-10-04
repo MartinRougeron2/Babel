@@ -18,6 +18,8 @@
     #include <set>
     #include <utility>
     #include <boost/asio.hpp>
+    #include <algorithm>
+    #include <string>
 
     #include "Signals.hpp"
     #include "Logs.hpp"

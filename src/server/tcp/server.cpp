@@ -126,10 +126,15 @@ chat_message::~chat_message()
 
 char *chat_message::data()
 {
-    std::cout << this->data_ << std::endl;
-    if (this->handler.mapped.count(this->data_) > 0) {
+    std::string data(this->data_);
+
+    data = data.substr(0, data.find('\n'));
+    std::cout << data << std::endl;
+
+    std::cout << "command: '" << data << "'" << std::endl;
+    if (this->handler.mapped.count(data) > 0) {
         std::cout << "command handled in mapped" << std::endl;
-        this->handler.mapped.at(this->data_);
+        this->handler.mapped.at(data);
         std::cout << "command ended" << std::endl;
     } else
         std::cout << "command not handled in mapped" << std::endl;
