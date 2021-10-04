@@ -6,12 +6,11 @@
 */
 
 #include <QtGui>
-#include "../../include/GUI/App.h"
+#include "GUI/App.h"
 
-App::App(QWidget *parent) : QWidget(parent)
+App::App(QWidget *parent) : QWidget(parent), login
 {
     setWindowTitle("Babel");
-
 }
 
 void App::call(User contact_to_call)
@@ -71,5 +70,9 @@ void App::login()
 
 void App::update()
 {
-
+    switch(this->app_state) {
+        case ToLog:
+            loginui->show();
+            break;
+    }
 }

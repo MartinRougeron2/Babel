@@ -61,6 +61,8 @@ public:
 
         Context contact_context;
         ContactState contact_state;
+
+        QWidget login;
 };
 
 #endif //BABEL_CONTACT_H

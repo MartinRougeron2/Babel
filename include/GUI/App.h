@@ -14,7 +14,6 @@
 #include <QList>
 #include <QLineEdit>
 #include <string>
-
 #include "../common/User.h"
 #include "Contact.h"
 
@@ -50,10 +49,7 @@ class App : public QWidget
         AppState app_state = ToLog;
 
         QLineEdit *search_name;
-
-        QLineEdit *username;
-        QLineEdit *password;
-
+        QWidget *loginui;
         void update();
 
 };
