@@ -7,7 +7,7 @@
 
 #include "sound/Sound.hpp"
 
-Sound::Encoder::Encoder(const int frameSize)
+Sound::Encoder::Encoder()
 {
     this->state = opus_encoder_create(SAMPLE_RATE, CHANNELS, OPUS_APPLICATION_VOIP, &error_code);
 
@@ -15,7 +15,7 @@ Sound::Encoder::Encoder(const int frameSize)
         fprintf(stderr, "failed to create decoder:\n");
 
     opus_encoder_ctl(this->state, OPUS_SET_BITRATE(64000));
-    this->frameSize = frameSize;
+    this->frameSize = SAMPLE_RATE;
 }
 
 Sound::Encoder::~Encoder()

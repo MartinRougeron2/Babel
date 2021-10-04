@@ -5,11 +5,11 @@
 ** main.cpp
 */
 
-#include "../../include/client/Asio.hpp"
+#include "client/Asio.hpp"
 
-#include "../../include/client/Signals.hpp"
-#include "../../include/client/TCP.hpp"
-#include "../../include/client/UDP.hpp"
+#include "client/Signals.hpp"
+#include "client/TCP.hpp"
+#include "client/UDP.hpp"
 
 int main(int argc, char **argv)
 {

@@ -5,7 +5,7 @@
 ** babel
 */
 
-#include "../../include/GUI/Contact.h"
+#include "GUI/Contact.h"
 
 Contact::Contact(std::string username, std::string address, bool in_list) {
     call = new QPushButton("\uD83D\uDCDE");

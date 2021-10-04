@@ -5,7 +5,7 @@
 ** signals.cpp
 */
 
-#include "../../../include/client/Signals.hpp"
+#include "../client/Signals.hpp"
 
 void signals::signalHandler(int signum)
 {

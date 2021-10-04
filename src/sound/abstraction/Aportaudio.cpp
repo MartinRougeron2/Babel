@@ -5,8 +5,8 @@
 ** Aportaudio
 */
 
-#include "../../../include/sound/Aportaudio.hpp"
-#include "../../../include/sound/Sound.hpp"
+#include "sound/Aportaudio.hpp"
+#include "sound/Sound.hpp"
 
 Aportaudio::Aportaudio()
 {

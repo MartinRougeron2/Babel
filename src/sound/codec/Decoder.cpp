@@ -8,13 +8,12 @@
 #include "sound/Sound.hpp"
 
 
-Sound::Decoder::Decoder(const int sampleRate)
+Sound::Decoder::Decoder()
 {
-    state = opus_decoder_create(sampleRate, CHANNELS, &error_code);
+    state = opus_decoder_create(SAMPLE_RATE, CHANNELS, &error_code);
 
     if (error_code < 0)
         fprintf(stderr, "failed to create decoder:\n");
-
 }
 
 Sound::Decoder::~Decoder()

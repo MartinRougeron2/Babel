@@ -9,7 +9,7 @@
 #define SOUND_HPP_
 
 #include "Aportaudio.hpp"
-#include <opus.h>
+#include "opus.h"
 
 #include <iostream>
 #include <string>
@@ -44,7 +44,18 @@ namespace Sound
             ~RecorderPlayer();
 
             void init(void);
+
+            /*
+            ** Get sound via mic.
+            ** @return vector of float with amplitude get by mic
+            */
             SoundFormat getMic();
+
+            /*
+            ** sound to speaker.
+            ** @param sample vector of float with amplitude get by mic
+            ** @return vector of float with amplitude get by mic
+            */
             void toSpeaker(SoundFormat sample);
 
             const std::string getErrorMsg() const;
@@ -67,7 +78,7 @@ namespace Sound
     class Encoder
     {
         public:
-            Encoder(const int);
+            Encoder();
             ~Encoder();
 
             int EncodeAudioStream(const SoundFormat);
@@ -84,7 +95,7 @@ namespace Sound
     class Decoder
     {
         public:
-            Decoder(const int sampleRate);
+            Decoder();
             ~Decoder();
 
             int decodeData(const PacketDataFormat data, const int frameSize);
