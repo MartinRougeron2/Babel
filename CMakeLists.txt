@@ -6,6 +6,8 @@ add_definitions("-std=c++11")
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
+add_compile_options(-Wall -Wextra -g3)
+
 include_directories(include/)
 file(GLOB_RECURSE SERVER_SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "src/server/*/*.cpp" "src/server/*.cpp" "src/sound/*.cpp")
 # file(GLOB_RECURSE CLIENT_SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "src/client/*.cpp")
