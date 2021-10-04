@@ -16,4 +16,4 @@ jobs:
     - name: compile
       run: ./RUN.sh
     - name: run
-      run: ./RUN server
+      run: ./RUN.sh server
