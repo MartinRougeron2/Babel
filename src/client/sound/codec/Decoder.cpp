@@ -11,9 +11,12 @@
 Sound::Decoder::Decoder()
 {
     state = opus_decoder_create(SAMPLE_RATE, CHANNELS, &error_code);
+    opus_int32 rate;
 
-    if (error_code < 0)
+    if (error_code != OPUS_OK)
         fprintf(stderr, "failed to create decoder:\n");
+    opus_decoder_ctl(this->state, OPUS_GET_BANDWIDTH(&rate));
+    this->encoded_data_size = rate;
 }
 
 Sound::Decoder::~Decoder()
@@ -21,20 +24,17 @@ Sound::Decoder::~Decoder()
     opus_decoder_destroy(this->state);
 }
 
-int Sound::Decoder::decodeData(const PacketDataFormat input, const int frameSize)
+Sound::SoundFormat Sound::Decoder::decodeData(const unsigned char *data)
 {
-    const unsigned char *inputFormatted = &input[0];
-    Sound::opusInputType soundFormatted = static_cast<Sound::opusInputType>(calloc(frameSize * CHANNELS, sizeof(float)));
-    int packetsSize;
-    // TODO: watch 0 usage
-    packetsSize = opus_decode_float(this->state, inputFormatted, input.size(), soundFormatted, frameSize, 0);
+    int ret;
+    float *frame = new (float[SAMPLE_RATE * CHANNELS]);
+    std::vector<float> sound;
 
-    sound = {soundFormatted, soundFormatted + packetsSize};
+    opus_packet_get_nb_channels(data);
+    ret = opus_decode_float(this->state, data, this->encoded_data_size, frame, 480, 0);
 
-    return packetsSize;
-}
-
-Sound::SoundFormat Sound::Decoder::getOutput() const
-{
+    for (size_t i = 0; i < SAMPLE_RATE * CHANNELS; i++)
+        sound.push_back(frame[i]);
+    delete frame;
     return sound;
 }

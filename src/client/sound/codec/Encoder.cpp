@@ -10,12 +10,13 @@
 Sound::Encoder::Encoder()
 {
     this->state = opus_encoder_create(SAMPLE_RATE, CHANNELS, OPUS_APPLICATION_VOIP, &error_code);
+    opus_int32 rate;
 
     if (this->error_code < 0)
         fprintf(stderr, "failed to create decoder:\n");
 
-    opus_encoder_ctl(this->state, OPUS_SET_BITRATE(64000));
-    this->frameSize = SAMPLE_RATE;
+    opus_encoder_ctl(this->state, OPUS_GET_BANDWIDTH(&rate));
+    this->encoded_data_size = rate;
 }
 
 Sound::Encoder::~Encoder()
@@ -23,21 +24,10 @@ Sound::Encoder::~Encoder()
     opus_encoder_destroy(this->state);
 }
 
-int Sound::Encoder::EncodeAudioStream(const SoundFormat inputData)
+Sound::PacketDataFormat *Sound::Encoder::EncodeAudioStream(const float *frame)
 {
-    unsigned char *packets = new unsigned char[FRAMES_PER_BUFFER * CHANNELS];
-    const float *inputDataFormatted = &inputData[0];
-    int packetsSize;
+    Sound::PacketDataFormat *compressed_buffer = new (Sound::PacketDataFormat[this->encoded_data_size]);
+    int ret = opus_encode_float(this->state, frame, 480, compressed_buffer, this->encoded_data_size);
 
-    packetsSize = opus_encode_float(this->state, inputDataFormatted, this->frameSize, packets, FRAMES_PER_BUFFER * CHANNELS);
-
-    this->outputData.clear();
-    for (size_t i = 0; i < packetsSize; i++)
-        this->outputData.push_back(packets[i]);
-    return packetsSize;
-}
-
-Sound::PacketDataFormat Sound::Encoder::getOuput() const
-{
-    return outputData;
+    return compressed_buffer;
 }

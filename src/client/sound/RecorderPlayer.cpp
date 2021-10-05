@@ -65,7 +65,7 @@ std::vector<float> Sound::RecorderPlayer::getMic()
 //spaeker(decodeà
 void Sound::RecorderPlayer::toSpeaker(std::vector<float> sample)
 {
-    this->data.play.insert(this->data.play.end(), sample.begin(), sample.end() );
+    this->data.play.insert(this->data.play.end(), sample.begin(), sample.end());
 }
 
 const std::string Sound::RecorderPlayer::getErrorMsg() const

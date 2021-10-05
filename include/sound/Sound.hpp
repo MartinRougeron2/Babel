@@ -22,14 +22,13 @@
 
 namespace Sound
 {
-
-    typedef std::vector<unsigned char> PacketDataFormat;
+    typedef unsigned char PacketDataFormat;
     typedef std::vector<float> SoundFormat;
     typedef float * opusInputType;
 
     #define SAMPLE_RATE 48000
     #define FRAMES_PER_BUFFER 256
-    #define CHANNELS 2
+    #define CHANNELS 1
 
     typedef struct data_s
     {
@@ -60,12 +59,10 @@ namespace Sound
 
             const std::string getErrorMsg() const;
 
-        private:
             Aportaudio audio;
+        private:
 
             PaStream *stream;
-            PaStreamParameters input;
-            PaStreamParameters output;
 
             data_t data;
             PaError err;
@@ -81,8 +78,7 @@ namespace Sound
             Encoder();
             ~Encoder();
 
-            int EncodeAudioStream(const SoundFormat);
-            PacketDataFormat getOuput() const;
+            Sound::PacketDataFormat *EncodeAudioStream(const float *frame);
 
         protected:
         private:
@@ -90,6 +86,7 @@ namespace Sound
             int error_code;
             int frameSize;
             PacketDataFormat outputData;
+            opus_int32 encoded_data_size;
     };
 
     class Decoder
@@ -98,14 +95,14 @@ namespace Sound
             Decoder();
             ~Decoder();
 
-            int decodeData(const PacketDataFormat data, const int frameSize);
-            SoundFormat getOutput() const;
+            Sound::SoundFormat decodeData(const unsigned char *data);
 
         protected:
         private:
             OpusDecoder *state;
             int error_code;
             SoundFormat sound;
+            opus_int32 encoded_data_size;
     };
 
 }; // namespace Sound
