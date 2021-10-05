@@ -115,7 +115,7 @@ void Server::handle_accept(std::shared_ptr<Session> session, const boost::system
 
 bool Session::login(int id)
 {
-
+    
     std::cout << colors::green << DONE << "logged: " << id << colors::reset << std::endl;
 
     return (false);
