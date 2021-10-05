@@ -59,8 +59,8 @@
             bool call(struct User);
             bool ping(struct User);
 
-            User decoder(std::string);
-            User set_new_user(void);
+            User decoder(std::string, User);
+            User set_new_user();
 
         private:
             enum
@@ -75,7 +75,6 @@
 
             std::string current_command;
             std::string current_arguments;
-            void add_user(std::string, std::string);
     };
 
     class Server

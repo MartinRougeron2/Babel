@@ -36,15 +36,11 @@ void Session::start()
 void Session::handle_read(std::shared_ptr<Session> &s, const boost::system::error_code &err, std::size_t bytes_transferred)
 {
     std::string new_data(data);
-    std::string user(socket.remote_endpoint().address().to_string());
-    std::string port(std::to_string(socket.remote_endpoint().port()));
-    User decoded = Session::set_new_user();
-
+    User decoded;
+ 
     if (!err) {
-        Session::add_user(user, port);
-
         new_data = new_data.substr(0, new_data.find('\n'));
-        decoded = Session::decoder(new_data);
+        decoded = Session::decoder(new_data, Session::set_new_user());
         if (this->mapped.find(this->current_command) != this->mapped.end()) {
             std::cout << colors::cyan << DONE << "command found: " << this->current_command << colors::reset << std::endl;
             (this->*this->mapped.at(this->current_command))(decoded);
@@ -66,19 +62,7 @@ void Session::handle_read(std::shared_ptr<Session> &s, const boost::system::erro
     }
 }
 
-void Session::add_user(std::string user, std::string port)
-{
-    std::string full(user + ":" + port);
-
-    if (std::find(this->users.begin(), this->users.end(), full) == this->users.end()) {
-        std::cout << "adding: " << full << " to users" << std::endl;
-        this->users.push_back(full);
-    } else {
-        std::cout << "user: " << full << " already registered" << std::endl;
-    }
-}
-
-User Session::decoder(std::string recv)
+User Session::decoder(std::string recv, User user)
 {
     User ids;
     std::string delimiter = ";";
@@ -92,8 +76,11 @@ User Session::decoder(std::string recv)
     recv = recv.erase(0, recv.find(delimiter) + delimiter.length());
 
     // GET ADDRESS
+    ids.address = user.address;
+    /*
     ids.address = recv.substr(0, recv.find(delimiter));
     recv = recv.erase(0, recv.find(delimiter) + delimiter.length());
+    */
 
     // GET COMMAND
     this->current_command = recv.substr(0, recv.find(delimiter));
@@ -113,10 +100,13 @@ User Session::decoder(std::string recv)
 User Session::set_new_user(void)
 {
     User new_user;
+    std::string user(socket.remote_endpoint().address().to_string());
+    std::string port(std::to_string(socket.remote_endpoint().port()));
+    std::string full(user + ":" + port);
 
     new_user.username = EMPTY;
     new_user.password = EMPTY;
-    new_user.address = EMPTY;
+    new_user.address = full;
 
     return (new_user);
 }
