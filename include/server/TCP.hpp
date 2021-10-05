@@ -11,11 +11,11 @@
     #include <cstdio>
     #include <cstdlib>
     #include <cstring>
-    #include <deque>
     #include <iostream>
     #include <list>
     #include <memory>
     #include <set>
+    #include <vector>
     #include <utility>
     #include <algorithm>
     #include <string>
@@ -24,6 +24,7 @@
 
     #include "Signals.hpp"
     #include "Logs.hpp"
+    #include "Asqlite3.hpp"
 
     #define TCP_PORT 2000
 
@@ -65,6 +66,10 @@
 
             tcp::socket socket;
             char data[max_length];
+            std::vector<std::string> users;
+            Asqlite3 database;
+
+            void add_user(std::string, std::string);
     };
 
     class Server

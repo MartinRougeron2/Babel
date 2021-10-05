@@ -11,6 +11,8 @@
 
 Session::Session(boost::asio::io_service &ios) : socket(ios)
 {
+    this->database = Asqlite3();
+
     return;
 }
 
@@ -34,15 +36,21 @@ void Session::start()
 void Session::handle_read(std::shared_ptr<Session> &s, const boost::system::error_code &err, std::size_t bytes_transferred)
 {
     std::string new_data(data);
+    std::string user;
+    std::string port;
 
     if (!err) {
+        user = socket.remote_endpoint().address().to_string();
+        port = socket.remote_endpoint().port();
+        Session::add_user(user, port);
+
         new_data = new_data.substr(0, new_data.find('\n'));
 
         if (this->mapped.find(new_data) != this->mapped.end()) {
             std::cout << colors::cyan << DONE << "command found: " << new_data << colors::reset << std::endl;
             (this->*this->mapped.at(new_data))(0);
         } else {
-            std::cout << colors::red << FAIL << "command not found: " << new_data << colors::reset << std::endl;
+            std::cout << colors::yellow << FAIL << "command not found: " << new_data << colors::reset << std::endl;
         }
         socket.async_read_some(
             boost::asio::buffer(data, max_length),
@@ -52,8 +60,22 @@ void Session::handle_read(std::shared_ptr<Session> &s, const boost::system::erro
                 boost::asio::placeholders::error,
                 boost::asio::placeholders::bytes_transferred)
             );
+    } else if (err == boost::asio::error::eof) {
+        std::cerr << colors::magenta << DONE << "A client left" << colors::reset << std::endl;
     } else {
-        std::cerr << colors::bold << FAIL << "err (recv): " << err.message() << colors::reset << std::endl;
+        std::cerr << colors::red << FAIL << "err (recv): " << err.message() << colors::reset << std::endl;
+    }
+}
+
+void Session::add_user(std::string user, std::string port)
+{
+    std::string full(user + ":" + port);
+
+    if (std::find(this->users.begin(), this->users.end(), full) == this->users.end()) {
+        std::cout << "adding: " << full << " to users" << std::endl;
+        this->users.push_back(full);
+    } else {
+        std::cout << "user: " << full << " already registered" << std::endl;
     }
 }
 
@@ -86,13 +108,14 @@ void Server::handle_accept(std::shared_ptr<Session> session, const boost::system
             )
         );
     } else {
-        std::cerr << colors::bold << FAIL << "err: " << err.message() << colors::reset << std::endl;
+        std::cerr << colors::red << FAIL << "err: " << err.message() << colors::reset << std::endl;
         session.reset();
     }
 }
 
 bool Session::login(int id)
 {
+
     std::cout << colors::green << DONE << "logged: " << id << colors::reset << std::endl;
 
     return (false);
@@ -107,28 +130,28 @@ bool Session::logout(int id)
 
 bool Session::join(int id)
 {
-    std::cout << "joinned: " << id << std::endl;
+    std::cout << colors::green << DONE << "joinned: " << id << colors::reset << std::endl;
 
     return (false);
 }
 
 bool Session::leave(int id)
 {
-    std::cout << "left: " << id << std::endl;
+    std::cout << colors::green << DONE << "left: " << id << colors::reset << std::endl;
 
     return (false);
 }
 
 bool Session::call(int id)
 {
-    std::cout << "called: " << id << std::endl;
+    std::cout << colors::green << DONE << "called: " << id << colors::reset << std::endl;
 
     return (false);
 }
 
 bool Session::ping(int id)
 {
-    std::cout << "pong" << id << std::endl;
+    std::cout << colors::green << DONE << "pong: " << id << colors::reset << std::endl;
 
     return (false);
 }
