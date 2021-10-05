@@ -52,8 +52,11 @@ using boost::asio::ip::udp;
                              const boost::system::error_code &error,
                              std::size_t bytes_transferred);
 
-            std::vector<User *> getOthersUsers(User * userFrom);
+
+            std::vector<udp::endpoint *> getOthersUsersEndpoint(const User *userFrom);
             void get();
+            void sendStringToEndpoint(const std::string dataToSend,
+                                      const udp::endpoint remote_endpoint);
 
 
             udp::socket socket_;
