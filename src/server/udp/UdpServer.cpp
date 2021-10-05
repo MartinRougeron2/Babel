@@ -19,6 +19,9 @@ void UdpServer::handleReceive(const boost::system::error_code &error,
     if (!error || error == boost::asio::error::message_size) {
         boost::shared_ptr <std::string> message(new std::string("PTDR t ki ?"));
 
+        std::cout << remote_endpoint_.address().to_string() << ":";
+        std::cout << remote_endpoint_.port() << std::endl;
+
         socket_.async_send_to(
             boost::asio::buffer(*message),
             remote_endpoint_,
@@ -35,17 +38,29 @@ void UdpServer::handleReceive(const boost::system::error_code &error,
     }
 }
 
-Group::Group(std::vector<User> newUsers, int newId)
+Group::Group(std::vector<User *> newUsers, int newId)
 {
-    this->listUser = newUsers;
     this->id = newId;
+
+    for (auto user : newUsers) {
+        this->addUser(user);
+    }
 }
 
 Group::~Group()
 {
 }
 
+void Group::addUser(User * user)
+{
+    size_t separationPos = user->address.find(':');
+    std::string address = user->address.substr(0, separationPos);
+    std::string port = user->address.substr(separationPos + 1);
 
+    this->listUser[user] = new boost::asio::ip::udp::endpoint(
+        boost::asio::ip::address::from_string(user->address),std::stoi(port)
+    );
+}
 
 void UdpServer::handleSend(boost::shared_ptr <std::string> msg,
                             const boost::system::error_code &error,
@@ -66,23 +81,23 @@ void UdpServer::get() {
     );
 }
 
-std::vector<User> UdpServer::getOthersUsers(User userFrom)
+std::vector<User *> UdpServer::getOthersUsers(User * userFrom)
 {
     Group userGroup({}, 0);
-    std::vector<User> others = {};
+    std::vector<User *> others;
 
 
     for (auto group : allGroups)
         for (auto user : group->listUser)
-            if (user == userFrom)
+            if (user.first->username == userFrom->username)
                 userGroup.listUser = group->listUser;
     for (auto user : userGroup.listUser)
-        if (user != userFrom)
-            others.push_back(user);
+        if (user.first->username != userFrom->username)
+            others.push_back(user.first);
     return others;
 }
 
-int UdpServer::addUser(User userToAdd)
+int UdpServer::addUser(User * userToAdd)
 {
     int newId = id++;
     this->allGroups.push_back(
@@ -92,15 +107,15 @@ int UdpServer::addUser(User userToAdd)
 }
 
 
-void UdpServer::addUser(User userToAdd, int groupId)
+void UdpServer::addUser(User * userToAdd, int groupId)
 {
     for (auto group : allGroups) {
         if (group->id == groupId)
-            group->listUser.push_back(userToAdd);
+            group->addUser(userToAdd);
     }
 }
 
-int UdpServer::addUser(std::vector<User> usersToAdd)
+int UdpServer::addUser(std::vector<User *> usersToAdd)
 {
     int newId = id++;
     this->allGroups.push_back(
@@ -109,20 +124,19 @@ int UdpServer::addUser(std::vector<User> usersToAdd)
     return newId;
 }
 
-void UdpServer::addUser(User userToAdd, User userToFind)
+void UdpServer::addUser(User * userToAdd, User * userToFind)
 {
     for (auto group : allGroups)
         for (auto user : group->listUser)
-            if (user == userToFind)
-                group->listUser.push_back(userToAdd);
+            if (user.first->username == userToFind->username)
+                group->addUser(userToAdd);
 }
 
-void UdpServer::addUser(std::vector <User> usersToAdd, int groupId)
+void UdpServer::addUser(std::vector <User *> usersToAdd, int groupId)
 {
     for (auto group : allGroups) {
         if (group->id == groupId)
-            group->listUser.insert(
-                group->listUser.begin(), usersToAdd.begin(), usersToAdd.end()
-                );
+            for (auto user : usersToAdd)
+                group->addUser(user);
     }
 }
