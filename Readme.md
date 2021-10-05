@@ -31,5 +31,5 @@ Default port: **2000**
 ```
 
 <p align="center">
-    <a><img src="https://raw.githubusercontent.com/EpitechPromo2024/B-CPP-500-LYN-5-1-babel-martin.rougeron/resources/UML_1.png" alt="UML_1"></a>
+    <a><img src="https://raw.githubusercontent.com/EpitechPromo2024/B-CPP-500-LYN-5-1-babel-martin.rougeron/master/resources/UML_1.png" alt="UML_1"></a>
 </p>
