@@ -61,7 +61,7 @@ using boost::asio::ip::udp;
 
             udp::socket socket_;
             udp::endpoint remote_endpoint_;
-            boost::array<char, 1> recv_buffer_;
+            boost::array<char, 100> recv_buffer_;
             std::vector<Group *> allGroups;
             int id = 0;
     };

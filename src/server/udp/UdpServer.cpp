@@ -52,7 +52,7 @@ void UdpServer::handleReceive(const boost::system::error_code &error,
         others = getOthersUsersEndpoint(sendUser);
         for (auto const endpoint : others)
             this->sendStringToEndpoint(message, *endpoint);
-
+        std::cout << recv_buffer_.c_array() << std::endl;
         this->get();
     }
 }
@@ -74,13 +74,17 @@ void UdpServer::get() {
             boost::asio::placeholders::bytes_transferred
         )
     );
+
 }
+
 
 std::vector<udp::endpoint *> UdpServer::getOthersUsersEndpoint(const User *userFrom)
 {
     Group userGroup({}, 0);
     std::vector<udp::endpoint *> others;
 
+    if (userFrom == nullptr)
+        return {};
 
     for (auto group : this->allGroups)
         for (auto user : group->listUser)
