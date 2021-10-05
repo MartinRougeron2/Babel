@@ -107,9 +107,6 @@ User Session::decoder(std::string recv)
     std::cout << "Arguments: " << recv << std::endl;
     std::cout << "-----------" << std::endl;
 
-    // TODO: get command asked
-    this->current_command = "/ping";
-
     return (ids);
 }
 
