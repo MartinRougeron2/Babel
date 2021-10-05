@@ -16,6 +16,8 @@
 using boost::asio::ip::udp;
 
 
+#include "../common/group.hpp"
+
 #ifndef ASIO_HPP_
     #define ASIO_HPP_
 
@@ -24,6 +26,11 @@ using boost::asio::ip::udp;
     class UdpServer {
         public:
             UdpServer(boost::asio::io_service &io_service);
+            int  addUser(User userToAdd);
+            void addUser(User userToAdd, int groupId);
+            int  addUser(std::vector<User> usersToAdd);
+            void addUser(std::vector<User> usersToAdd, int groupId);
+            void addUser(User userToAdd, User userToFind);
 
         private:
             void handleReceive(const boost::system::error_code &error,
@@ -33,10 +40,15 @@ using boost::asio::ip::udp;
                              const boost::system::error_code &error,
                              std::size_t bytes_transferred);
 
+            std::vector<User> getOthersUsers(User userFrom);
             void get();
+
+
             udp::socket socket_;
             udp::endpoint remote_endpoint_;
             boost::array<char, 1> recv_buffer_;
+            std::vector<Group *> allGroups;
+            int id = 0;
     };
 
 #endif /* !ASIO_HPP_ */
