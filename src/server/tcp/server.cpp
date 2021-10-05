@@ -36,19 +36,18 @@ void Session::start()
 void Session::handle_read(std::shared_ptr<Session> &s, const boost::system::error_code &err, std::size_t bytes_transferred)
 {
     std::string new_data(data);
-    std::string user;
-    std::string port;
+    std::string user(socket.remote_endpoint().address().to_string());
+    std::string port(std::to_string(socket.remote_endpoint().port()));
+    User decoded = Session::set_new_user();
 
     if (!err) {
-        user = socket.remote_endpoint().address().to_string();
-        port = socket.remote_endpoint().port();
         Session::add_user(user, port);
 
         new_data = new_data.substr(0, new_data.find('\n'));
-
-        if (this->mapped.find(new_data) != this->mapped.end()) {
-            std::cout << colors::cyan << DONE << "command found: " << new_data << colors::reset << std::endl;
-            (this->*this->mapped.at(new_data))(0);
+        decoded = Session::decoder(new_data);
+        if (this->mapped.find(this->current_command) != this->mapped.end()) {
+            std::cout << colors::cyan << DONE << "command found: " << this->current_command << colors::reset << std::endl;
+            (this->*this->mapped.at(this->current_command))(decoded);
         } else {
             std::cout << colors::yellow << FAIL << "command not found: " << new_data << colors::reset << std::endl;
         }
@@ -77,6 +76,52 @@ void Session::add_user(std::string user, std::string port)
     } else {
         std::cout << "user: " << full << " already registered" << std::endl;
     }
+}
+
+User Session::decoder(std::string recv)
+{
+    User ids;
+    std::string delimiter = ";";
+
+    // GET USERNAME
+    ids.username = recv.substr(0, recv.find(delimiter));
+    recv = recv.erase(0, recv.find(delimiter) + delimiter.length());
+
+    // GET PASSWORD
+    ids.password = recv.substr(0, recv.find(delimiter));
+    recv = recv.erase(0, recv.find(delimiter) + delimiter.length());
+
+    // GET ADDRESS
+    ids.address = recv.substr(0, recv.find(delimiter));
+    recv = recv.erase(0, recv.find(delimiter) + delimiter.length());
+
+    // GET COMMAND
+    this->current_command = recv.substr(0, recv.find(delimiter));
+    this->current_arguments = recv.erase(0, recv.find(delimiter) + delimiter.length());
+
+    std::cout << "-----------" << std::endl;
+    std::cout << "Username:  " << ids.username << std::endl;
+    std::cout << "Password:  " << ids.password << std::endl;
+    std::cout << "Address:   " << ids.address << std::endl;
+    std::cout << "Command:   " << this->current_command << std::endl;
+    std::cout << "Arguments: " << recv << std::endl;
+    std::cout << "-----------" << std::endl;
+
+    // TODO: get command asked
+    this->current_command = "/ping";
+
+    return (ids);
+}
+
+User Session::set_new_user(void)
+{
+    User new_user;
+
+    new_user.username = EMPTY;
+    new_user.password = EMPTY;
+    new_user.address = EMPTY;
+
+    return (new_user);
 }
 
 Server::Server(boost::asio::io_service &ios, short port) : ios(ios), acceptor(ios, tcp::endpoint(tcp::v4(), port))
@@ -113,45 +158,48 @@ void Server::handle_accept(std::shared_ptr<Session> session, const boost::system
     }
 }
 
-bool Session::login(int id)
+bool Session::login(struct User user)
 {
-    
-    std::cout << colors::green << DONE << "logged: " << id << colors::reset << std::endl;
+    if (this->database.login(user) == this->database.SUCCESS) {
+        std::cout << colors::green << DONE << "user: " << user.username << " has been logged" << colors::reset << std::endl;
+        return (true);
+    }
+    std::cout << colors::yellow << FAIL << "user: " << user.username << " failed to login" << colors::reset << std::endl;
 
     return (false);
 }
 
-bool Session::logout(int id)
+bool Session::logout(struct User user)
 {
-    std::cout << colors::green << DONE << "logout: " << id << colors::reset << std::endl;
+    std::cout << colors::green << DONE << "logged out: " << user.username << colors::reset << std::endl;
 
     return (false);
 }
 
-bool Session::join(int id)
+bool Session::join(struct User user)
 {
-    std::cout << colors::green << DONE << "joinned: " << id << colors::reset << std::endl;
+    std::cout << colors::green << DONE << "joinned: " << user.username << colors::reset << std::endl;
 
     return (false);
 }
 
-bool Session::leave(int id)
+bool Session::leave(struct User user)
 {
-    std::cout << colors::green << DONE << "left: " << id << colors::reset << std::endl;
+    std::cout << colors::green << DONE << "left: " << user.username << colors::reset << std::endl;
 
     return (false);
 }
 
-bool Session::call(int id)
+bool Session::call(struct User user)
 {
-    std::cout << colors::green << DONE << "called: " << id << colors::reset << std::endl;
+    std::cout << colors::green << DONE << "called: " << user.username << colors::reset << std::endl;
 
     return (false);
 }
 
-bool Session::ping(int id)
+bool Session::ping(struct User user)
 {
-    std::cout << colors::green << DONE << "pong: " << id << colors::reset << std::endl;
+    std::cout << colors::green << DONE << "pong: " << user.username << colors::reset << std::endl;
 
     return (false);
 }

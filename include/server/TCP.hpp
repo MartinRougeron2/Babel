@@ -27,6 +27,7 @@
     #include "Asqlite3.hpp"
 
     #define TCP_PORT 2000
+    #define EMPTY "__EMPTY__"
 
     using boost::asio::ip::tcp;
 
@@ -40,7 +41,7 @@
             void start();
             void handle_read(std::shared_ptr<Session> &, const boost::system::error_code &, std::size_t);
 
-            typedef bool (Session::*function_type)(int);
+            typedef bool (Session::*function_type)(struct User);
 
             std::map<std::string, function_type> mapped = {
                 { "/login", &Session::login },
@@ -51,12 +52,15 @@
                 { "/ping", &Session::ping }
             };
 
-            bool login(int);
-            bool logout(int);
-            bool join(int);
-            bool leave(int);
-            bool call(int);
-            bool ping(int);
+            bool login(struct User);
+            bool logout(struct User);
+            bool join(struct User);
+            bool leave(struct User);
+            bool call(struct User);
+            bool ping(struct User);
+
+            User decoder(std::string);
+            User set_new_user(void);
 
         private:
             enum
@@ -69,6 +73,8 @@
             std::vector<std::string> users;
             Asqlite3 database;
 
+            std::string current_command;
+            std::string current_arguments;
             void add_user(std::string, std::string);
     };
 
