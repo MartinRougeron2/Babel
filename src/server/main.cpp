@@ -12,6 +12,8 @@ int main(int argc, char **argv)
 {
     boost::asio::io_service ios;
     Server s(ios, TCP_PORT);
+    tcp::endpoint endpoint(tcp::v4(), TCP_PORT);
+    UdpServer udpServer(ios);
 
     try {
         signals::handler();
