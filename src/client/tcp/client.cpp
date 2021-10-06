@@ -56,30 +56,24 @@ bool TCP::build()
 
 bool TCP::run()
 {
-    int bytesRead = 0;
-    int bytesWritten = 0;
     this->running = true;
+    // command
+    Commands command;
+    User user;
+    Protocol data;
+
+    // TO REMOVE FORCE LOGIN
+    user.username = "admin";
+    user.password = "admin";
+    user.address = "127.0.0.1";
 
     for (; this->running == true; ) {
-        std::cout << ":: ";
-        std::string data;
-        std::getline(std::cin, data);
-        memset(&msg, 0, sizeof(msg));
-        strcpy(msg, data.c_str());
-
-        if (data == "exit") {
-            send(this->client_socket, (char*)&msg, strlen(msg), 0);
+        std::cout << "$> ";
+        std::cin >> command.command >> command.arguments;
+        if (data.command.command == "EXIT") {
             this->running = false;
         }
-        bytesWritten += send(this->client_socket, (char*)&msg, strlen(msg), 0);
-        std::cout << "Awaiting server response..." << std::endl;
-        memset(&msg, 0, sizeof(msg));
-        bytesRead += recv(this->client_socket, (char*)&msg, sizeof(msg), 0);
-        if (!strcmp(msg, "exit")) {
-            std::cout << "Server has quit the session" << std::endl;
-            this->running = false;
-        }
-        std::cout << "Received: " << msg;
+        send(this->client_socket, &data, sizeof(data), 0);
     }
     close(this->client_socket);
 

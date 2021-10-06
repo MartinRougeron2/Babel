@@ -25,6 +25,7 @@
     #include "Signals.hpp"
     #include "Logs.hpp"
     #include "Asqlite3.hpp"
+    #include "Protocol.hpp"
 
     #define TCP_PORT 2000
     #define EMPTY "__EMPTY__"
@@ -41,7 +42,7 @@
             void start();
             void handle_read(std::shared_ptr<Session> &, const boost::system::error_code &, std::size_t);
 
-            typedef bool (Session::*function_type)(struct User);
+            typedef bool (Session::*function_type)(std::string, struct User);
 
             std::map<std::string, function_type> mapped = {
                 { "/login", &Session::login },
@@ -53,15 +54,16 @@
                 { "/exit", &Session::exit }
             };
 
-            bool login(struct User);
-            bool logout(struct User);
-            bool join(struct User);
-            bool leave(struct User);
-            bool call(struct User);
-            bool ping(struct User);
-            bool exit(struct User);
+            bool login(std::string, struct User);
+            bool logout(std::string, struct User);
+            bool join(std::string, struct User);
+            bool leave(std::string, struct User);
+            bool call(std::string, struct User);
+            bool ping(std::string, struct User);
+            bool exit(std::string, struct User);
 
             User decoder(std::string, User);
+            void display(User);
             User set_new_user();
 
         private:
@@ -71,7 +73,7 @@
             };
 
             tcp::socket socket;
-            char data[max_length];
+            Protocol *recv;
             std::vector<std::string> users;
             Asqlite3 database;
             void close_socket();
