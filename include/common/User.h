@@ -20,6 +20,14 @@ struct UserApp {
     {
         return other.username < this->username;
     }
+    User(std::string username_="",
+         std::string address_="",
+         std::string password_="") :
+         username(username_),
+         address(address_),
+         password(password_)
+         {
+         }
 
     UserApp(std::string username_="", std::string address_="", std::string password_="", int id_=-1) :
         username(username_),

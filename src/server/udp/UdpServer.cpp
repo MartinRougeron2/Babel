@@ -10,7 +10,12 @@
 
 UdpServer::UdpServer(boost::asio::io_service &io_service) :
     socket_(io_service, udp::endpoint(udp::v4(), UDP_PORT)) {
-
+    int newId = this->addUser(
+        new User("martinew", "127.0.0.1:45455", "")
+    );
+    this->addUser(new User("antho", "10.109.250.61:45456", ""), newId);
+    for (auto userEnd : allGroups[0]->listUser)
+        std::cout << userEnd.first->username << std::endl;
     this->get();
 }
 
@@ -39,20 +44,21 @@ void UdpServer::handleReceive(const boost::system::error_code &error,
     std::vector<udp::endpoint *> others;
 
     if (!error || error == boost::asio::error::message_size) {
-        std::string message = std::string("PTDR t ki ?");
-
-        std::cout << remote_endpoint_.address().to_string() << ":";
-        std::cout << remote_endpoint_.port() << std::endl;
+        std::string message = std::string(recv_buffer_.c_array());
 
         for (auto group : this->allGroups)
             for (auto userEndpoint : group->listUser)
                 if (remote_endpoint_ == *userEndpoint.second)
                     sendUser = userEndpoint.first;
 
+        std::cout << sendUser->username << std::endl;
+
         others = getOthersUsersEndpoint(sendUser);
+        for (auto other : others)
+            std::cout << (*other).port() << std::endl;
         for (auto const endpoint : others)
             this->sendStringToEndpoint(message, *endpoint);
-        std::cout << recv_buffer_.c_array() << std::endl;
+        recv_buffer_.assign(0);
         this->get();
     }
 }
