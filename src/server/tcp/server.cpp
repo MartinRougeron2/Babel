@@ -9,13 +9,13 @@
 
 #include "Colors.hpp"
 
-Server::Server(boost::asio::io_service &ios, short port) : ios(ios), acceptor(ios, tcp::endpoint(tcp::v4(), port))
+TCPServer::TCPServer(boost::asio::io_service &ios, short port) : ios(ios), acceptor(ios, tcp::endpoint(tcp::v4(), port))
 {
     std::shared_ptr<Session> session = std::make_shared<Session>(ios);
     acceptor.async_accept(
         session->get_socket(),
         boost::bind(
-            &Server::handle_accept,
+            &TCPServer::handle_accept,
             this,
             session,
             boost::asio::placeholders::error
@@ -23,7 +23,7 @@ Server::Server(boost::asio::io_service &ios, short port) : ios(ios), acceptor(io
     );
 }
 
-void Server::handle_accept(std::shared_ptr<Session> session, const boost::system::error_code &err)
+void TCPServer::handle_accept(std::shared_ptr<Session> session, const boost::system::error_code &err)
 {
     if (!err) {
         session->start();
@@ -31,7 +31,7 @@ void Server::handle_accept(std::shared_ptr<Session> session, const boost::system
         acceptor.async_accept(
             session->get_socket(),
             boost::bind(
-                &Server::handle_accept,
+                &TCPServer::handle_accept,
                 this,
                 session,
                 boost::asio::placeholders::error
@@ -111,7 +111,7 @@ void Session::handle_read(std::shared_ptr<Session> &s, const boost::system::erro
 User Session::decoder(std::string recv, User user)
 {
     User ids;
-    std::string delimiter = " ";
+    std::string delimiter = ";";
 
     // GET USERNAME
     ids.username = recv.substr(0, recv.find(delimiter));

@@ -80,10 +80,10 @@
             std::string current_arguments;
     };
 
-    class Server
+    class TCPServer
     {
         public:
-            Server(boost::asio::io_service &, short);
+            TCPServer(boost::asio::io_service &, short);
 
             void handle_accept(std::shared_ptr<Session>, const boost::system::error_code &);
 
