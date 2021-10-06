@@ -91,7 +91,7 @@ User Session::decoder(std::string recv, User user)
     std::cout << "Password:  " << ids.password << std::endl;
     std::cout << "Address:   " << ids.address << std::endl;
     std::cout << "Command:   " << this->current_command << std::endl;
-    std::cout << "Arguments: " << recv << std::endl;
+    std::cout << "Arguments: " << this->current_arguments << std::endl;
     std::cout << "-----------" << std::endl;
 
     return (ids);
@@ -147,6 +147,21 @@ void Server::handle_accept(std::shared_ptr<Session> session, const boost::system
 
 bool Session::login(struct User user)
 {
+    std::cout << user.username << std::endl;
+    std::cout << user.password << std::endl;
+    std::cout << user.address << std::endl;
+
+    if (this->database.getUser(user.username) == user.username) {
+        std::cout << colors::green << DONE << "user present in database: " << user.username << colors::reset << std::endl;
+    } else {
+        std::cout << colors::yellow << FAIL << "user not present in database: " << user.username << colors::reset << std::endl;
+        std::cout << colors::blue << WAIT << "creating user: " << user.username << colors::reset << std::endl;
+        if (this->database.uploadData(user) == true) {
+            std::cout << colors::green << DONE << "user created: " << user.username << colors::reset << std::endl;
+        } else {
+            std::cout << colors::yellow << FAIL << "user already present: " << user.username << colors::reset << std::endl;
+        }
+    }
     if (this->database.login(user) == this->database.SUCCESS) {
         std::cout << colors::green << DONE << "user: " << user.username << " has been logged" << colors::reset << std::endl;
         return (true);

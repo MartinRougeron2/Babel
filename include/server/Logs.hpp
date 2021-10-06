@@ -21,7 +21,8 @@
     #define COMMAND_NF "command not found: "
     #define COMMAND_F "command found: "
 
-    #define DONE "[+] "
-    #define FAIL "[x] "
+    #define DONE "[  DONE  ] "
+    #define FAIL "[  FAIL  ] "
+    #define WAIT "[  WAIT  ] "
 
 #endif /* LOGS_HPP */
