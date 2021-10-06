@@ -60,15 +60,15 @@ int Asqlite3::callbackGetUser(void *context, int argc, char** argv, char** azCol
 
 Asqlite3::loginCode Asqlite3::login(struct UserApp user)
 {
-	std::string sql = SELECT_QUERY("pseudo") + FROM_QUERY("user") + WHERE_QUERY("pseudo = '" + user.username + "';");
+	std::string sql = SELECT_QUERY("pseudo ") + FROM_QUERY("user ") + WHERE_QUERY("pseudo = '" + user.username + "';");
 	this->_res.clear();
 	if (!executeQuery(sql, callbackUserExist, this))
 		std::cerr << "Error in login function.1" << std::endl;
 	if (user.username != this->_res)
 		return USER_NOT_EXIST;
 	this->_res.clear();
-	sql = SELECT_QUERY("pseudo") +
-	FROM_QUERY("user") +
+	sql = SELECT_QUERY("pseudo ") +
+	FROM_QUERY("user ") +
 	WHERE_QUERY("pseudo = '" + user.username + "' AND pseudo = '" + user.username + "';");
 	if (!executeQuery(sql, callbackUserExist, this))
 		std::cerr << "Error in login function.2" << std::endl;
@@ -80,8 +80,8 @@ Asqlite3::loginCode Asqlite3::login(struct UserApp user)
 
 std::string Asqlite3::getUser(std::string name)
 {
-	std::string sql = SELECT_QUERY("pseudo") +
-	FROM_QUERY("user") +
+	std::string sql = SELECT_QUERY("pseudo ") +
+	FROM_QUERY("user ") +
 	WHERE_QUERY("pseudo LIKE '" + name + "%';");
 	this->_res.clear();
 	if (!executeQuery(sql, callbackGetUser, this)) {
@@ -112,8 +112,8 @@ bool Asqlite3::linkUser(std::string from, std::string to)
 
 std::string Asqlite3::getIdByUsername(std::string username)
 {
-	std::string sql = SELECT_QUERY("id") +
-		FROM_QUERY("user") +
+	std::string sql = SELECT_QUERY("id ") +
+		FROM_QUERY("user ") +
 		WHERE_QUERY("pseudo = '" + username + "';");
 	this->_res.clear();
 	if (!executeQuery(sql, callbackUserExist, this))
@@ -137,8 +137,8 @@ int Asqlite3::callbackFillContact(void *context, int argc, char** argv, char** a
 std::vector<struct UserApp> Asqlite3::getLinkedUser(std::string username)
 {
 	std::string id = getIdByUsername(username);
-	std::string sql = SELECT_QUERY("pseudo, address") +
-		FROM_QUERY("contact") +
+	std::string sql = SELECT_QUERY("pseudo, address ") +
+		FROM_QUERY("contact ") +
 		INNERJOIN_QUERY("user ON user.id=contact.idfrom OR user.id=contact.idto ") +
 		WHERE_QUERY("user.id != "+id+" AND (contact.idfrom = "+id+" OR contact.idto = "+id+")");
 	this->_linkedUser.clear();
