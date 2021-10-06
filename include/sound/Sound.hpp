@@ -22,87 +22,85 @@
 
 namespace Sound
 {
-    typedef unsigned char PacketDataFormat;
-    typedef std::vector<float> SoundFormat;
-    typedef float * opusInputType;
-
-    #define SAMPLE_RATE 48000
-    #define FRAMES_PER_BUFFER 256
-    #define CHANNELS 1
-
-    typedef struct data_s
-    {
-        SoundFormat record;
-        SoundFormat play;
-    } data_t;
-
     class RecorderPlayer
     {
         public:
             RecorderPlayer();
             ~RecorderPlayer();
 
+            /**
+             * have to be call to initialize the audio lib
+             * @throw const char *
+             */
             void init(void);
 
-            /*
-            ** Get sound via mic.
-            ** @return vector of float with amplitude get by mic
-            */
-            SoundFormat getMic();
+            /**
+             * have to be call to close the audio lib
+             * @throw const char *
+             */
+            void stop(void);
+
+            /**
+             * have to be call in loop
+             * @return get a buffer of frame
+             */
+            const std::vector<unsigned short> getMic(void);
 
             /*
-            ** sound to speaker.
-            ** @param sample vector of float with amplitude get by mic
-            ** @return vector of float with amplitude get by mic
+            ** @brief have to be call in loop
+            ** @param decoded frame
+            ** @return get a buffer of encoded frame
             */
-            void toSpeaker(SoundFormat sample);
+            // std::vector<unsigned short> getEncodedMic();
 
-            const std::string getErrorMsg() const;
+            void frameToSpeaker(const std::vector<unsigned short> &decoded);
+            // bool encodedFrameToSpeaker(std::vector<unsigned short> decoded) const;
 
-            Aportaudio audio;
+            const size_t &getChannelNumber() const;
+            const size_t &getSampleRate() const;
+            const size_t &getBufferSize() const;
+
         private:
+            Aportaudio audio;
 
             PaStream *stream;
 
-            data_t data;
+            size_t channelsNb;
+            size_t bufferSize;
+            size_t sampleRate;
+
+            // std::vector<unsigned short> captured;
+            // std::vector<unsigned short> decoded;
+
             PaError err;
-            std::string errMsg;
     };
 
-    // ** Codec **
-
-
-    class Encoder
+    class Codec
     {
         public:
-            Encoder();
-            ~Encoder();
+            /**
+             * * Create codec to encode and decode audio
+             * @param sampleRate frequency of sample
+             * @param sampleRate number of channels
+             * @param bufferSize buffer size
+             */
+            Codec(size_t sampleRate, size_t channels, size_t bufferSize);
+            ~Codec();
 
-            Sound::PacketDataFormat *EncodeAudioStream(const float *frame);
+            std::vector<unsigned char> encodeFrames(std::vector<unsigned short> captured);
+            std::vector<unsigned short> decodeFrames(std::vector<unsigned char> encoded);
 
-        protected:
         private:
-            OpusEncoder *state;
-            int error_code;
-            int frameSize;
-            PacketDataFormat outputData;
-            opus_int32 encoded_data_size;
-    };
+            size_t bufferSize;
+            size_t channels;
 
-    class Decoder
-    {
-        public:
-            Decoder();
-            ~Decoder();
+            int opusErr;
 
-            Sound::SoundFormat decodeData(const unsigned char *data);
+            opus_int32 enc_bytes;
+            opus_int32 dec_bytes;
 
-        protected:
-        private:
-            OpusDecoder *state;
-            int error_code;
-            SoundFormat sound;
-            opus_int32 encoded_data_size;
+            OpusEncoder *enc;
+            OpusDecoder *dec;
     };
 
 }; // namespace Sound
