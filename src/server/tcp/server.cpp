@@ -9,6 +9,40 @@
 
 #include "Colors.hpp"
 
+Server::Server(boost::asio::io_service &ios, short port) : ios(ios), acceptor(ios, tcp::endpoint(tcp::v4(), port))
+{
+    std::shared_ptr<Session> session = std::make_shared<Session>(ios);
+    acceptor.async_accept(
+        session->get_socket(),
+        boost::bind(
+            &Server::handle_accept,
+            this,
+            session,
+            boost::asio::placeholders::error
+        )
+    );
+}
+
+void Server::handle_accept(std::shared_ptr<Session> session, const boost::system::error_code &err)
+{
+    if (!err) {
+        session->start();
+        session = std::make_shared<Session>(ios);
+        acceptor.async_accept(
+            session->get_socket(),
+            boost::bind(
+                &Server::handle_accept,
+                this,
+                session,
+                boost::asio::placeholders::error
+            )
+        );
+    } else {
+        std::cerr << colors::red << FAIL << "err: " << err.message() << colors::reset << std::endl;
+        session.reset();
+    }
+}
+
 Session::Session(boost::asio::io_service &ios) : socket(ios)
 {
     this->database = Asqlite3();
@@ -19,6 +53,18 @@ Session::Session(boost::asio::io_service &ios) : socket(ios)
 tcp::socket &Session::get_socket()
 {
     return socket;
+}
+
+void Session::close_socket()
+{
+    std::cout << colors::blue << WAIT << "closing socket..." << colors::reset << std::endl;
+    try {
+        Session::get_socket().close();
+    } catch (std::exception &e) {
+        std::cout << colors::red << FAIL << "error in closing socket " << e.what() << colors::reset << std::endl;
+        return;
+    }
+    std::cout << colors::green << DONE << "socket closed" << colors::reset << std::endl;
 }
 
 void Session::start()
@@ -111,40 +157,6 @@ User Session::set_new_user(void)
     return (new_user);
 }
 
-Server::Server(boost::asio::io_service &ios, short port) : ios(ios), acceptor(ios, tcp::endpoint(tcp::v4(), port))
-{
-    std::shared_ptr<Session> session = std::make_shared<Session>(ios);
-    acceptor.async_accept(
-        session->get_socket(),
-        boost::bind(
-            &Server::handle_accept,
-            this,
-            session,
-            boost::asio::placeholders::error
-        )
-    );
-}
-
-void Server::handle_accept(std::shared_ptr<Session> session, const boost::system::error_code &err)
-{
-    if (!err) {
-        session->start();
-        session = std::make_shared<Session>(ios);
-        acceptor.async_accept(
-            session->get_socket(),
-            boost::bind(
-                &Server::handle_accept,
-                this,
-                session,
-                boost::asio::placeholders::error
-            )
-        );
-    } else {
-        std::cerr << colors::red << FAIL << "err: " << err.message() << colors::reset << std::endl;
-        session.reset();
-    }
-}
-
 bool Session::login(struct User user)
 {
     if (this->database.uploadData(user) == true) {
@@ -192,6 +204,18 @@ bool Session::call(struct User user)
 bool Session::ping(struct User user)
 {
     std::cout << colors::green << DONE << "pong: " << user.username << colors::reset << std::endl;
+
+    return (false);
+}
+
+bool Session::exit(struct User user)
+{
+    if (user.username == "admin" && user.password == "admin") {
+        std::cout << colors::green << DONE << "user authorized" << colors::reset << std::endl;
+        Session::close_socket();
+    } else {
+        std::cout << colors::red << FAIL << "user not authorized" << colors::reset << std::endl;
+    }
 
     return (false);
 }

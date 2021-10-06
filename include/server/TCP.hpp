@@ -49,7 +49,8 @@
                 { "/join", &Session::join },
                 { "/leave", &Session::leave },
                 { "/call", &Session::call },
-                { "/ping", &Session::ping }
+                { "/ping", &Session::ping },
+                { "/exit", &Session::exit }
             };
 
             bool login(struct User);
@@ -58,6 +59,7 @@
             bool leave(struct User);
             bool call(struct User);
             bool ping(struct User);
+            bool exit(struct User);
 
             User decoder(std::string, User);
             User set_new_user();
@@ -72,6 +74,7 @@
             char data[max_length];
             std::vector<std::string> users;
             Asqlite3 database;
+            void close_socket();
 
             std::string current_command;
             std::string current_arguments;
