@@ -43,18 +43,17 @@ namespace Sound
             /**
              * have to be call in loop
              * @return get a buffer of frame
+             * @throw const char *
              */
             const std::vector<unsigned short> getMic(void);
 
-            /*
-            ** @brief have to be call in loop
-            ** @param decoded frame
-            ** @return get a buffer of encoded frame
-            */
-            // std::vector<unsigned short> getEncodedMic();
-
+            /**
+             * @brief decode audio
+             * @param decoded encoded audio to decode
+             * @return get a buffer of encoded frame
+             * @throw const char *
+             */
             void frameToSpeaker(const std::vector<unsigned short> &decoded);
-            // bool encodedFrameToSpeaker(std::vector<unsigned short> decoded) const;
 
             const size_t &getChannelNumber() const;
             const size_t &getSampleRate() const;
@@ -69,9 +68,6 @@ namespace Sound
             size_t bufferSize;
             size_t sampleRate;
 
-            // std::vector<unsigned short> captured;
-            // std::vector<unsigned short> decoded;
-
             PaError err;
     };
 
@@ -83,11 +79,25 @@ namespace Sound
              * @param sampleRate frequency of sample
              * @param sampleRate number of channels
              * @param bufferSize buffer size
+             * @throw const char *
              */
             Codec(size_t sampleRate, size_t channels, size_t bufferSize);
             ~Codec();
 
+            /**
+             * Encode frames
+             * @param captured frames get by mic
+             * @return encoded frames
+             * @throw const char *
+             */
             std::vector<unsigned char> encodeFrames(std::vector<unsigned short> captured);
+
+            /**
+             * Decode frames
+             * @param encoded frames encoded
+             * @return decoded frames
+             * @throw const char *
+             */
             std::vector<unsigned short> decodeFrames(std::vector<unsigned char> encoded);
 
         private:
