@@ -111,7 +111,7 @@ void Session::handle_read(std::shared_ptr<Session> &s, const boost::system::erro
 User Session::decoder(std::string recv, User user)
 {
     User ids;
-    std::string delimiter = ";";
+    std::string delimiter = " ";
 
     // GET USERNAME
     ids.username = recv.substr(0, recv.find(delimiter));

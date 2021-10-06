@@ -33,7 +33,6 @@ bool Asqlite3::uploadData(struct UserApp user)
 	std::string sql("INSERT INTO user (pseudo, password, address)"
 	"VALUES('" + user.username + "', '" + user.password + "', '" + user.address + "');");
 	if (!executeQuery(sql, NULL, 0)) {
-		std::cerr << "Error in upload new user" << std::endl;
 		return false;
 	}
 	return true;
