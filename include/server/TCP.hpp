@@ -51,7 +51,7 @@
                 { "/leave", &Session::leave },
                 { "/call", &Session::call },
                 { "/ping", &Session::ping },
-                { "/exit", &Session::exit }
+                { "/exit", &Session::close_server }
             };
 
             bool login(std::string, struct User);
@@ -60,9 +60,8 @@
             bool leave(std::string, struct User);
             bool call(std::string, struct User);
             bool ping(std::string, struct User);
-            bool exit(std::string, struct User);
+            bool close_server(std::string, struct User);
 
-            User decoder(std::string, User);
             void display(User);
             User set_new_user();
 
@@ -77,9 +76,6 @@
             std::vector<std::string> users;
             Asqlite3 database;
             void close_socket();
-
-            std::string current_command;
-            std::string current_arguments;
     };
 
     class TCPServer

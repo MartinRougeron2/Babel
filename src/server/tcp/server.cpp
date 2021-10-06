@@ -65,6 +65,7 @@ void Session::close_socket()
         return;
     }
     std::cout << colors::green << DONE << "socket closed" << colors::reset << std::endl;
+    exit(0);
 }
 
 void Session::start()
@@ -72,17 +73,19 @@ void Session::start()
     socket.async_read_some(
         boost::asio::buffer(this->recv, max_length),
         boost::bind(
-            &Session::handle_read, this,
+            &Session::handle_read,
+            this,
             shared_from_this(),
             boost::asio::placeholders::error,
-            boost::asio::placeholders::bytes_transferred)
-        );
+            boost::asio::placeholders::bytes_transferred
+        )
+    );
 }
 
 void Session::handle_read(std::shared_ptr<Session> &s, const boost::system::error_code &err, std::size_t bytes_transferred)
 {
-    User decoded;
- 
+    // FIX: Bad Address => due to this->recv memory allocation size
+
     if (!err) {
         if (this->mapped.find(this->recv->command.command) != this->mapped.end()) {
             std::cout << colors::cyan << DONE << "command found: " << this->recv->command.command << colors::reset << std::endl;
@@ -93,44 +96,19 @@ void Session::handle_read(std::shared_ptr<Session> &s, const boost::system::erro
         socket.async_read_some(
             boost::asio::buffer(this->recv, max_length),
             boost::bind(
-                &Session::handle_read, this,
+                &Session::handle_read,
+                this,
                 shared_from_this(),
                 boost::asio::placeholders::error,
-                boost::asio::placeholders::bytes_transferred)
-            );
+                boost::asio::placeholders::bytes_transferred
+            )
+        );
     } else if (err == boost::asio::error::eof) {
         std::cerr << colors::magenta << DONE << "A client left" << colors::reset << std::endl;
     } else {
         std::cerr << colors::red << FAIL << "err (recv): " << err.message() << colors::reset << std::endl;
+        Session::close_socket();
     }
-}
-
-User Session::decoder(std::string recv, User user)
-{
-    std::string delimiter = ";";
-
-    // GET USERNAME
-    user.username = recv.substr(0, recv.find(delimiter));
-    recv = recv.erase(0, recv.find(delimiter) + delimiter.length());
-
-    // GET PASSWORD
-    user.password = recv.substr(0, recv.find(delimiter));
-    recv = recv.erase(0, recv.find(delimiter) + delimiter.length());
-
-    // GET ADDRESS
-    user.address = user.address;
-    /*
-    ids.address = recv.substr(0, recv.find(delimiter));
-    recv = recv.erase(0, recv.find(delimiter) + delimiter.length());
-    */
-
-    // GET COMMAND
-    this->current_command = recv.substr(0, recv.find(delimiter));
-    this->current_arguments = recv.erase(0, recv.find(delimiter) + delimiter.length());
-
-    Session::display(user);
-
-    return (user);
 }
 
 void Session::display(User user)
@@ -139,8 +117,6 @@ void Session::display(User user)
     std::cout << "Username:  " << user.username << std::endl;
     std::cout << "Password:  " << user.password << std::endl;
     std::cout << "Address:   " << user.address << std::endl;
-    std::cout << "Command:   " << this->current_command << std::endl;
-    std::cout << "Arguments: " << this->current_arguments << std::endl;
     std::cout << "-----------" << std::endl;
 }
 
@@ -163,15 +139,15 @@ bool Session::login(std::string arguments, struct User user)
     Session::display(user);
 
     if (this->database.uploadData(user) == true) {
-        std::cout << colors::green << DONE << "user created: " << user.username << colors::reset << std::endl;
+        std::cout << colors::green << DONE << "user created" << colors::reset << std::endl;
     } else {
-        std::cout << colors::yellow << FAIL << "user already present: " << user.username << colors::reset << std::endl;
+        std::cout << colors::yellow << FAIL << "user already present" << colors::reset << std::endl;
     }
     if (this->database.login(user) == this->database.SUCCESS) {
-        std::cout << colors::green << DONE << "user: " << user.username << " has been logged" << colors::reset << std::endl;
+        std::cout << colors::green << DONE << "logged" << colors::reset << std::endl;
         return (true);
     }
-    std::cout << colors::yellow << FAIL << "user: " << user.username << " failed to login" << colors::reset << std::endl;
+    std::cout << colors::yellow << FAIL << "failed to login" << colors::reset << std::endl;
 
     return (false);
 }
@@ -180,7 +156,7 @@ bool Session::logout(std::string arguments, struct User user)
 {
     Session::display(user);
 
-    std::cout << colors::green << DONE << "logged out: " << user.username << colors::reset << std::endl;
+    std::cout << colors::green << DONE << "logged out" << colors::reset << std::endl;
 
     return (false);
 }
@@ -189,7 +165,7 @@ bool Session::join(std::string arguments, struct User user)
 {
     Session::display(user);
 
-    std::cout << colors::green << DONE << "joinned: " << user.username << colors::reset << std::endl;
+    std::cout << colors::green << DONE << "joinned" << colors::reset << std::endl;
 
     return (false);
 }
@@ -198,7 +174,7 @@ bool Session::leave(std::string arguments, struct User user)
 {
     Session::display(user);
 
-    std::cout << colors::green << DONE << "left: " << user.username << colors::reset << std::endl;
+    std::cout << colors::green << DONE << "left" << colors::reset << std::endl;
 
     return (false);
 }
@@ -207,7 +183,7 @@ bool Session::call(std::string arguments, struct User user)
 {
     Session::display(user);
 
-    std::cout << colors::green << DONE << "called: " << user.username << colors::reset << std::endl;
+    std::cout << colors::green << DONE << "called" << colors::reset << std::endl;
 
     return (false);
 }
@@ -216,12 +192,12 @@ bool Session::ping(std::string arguments, struct User user)
 {
     Session::display(user);
 
-    std::cout << colors::green << DONE << "pong: " << user.username << colors::reset << std::endl;
+    std::cout << colors::green << DONE << "pong" << colors::reset << std::endl;
 
     return (false);
 }
 
-bool Session::exit(std::string arguments, struct User user)
+bool Session::close_server(std::string arguments, struct User user)
 {
     Session::display(user);
 
