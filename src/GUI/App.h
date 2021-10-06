@@ -14,8 +14,11 @@
 #include <QList>
 #include <QLineEdit>
 #include <string>
-#include "../common/User.h"
+#include "include/common/User.h"
 #include "Contact.h"
+
+enum loginCode {SUCCESS, USER_NOT_EXIST, BAD_PASSWORD};
+//TO REMOVEAND USE SQLITE
 
 class App : public QWidget
 {
@@ -40,17 +43,20 @@ class App : public QWidget
 
         void fetchUsers();
 
-        void login();
+        User getUser() const { return this->user;};
+
+        loginCode login(std::string username, std::string password);
+        void update();
 
     private:
-        User user;
+        User user = {"martin", "cringe", "127.0.0.1"};
         QList<Contact *> contact_list; // selected
         QList<User> all_users; // all
         AppState app_state = ToLog;
 
         QLineEdit *search_name;
         QWidget *loginui;
-        void update();
+        QWidget *usermenu;
 
 };
 

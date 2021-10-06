@@ -12,8 +12,11 @@
 #include <QWidget>
 #include <QtWidgets>
 #include <QMap>
+#include <QList>
 
 #include "ModifyPopup.h"
+#include "App.h"
+#include "ContactLabel.hpp"
 
 class UserMenu : public QWidget
 {
@@ -24,39 +27,31 @@ class UserMenu : public QWidget
 
     public slots:
                 void addContact();
-        void editContact();
-        void submitContact();
-        void cancel();
         void removeContact();
         void findContact();
-        void next();
-        void previous();
-        void saveToFile();
-        void loadFromFile();
-        void exportAsVCard();
+        void setSelectioned(const QString &username);
 
     private:
         void updateInterface(Mode mode);
+        void fetchContact();
 
         QPushButton *addButton;
-        QPushButton *editButton;
         QPushButton *removeButton;
         QPushButton *findButton;
-        QPushButton *submitButton;
-        QPushButton *cancelButton;
-        QPushButton *nextButton;
-        QPushButton *previousButton;
-        QPushButton *loadButton;
-        QPushButton *saveButton;
-        QPushButton *exportButton;
         QLineEdit *nameLine;
-        QTextEdit *addressText;
+        QList<ContactLabel *> contactDraw = {};
+
+        QGridLayout *mainLayout;
+        QVBoxLayout *contactLayout;
 
         QMap<QString, QString> contacts;
         ModifyPopup *dialog;
         QString oldName;
         QString oldAddress;
         Mode currentMode;
+        std::string selection;
+
+        App *app;
 };
 
 

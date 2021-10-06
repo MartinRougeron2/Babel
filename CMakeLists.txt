@@ -10,7 +10,7 @@ add_compile_options(-Wall -Wextra -g3)
 
 include_directories(include/)
 #file(GLOB_RECURSE SERVER_SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "src/server/*/*.cpp" "src/server/*.cpp" "src/sound/*.cpp")
-file(GLOB_RECURSE CLIENT_SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "src/client/*.cpp" "src/client/*/*.cpp")
+file(GLOB_RECURSE CLIENT_SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "src/client/*.cpp" "src/GUI/*.cpp")
 
 #add_executable(babel_server ${SERVER_SOURCES})
 add_executable(babel_client ${CLIENT_SOURCES})

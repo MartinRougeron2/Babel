@@ -6,11 +6,15 @@
 */
 
 #include <QtGui>
-#include "GUI/App.h"
+#include "App.h"
+#include "Login.hpp"
+#include "UserMenu.h"
+#include <iostream>
 
-App::App(QWidget *parent) : QWidget(parent), login
+App::App(QWidget *parent) : QWidget(parent)
 {
     setWindowTitle("Babel");
+    update();
 }
 
 void App::call(User contact_to_call)
@@ -62,17 +66,23 @@ void App::fetchUsers()
 
 }
 
-void App::login()
+loginCode App::login(std::string username, std::string password)
 {
-    // if (send(username, password))
-    // this->app_state = Menu
+    //TODO LOGIN
+    this->app_state = Menu_;
+    this->user = {username, password, ""};
+    return SUCCESS;
 }
 
 void App::update()
 {
     switch(this->app_state) {
         case ToLog:
-            loginui->show();
+            loginui = new Login(this);
+            break;
+        case Menu_:
+            delete loginui;
+            usermenu = new UserMenu(this);
             break;
     }
 }

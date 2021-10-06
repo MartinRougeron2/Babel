@@ -18,17 +18,19 @@
 #include <QGridLayout>
 #include <QtWidgets>
 #include <QWidget>
+#include "App.h"
 
 class Login : public QWidget{
     Q_OBJECT
 
     public:
-        Login();
+        Login(QWidget *parent);
         ~Login();
 
-        void proceed_login();
-        //void update();
+        void update();
     protected:
+    public slots:
+        void proceed_login();
     private:
         QLineEdit *username_edit;
         QLineEdit *password_edit;
@@ -36,7 +38,11 @@ class Login : public QWidget{
         QLabel *password_info;
         QLabel *username_error;
         QLabel *password_error;
-        QButton *login_button;
+        QPushButton *login_button;
+
+        QGridLayout *login_layout;
+
+        App *parent;
 };
 
 #endif /* !LOGIN_HPP_ */

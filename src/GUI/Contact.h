@@ -9,7 +9,7 @@
 #define BABEL_CONTACT_H
 
 #include "constants.h"
-#include "../common/User.h"
+#include <include/common/User.h>
 
 #include <QDialog>
 #include <QLineEdit>

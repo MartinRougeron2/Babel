@@ -5,7 +5,7 @@
 ** babel
 */
 
-#include "GUI/Contact.h"
+#include "Contact.h"
 
 Contact::Contact(std::string username, std::string address, bool in_list)
 {
@@ -28,8 +28,7 @@ Contact::Contact(std::string username, std::string address, bool in_list)
     connect(remove_from_call_btn, SIGNAL(clicked()), this, SLOT(removeFromCall
     ()));
     connect(add_to_list_btn, SIGNAL(clicked()), this, SLOT(addToList()));
-    connect(remove_from_list_btn, SIGNAL(clicked()), this, SLOT(removeFromList
-    ()));
+    connect(remove_from_list_btn, SIGNAL(clicked()), this, SLOT(removeFromList()));
     update();
 }
 
