@@ -60,9 +60,7 @@ int Asqlite3::callbackGetUser(void *context, int argc, char** argv, char** azCol
 
 Asqlite3::loginCode Asqlite3::login(struct UserApp user)
 {
-	std::string sql = SELECT_QUERY("pseudo") +
-	FROM_QUERY("user") +
-	WHERE_QUERY("pseudo = '" + user.username + "';");
+	std::string sql = SELECT_QUERY("pseudo") + FROM_QUERY("user") + WHERE_QUERY("pseudo = '" + user.username + "';");
 	this->_res.clear();
 	if (!executeQuery(sql, callbackUserExist, this))
 		std::cerr << "Error in login function.1" << std::endl;
