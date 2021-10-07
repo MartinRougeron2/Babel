@@ -71,7 +71,8 @@ void Session::close_socket()
 void Session::start()
 {
     socket.async_read_some(
-        boost::asio::buffer(this->recv, max_length),
+        //boost::asio::buffer(this->recv, max_length),
+        boost::asio::buffer(this->buffer, max_length),
         boost::bind(
             &Session::handle_read,
             this,
@@ -84,9 +85,11 @@ void Session::start()
 
 void Session::handle_read(std::shared_ptr<Session> &s, const boost::system::error_code &err, std::size_t bytes_transferred)
 {
-    // FIX: Bad Address => due to this->recv memory allocation size
+    // FIX: Bad Address
+    S_Protocol response;
 
     if (!err) {
+        /*
         this->recv_user = Session::C_user_to_user(this->recv->user);
         this->recv_commands = Session::C_command_to_commands(this->recv->command);
 
@@ -96,8 +99,17 @@ void Session::handle_read(std::shared_ptr<Session> &s, const boost::system::erro
         } else {
             std::cout << colors::yellow << FAIL << "command not found: " << this->recv_commands.command << colors::reset << std::endl;
         }
+        */
+        response = Session::decode(this->buffer);
+        if (this->mapped.find(response.command.command) != this->mapped.end()) {
+            std::cout << colors::cyan << DONE << "command found: " << response.command.command << colors::reset << std::endl;
+            (this->*this->mapped.at(response.command.command))(response.command.arguments, response.user);
+        } else {
+            std::cout << colors::yellow << FAIL << "command not found: " << response.command.command << colors::reset << std::endl;
+        }
         socket.async_read_some(
-            boost::asio::buffer(this->recv, max_length),
+            //boost::asio::buffer(this->recv, max_length),
+            boost::asio::buffer(this->buffer, max_length),
             boost::bind(
                 &Session::handle_read,
                 this,
@@ -112,6 +124,37 @@ void Session::handle_read(std::shared_ptr<Session> &s, const boost::system::erro
         std::cerr << colors::red << FAIL << "err (recv): " << err.message() << colors::reset << std::endl;
         Session::close_socket();
     }
+}
+
+S_Protocol Session::decode(std::string recv)
+{
+    std::string delimiter = ";";
+    std::string full(socket.local_endpoint().address().to_string() + ":" + std::to_string(socket.local_endpoint().port()));
+    S_Protocol protocol;
+
+    recv = recv.substr(0, recv.find('\n'));
+
+    // GET USERNAME
+    protocol.user.username = recv.substr(0, recv.find(delimiter));
+    recv = recv.erase(0, recv.find(delimiter) + delimiter.length());
+
+    // GET PASSWORD
+    protocol.user.password = recv.substr(0, recv.find(delimiter));
+    recv = recv.erase(0, recv.find(delimiter) + delimiter.length());
+
+    protocol.user.address = full;
+    /*
+    ids.address = recv.substr(0, recv.find(delimiter));
+    recv = recv.erase(0, recv.find(delimiter) + delimiter.length());
+    */
+
+    // GET COMMAND
+    protocol.command.command = recv.substr(0, recv.find(delimiter));
+    protocol.command.arguments = recv.erase(0, recv.find(delimiter) + delimiter.length());
+
+    Session::display(protocol.user);
+
+    return (protocol);
 }
 
 void Session::display(User user)

@@ -66,13 +66,18 @@
             User C_user_to_user(C_User);
             Commands C_command_to_commands(C_Commands);
 
+            S_Protocol decode(std::string);
+
         private:
             enum
             {
                 max_length = 1024
             };
             tcp::socket socket;
+
             Protocol *recv;
+            char buffer[max_length];
+
             User recv_user;
             Commands recv_commands;
             std::vector<std::string> users;

@@ -37,4 +37,10 @@
         C_User user;
     };
 
+    struct S_Protocol
+    {
+        Commands command;
+        User user;
+    };
+
 #endif /* PROTOCOL_HPP */
