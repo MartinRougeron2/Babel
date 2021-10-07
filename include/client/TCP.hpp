@@ -40,6 +40,8 @@
             bool build_connect();
             bool build();
             bool run();
+            char *stca(const char *);
+            char *stca_(std::string);
 
         private:
             // client settings
@@ -47,6 +49,11 @@
             int server_port;
 
             char msg[1500];
+            
+            enum
+            {
+                max_length = 1024
+            };
 
             struct hostent *host;
             sockaddr_in address;

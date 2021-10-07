@@ -54,26 +54,65 @@ bool TCP::build()
     return (true);
 }
 
+char *TCP::stca(const char *data)
+{
+    char *result = new char[strlen(data) + 1]; 
+    result[strlen(data)] = '\0';
+
+    for (int i = 0; i < strlen(data); i++) {
+        result[i] = data[i];
+    }
+
+    return (result);
+}
+
+char *TCP::stca_(std::string data)
+{
+    char *result = new char[data.size() + 1]; 
+    result[data.size()] = '\0';
+
+    for (int i = 0; i < data.size(); i++) {
+        result[i] = data[i];
+    }
+
+    return (result);
+}
+
 bool TCP::run()
 {
     this->running = true;
-    // command
-    Commands command;
-    User user;
-    Protocol data;
 
-    // TO REMOVE FORCE LOGIN
-    user.username = "admin";
-    user.password = "admin";
-    user.address = "127.0.0.1";
+    // command
+    Protocol sendv;
+
+    // REMOVE FORCE LOGIN
+    sendv.user.username = stca("admin");
+    sendv.user.password = stca("P_admin");
+    sendv.user.address = stca("127.0.0.1");
+    sendv.user.id = -1;
+
+    std::string command;
+    std::string arguments;
 
     for (; this->running == true; ) {
         std::cout << "$> ";
-        std::cin >> command.command >> command.arguments;
-        if (data.command.command == "EXIT") {
+        std::cin >> command >> arguments;
+        if (command == "EXIT") {
             this->running = false;
         }
-        send(this->client_socket, &data, sizeof(data), 0);
+        sendv.command.command = stca_(command);
+        sendv.command.arguments = stca_(arguments);
+
+        std::cout << "-----------" << std::endl;
+        std::cout << "username:  " << sendv.user.username << std::endl;
+        std::cout << "password:  " << sendv.user.password << std::endl;
+        std::cout << "address:   " << sendv.user.address << std::endl;
+        std::cout << "id:        " << sendv.user.id << std::endl;
+        std::cout << "command:   " << sendv.command.command << std::endl;
+        std::cout << "arguments: " << sendv.command.arguments << std::endl;
+        std::cout << "-----------" << std::endl;
+
+        send(this->client_socket, &sendv, sizeof(sendv), 0);
     }
     close(this->client_socket);
 

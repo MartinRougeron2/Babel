@@ -63,16 +63,18 @@
             bool close_server(std::string, struct User);
 
             void display(User);
-            User set_new_user();
+            User C_user_to_user(C_User);
+            Commands C_command_to_commands(C_Commands);
 
         private:
             enum
             {
                 max_length = 1024
             };
-
             tcp::socket socket;
             Protocol *recv;
+            User recv_user;
+            Commands recv_commands;
             std::vector<std::string> users;
             Asqlite3 database;
             void close_socket();

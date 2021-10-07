@@ -17,10 +17,24 @@
         std::string arguments;
     };
 
+    struct C_Commands
+    {
+        char *command;
+        char *arguments;
+    };
+
+    struct C_User
+    {
+        char *username;
+        char *password;
+        char *address;
+        int id;
+    };
+
     struct Protocol
     {
-        Commands command;
-        User user;
+        C_Commands command;
+        C_User user;
     };
 
 #endif /* PROTOCOL_HPP */

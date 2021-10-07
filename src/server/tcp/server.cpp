@@ -87,11 +87,14 @@ void Session::handle_read(std::shared_ptr<Session> &s, const boost::system::erro
     // FIX: Bad Address => due to this->recv memory allocation size
 
     if (!err) {
-        if (this->mapped.find(this->recv->command.command) != this->mapped.end()) {
-            std::cout << colors::cyan << DONE << "command found: " << this->recv->command.command << colors::reset << std::endl;
-            (this->*this->mapped.at(this->recv->command.command))(this->recv->command.arguments, this->recv->user);
+        this->recv_user = Session::C_user_to_user(this->recv->user);
+        this->recv_commands = Session::C_command_to_commands(this->recv->command);
+
+        if (this->mapped.find(this->recv_commands.command) != this->mapped.end()) {
+            std::cout << colors::cyan << DONE << "command found: " << this->recv_commands.command << colors::reset << std::endl;
+            (this->*this->mapped.at(this->recv_commands.command))(this->recv_commands.arguments, this->recv_user);
         } else {
-            std::cout << colors::yellow << FAIL << "command not found: " << this->recv->command.command << colors::reset << std::endl;
+            std::cout << colors::yellow << FAIL << "command not found: " << this->recv_commands.command << colors::reset << std::endl;
         }
         socket.async_read_some(
             boost::asio::buffer(this->recv, max_length),
@@ -116,22 +119,39 @@ void Session::display(User user)
     std::cout << "-----------" << std::endl;
     std::cout << "Username:  " << user.username << std::endl;
     std::cout << "Password:  " << user.password << std::endl;
-    std::cout << "Address:   " << user.address << std::endl;
+    std::cout << "LHost:     " << socket.local_endpoint() << std::endl;
+    std::cout << "Socket:    " << socket.remote_endpoint() << std::endl;
     std::cout << "-----------" << std::endl;
 }
 
-User Session::set_new_user(void)
+User Session::C_user_to_user(C_User c_user)
 {
-    User new_user;
-    std::string user(socket.remote_endpoint().address().to_string());
-    std::string port(std::to_string(socket.remote_endpoint().port()));
-    std::string full(user + ":" + port);
+    std::cout << "converting user..." << std::endl;
+    User user;
 
-    new_user.username = EMPTY;
-    new_user.password = EMPTY;
-    new_user.address = full;
+    user.username = std::string(c_user.username);
+    user.password = std::string(c_user.password);
+    user.address = std::string(c_user.address);
+    user.id = c_user.id;
 
-    return (new_user);
+    Session::display(user);
+
+    std::cout << "converted user" << std::endl;
+
+    return (user);
+}
+
+Commands Session::C_command_to_commands(C_Commands c_commands)
+{
+    std::cout << "converting commands..." << std::endl;
+    Commands commands;
+
+    commands.command = std::string(c_commands.command);
+    commands.arguments = std::string(c_commands.arguments);
+
+    std::cout << "converted commands" << std::endl;
+
+    return (commands);
 }
 
 bool Session::login(std::string arguments, struct User user)
