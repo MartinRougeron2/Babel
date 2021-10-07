@@ -8,17 +8,22 @@
 #include <QLabel>
 #include <QWidget>
 #include <Qt>
+#include "include/common/User.h"
 
 class ContactLabel : public QLabel {
     Q_OBJECT
 
     public:
-        explicit ContactLabel(QWidget* parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags()) : QLabel(parent, f){}
+        explicit ContactLabel(User user, QWidget* parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags()) : QLabel(parent, f), _user(user){}
         ~ContactLabel() {};
+        User getUser() { return _user;}
 
     signals:
-        void clicked(const QString &);
+        void clicked(User);
 
     protected:
-        void mousePressEvent(QMouseEvent* event) { emit clicked(this->text());};
+        void mousePressEvent(QMouseEvent* event) { emit clicked(_user);};
+
+    private:
+        User _user;
 };

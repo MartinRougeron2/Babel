@@ -5,7 +5,6 @@
 ** babel
 */
 
-#include <QtGui>
 #include "UserMenu.h"
 #include <iostream>
 
@@ -23,28 +22,31 @@ UserMenu::UserMenu(QWidget *parent)
 
     removeButton = new QPushButton(tr("&Remove"));
     removeButton->setEnabled(false);
-    findButton = new QPushButton(tr("&Find"));
-    findButton->setEnabled(false);
+    callButon = new QPushButton(tr("&Call"));
+    callButon->setEnabled(false);
 
     dialog = new ModifyPopup;
 
     connect(addButton, SIGNAL(clicked()), this, SLOT(addContact()));
     connect(removeButton, SIGNAL(clicked()), this, SLOT(removeContact()));
-    connect(findButton, SIGNAL(clicked()), this, SLOT(findContact()));
+    connect(callButon, SIGNAL(clicked()), this, SLOT(call()));
 
     QVBoxLayout *buttonLayout1 = new QVBoxLayout;
     buttonLayout1->addWidget(addButton);
     buttonLayout1->addWidget(removeButton);
-    buttonLayout1->addWidget(findButton);
+    buttonLayout1->addWidget(callButon);
     buttonLayout1->addStretch();
 
     contactLayout = new QVBoxLayout;
     contactLayout->addWidget(addressLabel);
 
+    callWidget = new Call;
+
     mainLayout = new QGridLayout;
     mainLayout->addWidget(nameLabel, 0, 0);
-    mainLayout->addLayout(contactLayout, 1, 0, Qt::AlignTop);
-    mainLayout->addLayout(buttonLayout1, 1, 2);
+    mainLayout->addLayout(contactLayout, 2, 0, Qt::AlignTop);
+    mainLayout->addLayout(buttonLayout1, 2, 2);
+    mainLayout->addLayout(callWidget->getLayout(), 0, 4, 3, 3);
 
     parent->setLayout(mainLayout);
     fetchContact();
@@ -52,63 +54,80 @@ UserMenu::UserMenu(QWidget *parent)
 
 void UserMenu::fetchContact()
 {
-    for (auto a : contactDraw)
+    for (auto &a : contactDraw)
         delete a;
     this->contactDraw.clear();
-    /*for ()
-    */
-    ContactLabel *label = new ContactLabel;
-    label->setText("dddd");
-    contactLayout->addWidget(label);
-    connect(label, SIGNAL(clicked(const QString &)), this, SLOT(setSelectioned(const QString &)));
+    std::vector<User> linkeds = app->fetchContact();
+    for (auto contact : linkeds) {
+        ContactLabel *label = new ContactLabel(contact);
+        label->setText(QString::fromStdString(label->getUser().username));
+        contactLayout->addWidget(label);
+        connect(label, SIGNAL(clicked(User)), this, SLOT(setSelectioned(User)));
+        contactDraw.push_back(label);
+    }
 }
 
-void UserMenu::setSelectioned(const QString &username)
+ContactLabel *UserMenu::findLabelWithId(int id)
 {
-    this->selection = username.toStdString();
-    std::cout << selection << std::endl;
+    for (auto label : contactDraw) {
+        if (label->getUser().id == id) {
+            return label;
+        }
+    }
+    return NULL;
+}
+
+void UserMenu::setSelectioned(User user)
+{
+    this->selection = user;
+    for (auto a : contactDraw)
+        a->setFrameStyle(0);
+    findLabelWithId(user.id)->setFrameStyle(QFrame::Box | QFrame::Plain);
+    this->removeButton->setEnabled(true);
+    this->callButon->setEnabled(true);
 }
 
 void UserMenu::addContact()
 {
-    oldName = nameLine->text();
-
-    nameLine->clear();
+    callWidget->setScene(Call::RECEIVECALL, "adolphe");
+    dialog->show();
+    if (dialog->exec() == 1) {
+        User contactName = dialog->getUserAdded();
+        if (app->checkUser(contactName.username)) {
+            app->addContact(contactName);
+            fetchContact();
+        } else {
+            QMessageBox::information(this, tr("Contact Not Found"),
+                                     tr("Sorry, canno't find \"%1\"")
+                                     .arg(QString::fromStdString(contactName.username)));
+            return;
+        }
+    }
 }
 
 void UserMenu::removeContact()
 {
-    QString name = nameLine->text();
-
-    if (contacts.contains(name)) {
-        int button = QMessageBox::question(this,
-                                           tr("Confirm Remove"),
-                                           tr("Are you sure you want to remove \"%1\"?").arg(name),
-                                           QMessageBox::Yes | QMessageBox::No);
-
-        if (button == QMessageBox::Yes) {
-
-            contacts.remove(name);
-
-            QMessageBox::information(this, tr("Remove Successful"),
-                                     tr("\"%1\" has been removed from your address book.").arg(name));
+    if (this->selection.id == -1)
+        return;
+    int index = 0;
+    for (auto label : contactDraw) {
+        if (this->selection.id == label->getUser().id) {
+            app->removeContact(label->getUser());
+            delete label;
+            contactDraw.erase(contactDraw.begin() + index);
+            this->selection.id = -1;
+            this->removeButton->setEnabled(false);
+            this->callButon->setEnabled(false);
+            break;
         }
+        index++;
     }
 }
 
-void UserMenu::findContact()
+void UserMenu::call()
 {
-    dialog->show();
-
-    if (dialog->exec() == 1) {
-        QString contactName = dialog->getFindText();
-
-        if (contacts.contains(contactName)) {
-            nameLine->setText(contactName);
-        } else {
-            QMessageBox::information(this, tr("Contact Not Found"),
-                                     tr("Sorry, \"%1\" is not in your address book.").arg(contactName));
-            return;
-        }
-    }
+    if (this->selection.id == -1)
+        return;
+    app->call(this->selection);
+    callWidget->setScene(Call::Scene::SENDCALL, this->selection.username);
 }

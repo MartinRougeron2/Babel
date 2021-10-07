@@ -1,7 +1,7 @@
-SOURCES   = ./src/GUI/* \
+SOURCES   = ./src/GUI/*.cpp \
             ./src/client/main.cpp
 HEADERS   = ./src/GUI/UserMenu.h \
-            ./src/GUI/Contact.h \
+            ./src/GUI/Call.hpp \
             ./src/GUI/App.h \
             ./src/GUI/ModifyPopup.h \
             ./src/GUI/Login.hpp \

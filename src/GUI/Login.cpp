@@ -46,7 +46,6 @@ Login::~Login()
     while ((item = login_layout->takeAt(0))) {
         if ((widget = item->widget()) != 0)
             widget->hide();
-        std::cout << "item deleted" << std::endl;
         delete item;
     }
     delete login_layout;

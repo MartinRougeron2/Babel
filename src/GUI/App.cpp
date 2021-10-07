@@ -22,14 +22,14 @@ void App::call(User contact_to_call)
 
 }
 
-void App::acceptCall(User contact_from)
+void App::acceptCall()
 {
-
+    //TODO ACCEPT CALL
 }
 
 void App::refuseCall()
 {
-
+    //TODO REFUSE CALL
 }
 
 void App::dismiss()
@@ -49,28 +49,35 @@ void App::removeContactToCall(User contact_to_remove)
 
 void App::addContact(User contact_to_add)
 {
-    this->contact_list.append(
-        new Contact(contact_to_add.username, contact_to_add.address, true)
-    );
-
-
+    //TODO ADD CONTACT TO DB
 }
 
 void App::removeContact(User contact_to_remove)
 {
-
+    //TODO REMOVE CONTACT FROM DB
 }
 
-void App::fetchUsers()
+bool App::checkUser(std::string username)
 {
+    //TODO CHECK IF USER EXIST
+    return true;
+}
 
+std::vector<User> App::fetchContact()
+{
+    std::vector<User> linkeds;
+    linkeds.push_back({"dd", "dd", "dd", 0});
+    linkeds.push_back({"YOJ", "dd", "dd", 1});
+    linkeds.push_back({"Vat", "dd", "dd", 2});
+    //TODO GET LINKED
+    return linkeds;
 }
 
 loginCode App::login(std::string username, std::string password)
 {
     //TODO LOGIN
     this->app_state = Menu_;
-    this->user = {username, password, ""};
+    this->user = {username, password, "", 0};
     return SUCCESS;
 }
 

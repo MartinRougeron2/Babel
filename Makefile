@@ -15,7 +15,7 @@ EQ            = =
 CC            = gcc
 CXX           = g++
 DEFINES       = -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
-CFLAGS        = -pipe -O2 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
+CFLAGS        = -pipe -O2 -Wall -W -D_REENTRANT -fPIC -g3 $(DEFINES)
 CXXFLAGS      = -pipe -O2 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 INCPATH       = -I. -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++
 QMAKE         = /usr/lib/qt5/bin/qmake
@@ -53,24 +53,24 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = src/GUI/App.cpp \
-		src/GUI/Contact.cpp \
+		src/GUI/Call.cpp \
 		src/GUI/Login.cpp \
 		src/GUI/ModifyPopup.cpp \
 		src/GUI/UserMenu.cpp \
 		src/client/main.cpp moc_UserMenu.cpp \
-		moc_Contact.cpp \
+		moc_Call.cpp \
 		moc_App.cpp \
 		moc_ModifyPopup.cpp \
 		moc_Login.cpp \
 		moc_ContactLabel.cpp
 OBJECTS       = App.o \
-		Contact.o \
+		Call.o \
 		Login.o \
 		ModifyPopup.o \
 		UserMenu.o \
 		main.o \
 		moc_UserMenu.o \
-		moc_Contact.o \
+		moc_Call.o \
 		moc_App.o \
 		moc_ModifyPopup.o \
 		moc_Login.o \
@@ -151,12 +151,12 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		babel_client.pro src/GUI/UserMenu.h \
-		src/GUI/Contact.h \
+		src/GUI/Call.hpp \
 		src/GUI/App.h \
 		src/GUI/ModifyPopup.h \
 		src/GUI/Login.hpp \
 		src/GUI/ContactLabel.hpp src/GUI/App.cpp \
-		src/GUI/Contact.cpp \
+		src/GUI/Call.cpp \
 		src/GUI/Login.cpp \
 		src/GUI/ModifyPopup.cpp \
 		src/GUI/UserMenu.cpp \
@@ -340,8 +340,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents src/GUI/UserMenu.h src/GUI/Contact.h src/GUI/App.h src/GUI/ModifyPopup.h src/GUI/Login.hpp src/GUI/ContactLabel.hpp $(DISTDIR)/
-	$(COPY_FILE) --parents src/GUI/App.cpp src/GUI/Contact.cpp src/GUI/Login.cpp src/GUI/ModifyPopup.cpp src/GUI/UserMenu.cpp src/client/main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents src/GUI/UserMenu.h src/GUI/Call.hpp src/GUI/App.h src/GUI/ModifyPopup.h src/GUI/Login.hpp src/GUI/ContactLabel.hpp $(DISTDIR)/
+	$(COPY_FILE) --parents src/GUI/App.cpp src/GUI/Call.cpp src/GUI/Login.cpp src/GUI/ModifyPopup.cpp src/GUI/UserMenu.cpp src/client/main.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -373,46 +373,53 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -Wall -W -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_UserMenu.cpp moc_Contact.cpp moc_App.cpp moc_ModifyPopup.cpp moc_Login.cpp moc_ContactLabel.cpp
+compiler_moc_header_make_all: moc_UserMenu.cpp moc_Call.cpp moc_App.cpp moc_ModifyPopup.cpp moc_Login.cpp moc_ContactLabel.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_UserMenu.cpp moc_Contact.cpp moc_App.cpp moc_ModifyPopup.cpp moc_Login.cpp moc_ContactLabel.cpp
+	-$(DEL_FILE) moc_UserMenu.cpp moc_Call.cpp moc_App.cpp moc_ModifyPopup.cpp moc_Login.cpp moc_ContactLabel.cpp
 moc_UserMenu.cpp: src/GUI/UserMenu.h \
 		src/GUI/ModifyPopup.h \
-		src/GUI/App.h \
-		src/GUI/Contact.h \
-		src/GUI/constants.h \
+		include/common/User.h \
+		include/common/standard.h \
 		src/GUI/ContactLabel.hpp \
+		src/GUI/Call.hpp \
+		src/GUI/App.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include src/GUI/UserMenu.h -o moc_UserMenu.cpp
 
-moc_Contact.cpp: src/GUI/Contact.h \
-		src/GUI/constants.h \
+moc_Call.cpp: src/GUI/Call.hpp \
+		src/GUI/App.h \
+		include/common/User.h \
+		include/common/standard.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include src/GUI/Contact.h -o moc_Contact.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include src/GUI/Call.hpp -o moc_Call.cpp
 
 moc_App.cpp: src/GUI/App.h \
-		src/GUI/Contact.h \
-		src/GUI/constants.h \
+		include/common/User.h \
+		include/common/standard.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include src/GUI/App.h -o moc_App.cpp
 
 moc_ModifyPopup.cpp: src/GUI/ModifyPopup.h \
+		include/common/User.h \
+		include/common/standard.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include src/GUI/ModifyPopup.h -o moc_ModifyPopup.cpp
 
 moc_Login.cpp: src/GUI/Login.hpp \
 		src/GUI/App.h \
-		src/GUI/Contact.h \
-		src/GUI/constants.h \
+		include/common/User.h \
+		include/common/standard.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include src/GUI/Login.hpp -o moc_Login.cpp
 
 moc_ContactLabel.cpp: src/GUI/ContactLabel.hpp \
+		include/common/User.h \
+		include/common/standard.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include src/GUI/ContactLabel.hpp -o moc_ContactLabel.cpp
@@ -434,43 +441,51 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 ####### Compile
 
 App.o: src/GUI/App.cpp src/GUI/App.h \
-		src/GUI/Contact.h \
-		src/GUI/constants.h \
+		include/common/User.h \
+		include/common/standard.h \
 		src/GUI/Login.hpp \
 		src/GUI/UserMenu.h \
 		src/GUI/ModifyPopup.h \
-		src/GUI/ContactLabel.hpp
+		src/GUI/ContactLabel.hpp \
+		src/GUI/Call.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o App.o src/GUI/App.cpp
 
-Contact.o: src/GUI/Contact.cpp src/GUI/Contact.h \
-		src/GUI/constants.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Contact.o src/GUI/Contact.cpp
+Call.o: src/GUI/Call.cpp src/GUI/Call.hpp \
+		src/GUI/App.h \
+		include/common/User.h \
+		include/common/standard.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Call.o src/GUI/Call.cpp
 
 Login.o: src/GUI/Login.cpp src/GUI/Login.hpp \
 		src/GUI/App.h \
-		src/GUI/Contact.h \
-		src/GUI/constants.h
+		include/common/User.h \
+		include/common/standard.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Login.o src/GUI/Login.cpp
 
-ModifyPopup.o: src/GUI/ModifyPopup.cpp src/GUI/ModifyPopup.h
+ModifyPopup.o: src/GUI/ModifyPopup.cpp src/GUI/ModifyPopup.h \
+		include/common/User.h \
+		include/common/standard.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ModifyPopup.o src/GUI/ModifyPopup.cpp
 
 UserMenu.o: src/GUI/UserMenu.cpp src/GUI/UserMenu.h \
 		src/GUI/ModifyPopup.h \
-		src/GUI/App.h \
-		src/GUI/Contact.h \
-		src/GUI/constants.h \
-		src/GUI/ContactLabel.hpp
+		include/common/User.h \
+		include/common/standard.h \
+		src/GUI/ContactLabel.hpp \
+		src/GUI/Call.hpp \
+		src/GUI/App.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o UserMenu.o src/GUI/UserMenu.cpp
 
-main.o: src/client/main.cpp 
+main.o: src/client/main.cpp src/GUI/App.h \
+		include/common/User.h \
+		include/common/standard.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o src/client/main.cpp
 
 moc_UserMenu.o: moc_UserMenu.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_UserMenu.o moc_UserMenu.cpp
 
-moc_Contact.o: moc_Contact.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_Contact.o moc_Contact.cpp
+moc_Call.o: moc_Call.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_Call.o moc_Call.cpp
 
 moc_App.o: moc_App.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_App.o moc_App.cpp
@@ -499,20 +514,13 @@ uninstall_target: FORCE
 install_sources: first FORCE
 	@test -d $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples || mkdir -p $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples
 	-$(QINSTALL) /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/GUI/App.cpp $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/App.cpp
-	-$(QINSTALL) /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/GUI/App.h $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/App.h
-	-$(QINSTALL) /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/GUI/constants.h $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/constants.h
-	-$(QINSTALL) /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/GUI/Contact.cpp $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/Contact.cpp
-	-$(QINSTALL) /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/GUI/Contact.h $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/Contact.h
-	-$(QINSTALL) /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/GUI/ContactLabel.hpp $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/ContactLabel.hpp
+	-$(QINSTALL) /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/GUI/Call.cpp $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/Call.cpp
 	-$(QINSTALL) /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/GUI/Login.cpp $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/Login.cpp
-	-$(QINSTALL) /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/GUI/Login.hpp $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/Login.hpp
 	-$(QINSTALL) /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/GUI/ModifyPopup.cpp $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/ModifyPopup.cpp
-	-$(QINSTALL) /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/GUI/ModifyPopup.h $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/ModifyPopup.h
 	-$(QINSTALL) /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/GUI/UserMenu.cpp $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/UserMenu.cpp
-	-$(QINSTALL) /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/GUI/UserMenu.h $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/UserMenu.h
 	-$(QINSTALL) /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/client/main.cpp $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/main.cpp
 	-$(QINSTALL) /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/GUI/UserMenu.h $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/UserMenu.h
-	-$(QINSTALL) /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/GUI/Contact.h $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/Contact.h
+	-$(QINSTALL) /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/GUI/Call.hpp $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/Call.hpp
 	-$(QINSTALL) /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/GUI/App.h $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/App.h
 	-$(QINSTALL) /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/GUI/ModifyPopup.h $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/ModifyPopup.h
 	-$(QINSTALL) /home/deul/3eme/babel/B-CPP-500-LYN-5-1-babel-martin.rougeron/src/GUI/Login.hpp $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/Login.hpp
@@ -525,20 +533,13 @@ uninstall_sources: FORCE
 	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/Login.hpp
 	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/ModifyPopup.h
 	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/App.h
-	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/Contact.h
+	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/Call.hpp
 	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/UserMenu.h
 	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/main.cpp
-	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/UserMenu.h
 	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/UserMenu.cpp
-	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/ModifyPopup.h
 	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/ModifyPopup.cpp
-	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/Login.hpp
 	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/Login.cpp
-	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/ContactLabel.hpp
-	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/Contact.h
-	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/Contact.cpp
-	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/constants.h
-	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/App.h
+	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/Call.cpp
 	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/App.cpp
 	-$(DEL_DIR) $(INSTALL_ROOT)/usr/lib/x86_64-linux-gnu/qt5/examples/ 
 

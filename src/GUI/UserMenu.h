@@ -15,8 +15,7 @@
 #include <QList>
 
 #include "ModifyPopup.h"
-#include "App.h"
-#include "ContactLabel.hpp"
+#include "Call.hpp"
 
 class UserMenu : public QWidget
 {
@@ -26,20 +25,22 @@ class UserMenu : public QWidget
         enum Mode { NavigationMode, AddingMode, EditingMode };
 
     public slots:
-                void addContact();
+        void addContact();
         void removeContact();
-        void findContact();
-        void setSelectioned(const QString &username);
+        void call();
+        void setSelectioned(User usr);
 
     private:
         void updateInterface(Mode mode);
         void fetchContact();
+        ContactLabel *findLabelWithId(int);
 
         QPushButton *addButton;
         QPushButton *removeButton;
-        QPushButton *findButton;
+        QPushButton *callButon;
         QLineEdit *nameLine;
         QList<ContactLabel *> contactDraw = {};
+        Call *callWidget;
 
         QGridLayout *mainLayout;
         QVBoxLayout *contactLayout;
@@ -49,7 +50,7 @@ class UserMenu : public QWidget
         QString oldName;
         QString oldAddress;
         Mode currentMode;
-        std::string selection;
+        User selection = {"", "", "", -1};
 
         App *app;
 };
