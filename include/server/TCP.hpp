@@ -67,6 +67,8 @@
             Commands C_command_to_commands(C_Commands);
 
             S_Protocol decode(std::string);
+            bool send(char *);
+            char *set_string(char *);
 
         private:
             enum

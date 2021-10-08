@@ -100,6 +100,7 @@ void Session::handle_read(std::shared_ptr<Session> &s, const boost::system::erro
             std::cout << colors::yellow << FAIL << "command not found: " << this->recv_commands.command << colors::reset << std::endl;
         }
         */
+        std::cout << this->buffer << std::endl;
         response = Session::decode(this->buffer);
         if (this->mapped.find(response.command.command) != this->mapped.end()) {
             std::cout << colors::cyan << DONE << "command found: " << response.command.command << colors::reset << std::endl;
@@ -218,10 +219,48 @@ bool Session::login(std::string arguments, struct User user)
 bool Session::logout(std::string arguments, struct User user)
 {
     Session::display(user);
+    
+    Session::send(set_string("logged out"));
 
     std::cout << colors::green << DONE << "logged out" << colors::reset << std::endl;
 
     return (false);
+}
+
+char *Session::set_string(char *data)
+{
+    char *result = new char[strlen(data)];
+
+    for (int i = 0; i < strlen(data); i++) {
+        result[i] = data[i];
+    }
+
+    return (result);
+}
+
+bool Session::send(char *data)
+{
+    /*
+    socket.async_send(
+        boost::asio::buffer(data, strlen(data)),
+        boost::bind(
+            &Session::handle_read,
+            this,
+            shared_from_this(),
+            boost::asio::placeholders::error,
+            boost::asio::placeholders::bytes_transferred
+        )
+    );
+    */
+   boost::system::error_code ignored_ec;
+
+    socket.send(
+        boost::asio::buffer(data, strlen(data)),
+        0,
+        ignored_ec
+    );
+
+    return (true);
 }
 
 bool Session::join(std::string arguments, struct User user)
@@ -246,7 +285,13 @@ bool Session::call(std::string arguments, struct User user)
 {
     Session::display(user);
 
-    std::cout << colors::green << DONE << "called" << colors::reset << std::endl;
+    if (this->database.login(user) == this->database.SUCCESS) {
+        Session::send(set_string("calling..."));
+        std::cout << colors::green << DONE << "called" << colors::reset << std::endl;
+        return (true);
+    }
+    Session::send(set_string("user not found"));
+    std::cout << colors::red << FAIL << "user not found" << colors::reset << std::endl;
 
     return (false);
 }
