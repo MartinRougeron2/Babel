@@ -11,7 +11,7 @@
 int main(int argc, char **argv)
 {
     boost::asio::io_service ios;
-    TCPServer tcpServer(ios, TCP_PORT);
+    // TCPServer tcpServer(ios, TCP_PORT);
     tcp::endpoint endpoint(tcp::v4(), TCP_PORT);
     UdpServer udpServer(ios);
 

@@ -12,6 +12,10 @@
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/asio.hpp>
+#include <boost/enable_shared_from_this.hpp>
+#include <boost/thread.hpp>
+
+
 
 #include "../common/User.h"
 #include "../common/standard.h"
@@ -24,46 +28,62 @@ using boost::asio::ip::udp;
 
     #define UDP_PORT 2001
 
-        class Group {
-            public:
-                Group(std::vector<User *> newUsers, int newId);
-                ~Group();
-                std::map<User * , boost::asio::ip::udp::endpoint *> listUser;
-                int id;
-                void addUser(User * newUser);
-        };
+class UdpServer;
+struct UdpSession;
+
+struct UdpSession : boost::enable_shared_from_this<UdpSession> {
+
+    UdpSession(UdpServer *server);
+
+    void handle_request(const boost::system::error_code &error);
+
+    void handle_sent(const boost::system::error_code &ec, std::size_t);
+
+    udp::endpoint remote_endpoint_;
+    boost::array<char, 100> recv_buffer_;
+    std::string message;
+    UdpServer *server_;
+};
+
+typedef boost::shared_ptr<UdpSession> shared_session;
 
 
+class Group {
+    public:
+        Group();
+        Group(shared_session session);
+        Group(std::vector<shared_session> sessions);
+        ~Group();
 
-    class UdpServer {
-        public:
-            UdpServer(boost::asio::io_service &io_service);
-            int  addUser(User * userToAdd);
-            void addUser(User * userToAdd, int groupId);
-            int  addUser(std::vector<User *> usersToAdd);
-            void addUser(std::vector<User *> usersToAdd, int groupId);
-            void addUser(User * userToAdd, User * userToFind);
+        void addSession(shared_session session);
+        void addSession(std::vector<shared_session> sessions);
+        std::vector<shared_session> sessions;
+};
 
-        private:
-            void handleReceive(const boost::system::error_code &error,
-                                std::size_t size);
+class UdpServer {
+    public:
+        UdpServer(boost::asio::io_service &io_service);
 
-            void handleSend(boost::shared_ptr <std::string> msg,
-                             const boost::system::error_code &error,
-                             std::size_t bytes_transferred);
+        int createGroup(shared_session session);
+        int addToGroup(int groupId, shared_session sessionToAdd);
+        bool removeFromGroup(int groupId, shared_session sessionToRemove);
 
+    private:
 
-            std::vector<udp::endpoint *> getOthersUsersEndpoint(const User *userFrom);
-            void get();
-            void sendStringToEndpoint(const std::string dataToSend,
-                                      const udp::endpoint remote_endpoint);
+        void receive_session();
+        std::vector<shared_session> get_related(const shared_session session) const;
 
+        void handle_receive(const shared_session session, const
+        boost::system::error_code &ec, std::size_t);
+        void enqueue_response(shared_session const &session);
 
-            udp::socket socket_;
-            udp::endpoint remote_endpoint_;
-            boost::array<char, 100> recv_buffer_;
-            std::vector<Group *> allGroups;
-            int id = 0;
-    };
+        int id = 0;
+        udp::socket socket_;
+        boost::asio::io_service::strand strand_;
+        std::map<int, Group> groups;
+
+        friend struct UdpSession;
+};
+
 
 #endif /* !ASIO_HPP_ */

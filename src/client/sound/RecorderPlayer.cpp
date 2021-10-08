@@ -61,7 +61,8 @@ std::vector<float> Sound::RecorderPlayer::getMic()
     this->data.record.clear();
     return tmp;
 }
-
+//encode(getmic)
+//spaeker(decodeà
 void Sound::RecorderPlayer::toSpeaker(std::vector<float> sample)
 {
     this->data.play.insert(this->data.play.end(), sample.begin(), sample.end() );
