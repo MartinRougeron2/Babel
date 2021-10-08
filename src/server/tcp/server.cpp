@@ -103,10 +103,9 @@ void Session::handle_read(std::shared_ptr<Session> &s, const boost::system::erro
         std::cout << this->buffer << std::endl;
         response = Session::decode(this->buffer);
         if (this->mapped.find(response.command.command) != this->mapped.end()) {
-            std::cout << colors::cyan << DONE << "command found: " << response.command.command << colors::reset << std::endl;
             (this->*this->mapped.at(response.command.command))(response.command.arguments, response.user);
         } else {
-            std::cout << colors::yellow << FAIL << "command not found: " << response.command.command << colors::reset << std::endl;
+            Session::send(set_string("command not found"));
         }
         socket.async_read_some(
             //boost::asio::buffer(this->recv, max_length),
@@ -170,7 +169,6 @@ void Session::display(User user)
 
 User Session::C_user_to_user(C_User c_user)
 {
-    std::cout << "converting user..." << std::endl;
     User user;
 
     user.username = std::string(c_user.username);
@@ -180,20 +178,15 @@ User Session::C_user_to_user(C_User c_user)
 
     Session::display(user);
 
-    std::cout << "converted user" << std::endl;
-
     return (user);
 }
 
 Commands Session::C_command_to_commands(C_Commands c_commands)
 {
-    std::cout << "converting commands..." << std::endl;
     Commands commands;
 
     commands.command = std::string(c_commands.command);
     commands.arguments = std::string(c_commands.arguments);
-
-    std::cout << "converted commands" << std::endl;
 
     return (commands);
 }
@@ -202,16 +195,12 @@ bool Session::login(std::string arguments, struct User user)
 {
     Session::display(user);
 
-    if (this->database.uploadData(user) == true) {
-        std::cout << colors::green << DONE << "user created" << colors::reset << std::endl;
-    } else {
-        std::cout << colors::yellow << FAIL << "user already present" << colors::reset << std::endl;
-    }
+    this->database.uploadData(user);
     if (this->database.login(user) == this->database.SUCCESS) {
-        std::cout << colors::green << DONE << "logged" << colors::reset << std::endl;
+        Session::send(set_string("logged"));
         return (true);
     }
-    std::cout << colors::yellow << FAIL << "failed to login" << colors::reset << std::endl;
+    Session::send(set_string("login failed"));
 
     return (false);
 }
@@ -220,17 +209,16 @@ bool Session::logout(std::string arguments, struct User user)
 {
     Session::display(user);
     
-    Session::send(set_string("logged out"));
-
-    std::cout << colors::green << DONE << "logged out" << colors::reset << std::endl;
+    Session::send(set_string("EXIT"));
 
     return (false);
 }
 
 char *Session::set_string(char *data)
 {
-    char *result = new char[strlen(data)];
+    char *result = new char[strlen(data) + 1];
 
+    result[strlen(data)] = '\0';
     for (int i = 0; i < strlen(data); i++) {
         result[i] = data[i];
     }
@@ -276,7 +264,7 @@ bool Session::leave(std::string arguments, struct User user)
 {
     Session::display(user);
 
-    std::cout << colors::green << DONE << "left" << colors::reset << std::endl;
+    Session::send(set_string("EXIT"));
 
     return (false);
 }
@@ -287,11 +275,9 @@ bool Session::call(std::string arguments, struct User user)
 
     if (this->database.login(user) == this->database.SUCCESS) {
         Session::send(set_string("calling..."));
-        std::cout << colors::green << DONE << "called" << colors::reset << std::endl;
         return (true);
     }
     Session::send(set_string("user not found"));
-    std::cout << colors::red << FAIL << "user not found" << colors::reset << std::endl;
 
     return (false);
 }
@@ -300,7 +286,7 @@ bool Session::ping(std::string arguments, struct User user)
 {
     Session::display(user);
 
-    std::cout << colors::green << DONE << "pong" << colors::reset << std::endl;
+    Session::send(set_string("pong"));
 
     return (false);
 }
@@ -310,10 +296,10 @@ bool Session::close_server(std::string arguments, struct User user)
     Session::display(user);
 
     if (user.username == "admin" && user.password == "admin") {
-        std::cout << colors::green << DONE << "user authorized" << colors::reset << std::endl;
+        Session::send(set_string("user authorized"));
         Session::close_socket();
     } else {
-        std::cout << colors::red << FAIL << "user not authorized" << colors::reset << std::endl;
+        Session::send(set_string("user not authorized"));
     }
 
     return (false);

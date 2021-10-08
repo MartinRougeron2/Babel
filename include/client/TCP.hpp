@@ -44,16 +44,17 @@
             char *stca_(std::string);
 
         private:
-            // client settings
-            char *server_ip;
-            int server_port;
-
-            char msg[1500];
-            
             enum
             {
                 max_length = 1024
             };
+
+            // client settings
+            char *server_ip;
+            int server_port;
+
+            char msg[max_length];
+            
 
             struct hostent *host;
             sockaddr_in address;

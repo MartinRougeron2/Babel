@@ -82,34 +82,37 @@ bool TCP::run()
 {
     this->running = true;
     bool logged = false;
-
-    std::string command;
-    std::string arguments;
-
-    std::string username;
-    std::string password;
-
-    std::string target_username;
-    std::string sendv;
+    std::string data;
+    std::string logs;
+    std::string full;
 
     for (; this->running == true; ) {
-        std::cout << ":: ";
-        std::string data;
-        std::getline(std::cin, data);
-        memset(&msg, 0, sizeof(msg));
-        strcpy(msg, data.c_str());
-        if (data == "exit") {
-            this->running = false;
+        if (logged == false) {
+            std::cout << "login: username;pass" << std::endl;
+            std::cout << "$> ";
+            std::getline(std::cin, logs);
+            logged = true;
+            full = logs + ";/login";
+        } else {
+            std::cout << "$> ";
+            std::getline(std::cin, data);
+            memset(&msg, 0, strlen(msg));
+            full = logs + ";" + data;
+            std::cout << "command: " << full << std::endl;
         }
-        send(this->client_socket, (char*)&msg, strlen(msg), 0);
-        std::cout << "Awaiting server response..." << std::endl;
-        memset(&msg, 0, sizeof(msg));
-        recv(this->client_socket, (char*)&msg, sizeof(msg), 0);
-        if (!strcmp(msg, "exit")) {
-            std::cout << "Server has quit the session" << std::endl;
+        std::cout << "msg: '" << msg << "'" << std::endl;
+        strcpy(msg, full.c_str());
+        if (data == "/EXIT") {
             this->running = false;
+        } else {
+            send(this->client_socket, (char *)&msg, sizeof(msg), 0);
+            std::cout << "Awaiting server response..." << std::endl;
+            memset(&msg, 0, strlen(msg));
+            recv(this->client_socket, (char *)&msg, sizeof(msg), 0);
+            std::cout << "Received: " << msg << std::endl;
+            if (std::string(msg) == "EXIT")
+                this->running = false;
         }
-        std::cout << "Received: " << msg;
     }
     close(this->client_socket);
 
