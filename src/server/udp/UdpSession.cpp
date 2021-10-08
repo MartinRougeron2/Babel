@@ -22,10 +22,3 @@ void UdpSession::handle_sent(const boost::system::error_code &ec, std::size_t)
                   << ": " << ec.message() << "\n";
     }
 }
-
-void UdpSession::handle_request(const boost::system::error_code &error)
-{
-    if (!error || error == boost::asio::error::message_size)
-        server_->enqueue_response(shared_from_this());
-}
-

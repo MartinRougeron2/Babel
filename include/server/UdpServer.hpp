@@ -35,8 +35,6 @@ struct UdpSession : boost::enable_shared_from_this<UdpSession> {
 
     UdpSession(UdpServer *server);
 
-    void handle_request(const boost::system::error_code &error);
-
     void handle_sent(const boost::system::error_code &ec, std::size_t);
 
     udp::endpoint remote_endpoint_;
@@ -78,9 +76,7 @@ class UdpServer {
         void receive_session();
         std::vector<shared_session> get_related(const shared_session session) const;
 
-        void handle_receive(const shared_session session, const
-        boost::system::error_code &ec, std::size_t);
-        void enqueue_response(shared_session const &session);
+        void handle_receive(const shared_session session, const boost::system::error_code &ec, std::size_t);
 
         int id = 0;
         udp::socket socket_;

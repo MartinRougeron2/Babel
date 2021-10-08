@@ -67,42 +67,38 @@ const
                 break;
             }
     // pop sender out
-    for (size_t i = 0; i < others.size(); i++)
-        if (others[i] == session)
-            others.erase(others.begin() + i);
-    for (auto other: others)
-        std::cout << other->remote_endpoint_.address().to_string() << std::endl;
+    /// TO TEST
+//    for (size_t i = 0; i < others.size(); i++)
+//        if (others[i] == session)
+//            others.erase(others.begin() + i);
+//    for (auto other: others)
+//        std::cout << other->remote_endpoint_.address().to_string() << std::endl;
+/// ----------------------------
     return others;
 }
 
 void UdpServer::handle_receive(const shared_session session, const boost::system::error_code &ec,
                     std::size_t)
 {
+    /// To TEST
     this->groups[0].addSession(session);
+    ///-------
     std::vector<shared_session> others_sessions = get_related(session);
 
-    std::cout << session->recv_buffer_.c_array();
-
-    for (auto others_session : others_sessions)
-        post(socket_.get_executor(), bind(&UdpSession::handle_request,
-                                          others_session, ec));
+    for (auto others_session : others_sessions) {
+        socket_.async_send_to(
+            boost::asio::buffer(session->recv_buffer_),
+            others_session->remote_endpoint_,
+            strand_.wrap(
+                bind(
+                    &UdpSession::handle_sent,
+                    others_session,
+                    boost::asio::placeholders::error,
+                    boost::asio::placeholders::bytes_transferred
+                )
+            )
+        );
+    }
 
     receive_session();
-}
-
-void UdpServer::enqueue_response(shared_session const &session)
-{
-    socket_.async_send_to(
-        boost::asio::buffer(session->recv_buffer_),
-        session->remote_endpoint_,
-        strand_.wrap(
-            bind(
-                &UdpSession::handle_sent,
-                session, // keep-alive of buffer/endpoint
-                boost::asio::placeholders::error,
-                boost::asio::placeholders::bytes_transferred
-            )
-        )
-    );
-    session->recv_buffer_.assign(0);
 }
