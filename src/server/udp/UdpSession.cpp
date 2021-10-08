@@ -10,6 +10,7 @@
 
 UdpSession::UdpSession(UdpServer *server) : server_(server)
 {
+    this->recv_buffer_.assign(0);
 }
 
 void UdpSession::handle_sent(const boost::system::error_code &ec, std::size_t)

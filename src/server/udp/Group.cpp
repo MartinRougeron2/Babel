@@ -28,12 +28,15 @@ Group::~Group()
 {
 }
 
-void Group::addSession(shared_session session)
+void Group::addSession(const shared_session &session)
 {
+    for (auto _session : sessions)
+        if (_session == session)
+            return;
     this->sessions.push_back(session);
 }
 
-void Group::addSession(std::vector<shared_session> sessions)
+void Group::addSession(const std::vector<shared_session> sessions)
 {
     for (auto &session: sessions)
         this->sessions.push_back(session);

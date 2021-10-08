@@ -70,12 +70,15 @@ const
     for (size_t i = 0; i < others.size(); i++)
         if (others[i] == session)
             others.erase(others.begin() + i);
+    for (auto other: others)
+        std::cout << other->remote_endpoint_.address().to_string() << std::endl;
     return others;
 }
 
 void UdpServer::handle_receive(const shared_session session, const boost::system::error_code &ec,
                     std::size_t)
 {
+    this->groups[0].addSession(session);
     std::vector<shared_session> others_sessions = get_related(session);
 
     std::cout << session->recv_buffer_.c_array();
@@ -90,7 +93,7 @@ void UdpServer::handle_receive(const shared_session session, const boost::system
 void UdpServer::enqueue_response(shared_session const &session)
 {
     socket_.async_send_to(
-        boost::asio::buffer(session->message),
+        boost::asio::buffer(session->recv_buffer_),
         session->remote_endpoint_,
         strand_.wrap(
             bind(
@@ -101,4 +104,5 @@ void UdpServer::enqueue_response(shared_session const &session)
             )
         )
     );
+    session->recv_buffer_.assign(0);
 }

@@ -43,6 +43,11 @@ struct UdpSession : boost::enable_shared_from_this<UdpSession> {
     boost::array<char, 100> recv_buffer_;
     std::string message;
     UdpServer *server_;
+
+    bool operator==(const UdpSession &other)
+    {
+        return this->remote_endpoint_ == other.remote_endpoint_;
+    }
 };
 
 typedef boost::shared_ptr<UdpSession> shared_session;
@@ -55,8 +60,8 @@ class Group {
         Group(std::vector<shared_session> sessions);
         ~Group();
 
-        void addSession(shared_session session);
-        void addSession(std::vector<shared_session> sessions);
+        void addSession(const shared_session &session);
+        void addSession(const std::vector<shared_session> sessions);
         std::vector<shared_session> sessions;
 };
 
