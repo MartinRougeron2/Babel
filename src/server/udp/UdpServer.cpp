@@ -99,6 +99,7 @@ void UdpServer::handle_receive(const shared_session session, const boost::system
             )
         );
     }
+    session->recv_buffer_.assign(0);
 
     receive_session();
 }
