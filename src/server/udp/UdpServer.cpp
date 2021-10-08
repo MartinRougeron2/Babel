@@ -11,13 +11,6 @@
 UdpServer::UdpServer(boost::asio::io_service &io_service) : socket_(io_service,
                                                               udp::endpoint(udp::v4(), UDP_PORT)), strand_(io_service)
 {
-    boost::thread_group group;
-
-    for (unsigned i = 0; i < std::thread::hardware_concurrency(); ++i)
-        group.create_thread(bind(&boost::asio::io_service::run, boost::ref
-        (io_service)));
-
-    group.join_all();
     receive_session();
 }
 
@@ -49,7 +42,6 @@ bool UdpServer::removeFromGroup(int groupId, shared_session sessionToRemove)
 
 void UdpServer::receive_session()
 {
-    // our session to hold the buffer + endpoint
     auto session = boost::make_shared<UdpSession>(this);
 
     this->socket_.async_receive_from(
@@ -58,7 +50,7 @@ void UdpServer::receive_session()
         strand_.wrap(
             bind(&UdpServer::handle_receive,
                  this,
-                 session, // keep-alive of buffer/endpoint
+                 session,
                  boost::asio::placeholders::error,
                  boost::asio::placeholders::bytes_transferred)));
 }
@@ -85,6 +77,8 @@ void UdpServer::handle_receive(const shared_session session, const boost::system
                     std::size_t)
 {
     std::vector<shared_session> others_sessions = get_related(session);
+
+    std::cout << session->recv_buffer_.c_array();
 
     for (auto others_session : others_sessions)
         post(socket_.get_executor(), bind(&UdpSession::handle_request,
