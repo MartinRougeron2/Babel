@@ -13,7 +13,7 @@ UserMenu::UserMenu(QWidget *parent)
     this->app = static_cast<App *>(parent);
     QLabel *nameLabel = new QLabel(this);
     nameLabel->setFrameStyle(QFrame::Panel);
-    nameLabel->setText(QString::fromStdString(app->getUser().username + " : " + app->getUser().address));
+    nameLabel->setText(QString::fromStdString(app->getContext().username + " : " + app->getContext().address));
 
     QLabel *addressLabel = new QLabel(tr("Contact:"));
     contactDraw = QList<ContactLabel *>();
@@ -54,7 +54,7 @@ UserMenu::UserMenu(QWidget *parent)
 
 void UserMenu::fetchContact()
 {
-    for (auto &a : contactDraw)
+    for (auto a : contactDraw)
         delete a;
     this->contactDraw.clear();
     std::vector<User> linkeds = app->fetchContact();
@@ -79,6 +79,8 @@ ContactLabel *UserMenu::findLabelWithId(int id)
 
 void UserMenu::setSelectioned(User user)
 {
+    if (this->callWidget->getScene() != Call::Scene::NOCALL)
+        return;
     this->selection = user;
     for (auto a : contactDraw)
         a->setFrameStyle(0);
@@ -90,16 +92,19 @@ void UserMenu::setSelectioned(User user)
 void UserMenu::addContact()
 {
     callWidget->setScene(Call::RECEIVECALL, "adolphe");
+    if (this->callWidget->getScene() != Call::Scene::NOCALL)
+        return;
     dialog->show();
     if (dialog->exec() == 1) {
-        User contactName = dialog->getUserAdded();
-        if (app->checkUser(contactName.username)) {
-            app->addContact(contactName);
+        std::string contactName = dialog->getUserAdded();
+        if (app->checkUser(contactName)) {
+            User user = app->getUser(contactName);
+            app->addContact(user);
             fetchContact();
         } else {
             QMessageBox::information(this, tr("Contact Not Found"),
                                      tr("Sorry, canno't find \"%1\"")
-                                     .arg(QString::fromStdString(contactName.username)));
+                                     .arg(QString::fromStdString(contactName)));
             return;
         }
     }
@@ -108,6 +113,8 @@ void UserMenu::addContact()
 void UserMenu::removeContact()
 {
     if (this->selection.id == -1)
+        return;
+    if (this->callWidget->getScene() != Call::Scene::NOCALL)
         return;
     int index = 0;
     for (auto label : contactDraw) {
@@ -128,6 +135,9 @@ void UserMenu::call()
 {
     if (this->selection.id == -1)
         return;
+    if (this->callWidget->getScene() != Call::Scene::NOCALL)
+        return;
     app->call(this->selection);
-    callWidget->setScene(Call::Scene::SENDCALL, this->selection.username);
+    callWidget->setScene(Call::Scene::ONCALL, this->selection.username);
+    callWidget->updateCall();
 }

@@ -9,6 +9,8 @@
 #ifndef BABEL_APP_H
 #define BABEL_APP_H
 
+class UserMenu;
+
 #include <QWidget>
 #include <QtWidgets>
 #include <QList>
@@ -26,8 +28,12 @@ class App : public QWidget
     public:
         App(QWidget *parent=NULL);
         virtual ~App() {};
-        std::vector<User> fetchContact();
+        std::vector<User> fetchContact() const;
         bool checkUser(std::string usr);
+        void hangup();
+        User getUser(std::string username) const;
+        std::vector<User> getUserInCall() const;
+        void updateCall() const;
 
     public slots:
 
@@ -42,7 +48,7 @@ class App : public QWidget
         void addContact(User user_to_add);
         void removeContact(User user_to_remove);
 
-        User getUser() const { return this->user;};
+        User getContext() const { return this->user;};
 
         loginCode login(std::string username, std::string password);
         void update();
@@ -54,7 +60,7 @@ class App : public QWidget
 
         QLineEdit *search_name;
         QWidget *loginui;
-        QWidget *usermenu;
+        UserMenu *usermenu;
 
 };
 

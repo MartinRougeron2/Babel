@@ -37,15 +37,14 @@ void ModifyPopup::findClicked()
         QMessageBox::information(this, tr("Empty Field"),
                                  tr("Please enter a name."));
     } else {
-        user = {text.toStdString(), "", "", 0};
+        user = text.toStdString();
         lineEdit->clear();
-        addressEdit->clear();
         hide();
         accept();
     }
 }
 
-User ModifyPopup::getUserAdded()
+std::string ModifyPopup::getUserAdded()
 {
     return user;
 }

@@ -17,14 +17,32 @@ App::App(QWidget *parent) : QWidget(parent)
     update();
 }
 
+std::vector<User> App::getUserInCall() const
+{
+    //TODO RETURN USER IN CONTEXT CALL;
+    return fetchContact();
+}
+
+User App::getUser(std::string username) const
+{
+    //TODO RETURN USER WITH USERNAME;
+    return {"user", "password", "address", 5};
+}
+
 void App::call(User contact_to_call)
 {
+    //TODO CREATE CALL THEN ADD USER TO CALL
+}
 
+void App::hangup()
+{
+    //TODO HANGUP
 }
 
 void App::acceptCall()
 {
     //TODO ACCEPT CALL
+    updateCall();
 }
 
 void App::refuseCall()
@@ -39,22 +57,26 @@ void App::dismiss()
 
 void App::addContactToCall(User contact_to_add)
 {
-
+    //TODO ADD CONTACT TO CONTEXT USER CALL
+    //NEED TO CHECK IF USER IS IN YOUR CONTACT
 }
 
 void App::removeContactToCall(User contact_to_remove)
 {
-
+    //TODO REMOVE CONTACT TO CONTEXT USER CALL
+    //NEED TO CHECK IF USER IS IN THE CALL
 }
 
 void App::addContact(User contact_to_add)
 {
     //TODO ADD CONTACT TO DB
+    //ALREADY IN UR CONTACT ?
 }
 
 void App::removeContact(User contact_to_remove)
 {
     //TODO REMOVE CONTACT FROM DB
+    //NOT IN YOUR CONTACT (should not be called)
 }
 
 bool App::checkUser(std::string username)
@@ -63,7 +85,7 @@ bool App::checkUser(std::string username)
     return true;
 }
 
-std::vector<User> App::fetchContact()
+std::vector<User> App::fetchContact() const
 {
     std::vector<User> linkeds;
     linkeds.push_back({"dd", "dd", "dd", 0});
@@ -89,7 +111,12 @@ void App::update()
             break;
         case Menu_:
             delete loginui;
-            usermenu = new UserMenu(this);
+            this->usermenu = new UserMenu(this);
             break;
     }
+}
+
+void App::updateCall() const
+{
+    usermenu->getCallW()->updateCall();
 }

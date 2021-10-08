@@ -23,7 +23,7 @@ class ModifyPopup : public QDialog
     Q_OBJECT
     public:
         ModifyPopup(QWidget *parent = 0);
-        User getUserAdded();
+        std::string getUserAdded();
 
     public slots:
         void findClicked();
@@ -31,8 +31,7 @@ class ModifyPopup : public QDialog
     private:
         QPushButton *findButton;
         QLineEdit *lineEdit;
-        QLineEdit *addressEdit;
-        User user = {"", "", "", 0};
+        std::string user = "";
 };
 
 

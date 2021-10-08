@@ -14,7 +14,6 @@
 #include <QMap>
 #include <QList>
 
-#include "ModifyPopup.h"
 #include "Call.hpp"
 
 class UserMenu : public QWidget
@@ -22,16 +21,15 @@ class UserMenu : public QWidget
     Q_OBJECT
     public:
         UserMenu(QWidget *parent = 0);
-        enum Mode { NavigationMode, AddingMode, EditingMode };
 
     public slots:
         void addContact();
         void removeContact();
         void call();
         void setSelectioned(User usr);
+        Call *getCallW() const { return this->callWidget;};
 
     private:
-        void updateInterface(Mode mode);
         void fetchContact();
         ContactLabel *findLabelWithId(int);
 
@@ -45,11 +43,7 @@ class UserMenu : public QWidget
         QGridLayout *mainLayout;
         QVBoxLayout *contactLayout;
 
-        QMap<QString, QString> contacts;
         ModifyPopup *dialog;
-        QString oldName;
-        QString oldAddress;
-        Mode currentMode;
         User selection = {"", "", "", -1};
 
         App *app;

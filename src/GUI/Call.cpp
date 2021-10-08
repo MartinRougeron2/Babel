@@ -12,31 +12,27 @@ Call::Call(QWidget *parent)
     this->app = static_cast<App *>(parent);
 
     receiveCallName = new QLabel;
-    sendCallName = new QLabel;
-    QLabel *sendCallWait = new QLabel("Waiting...");
     QLabel *onCallName = new QLabel("On call");
     QPushButton *receiveCallAccept = new QPushButton("Answer");
     QPushButton *receiveCallDeny = new QPushButton("Deny");
 
-    QPushButton *addToCall = new QPushButton("Add");
-    QPushButton *removeToCall = new QPushButton("Remove");
-    QPushButton *hangup = new QPushButton("Hang Up");
+    QPushButton *addToCallb = new QPushButton("Add");
+    QPushButton *removeToCallb = new QPushButton("Remove");
+    QPushButton *hangupb = new QPushButton("Hang Up");
 
     connect(receiveCallAccept, SIGNAL(clicked()), this, SLOT(takeCall()));
     connect(receiveCallDeny, SIGNAL(clicked()), this, SLOT(refuseCall()));
+    connect(hangupb, SIGNAL(clicked()), this, SLOT(hangup()));
+    connect(addToCallb, SIGNAL(clicked()), this, SLOT(addToCall()));
+    connect(removeToCallb, SIGNAL(clicked()), this, SLOT(removeFromCall()));
     receiveCallLayout->addWidget(receiveCallName, 0, 0, 1, 2, Qt::AlignCenter);
     receiveCallLayout->addWidget(receiveCallAccept, 2, 0);
     receiveCallLayout->addWidget(receiveCallDeny, 2, 1);
 
-    sendCallLayout->addWidget(sendCallName, 0, 0, 1, 2, Qt::AlignCenter);
-    sendCallWait->setStyleSheet("color: grey; font-size: 14px");
-    sendCallLayout->addWidget(sendCallWait, 2, 0, 1, 2, Qt::AlignCenter);
-    buttonList->addWidget(addToCall);
-    buttonList->addWidget(removeToCall);
-    buttonList->addWidget(hangup);
-    ContactLabel *label = new ContactLabel({"Himler", "", "", 1});
-    label->setText("Himler");
-    contactList->addWidget(label);
+    buttonList->addWidget(addToCallb);
+    buttonList->addWidget(removeToCallb);
+    buttonList->addWidget(hangupb);
+    contactList->setAlignment(Qt::AlignTop);
     QHBoxLayout *row = new QHBoxLayout;
     row->addLayout(contactList);
     row->addStretch();
@@ -46,12 +42,16 @@ Call::Call(QWidget *parent)
 
     onCall->setLayout(onCallLayout);
     receiveCall->setLayout(receiveCallLayout);
-    sendCall->setLayout(sendCallLayout);
 
     scene->addWidget(new QWidget);
     scene->addWidget(onCall);
     scene->addWidget(receiveCall);
-    scene->addWidget(sendCall);
+}
+
+void Call::hangup()
+{
+    this->app->hangup();
+    this->setScene(NOCALL, "");
 }
 
 void Call::setScene(Scene scene, std::string context)
@@ -60,8 +60,6 @@ void Call::setScene(Scene scene, std::string context)
     this->contextCall = QString::fromStdString(context);
     if (scene == RECEIVECALL)
         receiveCallName->setText(QString::fromStdString("%1 is calling").arg(this->contextCall));
-    if (scene == SENDCALL)
-        sendCallName->setText(QString::fromStdString("You're calling %1").arg(this->contextCall));
 }
 
 void Call::refuseCall()
@@ -74,4 +72,51 @@ void Call::takeCall()
 {
     this->app->acceptCall();
     setScene(ONCALL, "");
+}
+
+void Call::addToCall()
+{
+    dialog->show();
+    if (dialog->exec() == 1) {
+        std::string contactName = dialog->getUserAdded();
+        if (app->checkUser(contactName)) {
+            User user = app->getUser(contactName);
+            app->addContactToCall(user);
+        } else {
+            QMessageBox::information(this, tr("Contact Not Found"),
+                                     tr("Sorry, canno't find \"%1\"")
+                                     .arg(QString::fromStdString(contactName)));
+            return;
+        }
+    }
+}
+
+void Call::removeFromCall()
+{
+    dialog->show();
+    if (dialog->exec() == 1) {
+        std::string contactName = dialog->getUserAdded();
+        if (app->checkUser(contactName)) {
+            User user = app->getUser(contactName);
+            app->removeContactToCall(user);
+        } else {
+            QMessageBox::information(this, tr("Contact Not Found"),
+                                     tr("Sorry, canno't find \"%1\"")
+                                     .arg(QString::fromStdString(contactName)));
+            return;
+        }
+    }
+}
+
+void Call::updateCall()
+{
+    QLayoutItem *wItem;
+    while ((wItem = contactList->takeAt(0)) != 0)
+        delete wItem;
+    std::vector<User> linkeds = app->fetchContact();
+    for (auto contact : linkeds) {
+        ContactLabel *label = new ContactLabel(contact);
+        label->setText(QString::fromStdString(label->getUser().username));
+        contactList->addWidget(label);
+    }
 }
