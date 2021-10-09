@@ -105,7 +105,7 @@ void Session::handle_read(std::shared_ptr<Session> &s, const boost::system::erro
         if (this->mapped.find(response.command.command) != this->mapped.end()) {
             (this->*this->mapped.at(response.command.command))(response.command.arguments, response.user);
         } else {
-            Session::send(set_string("command not found"));
+            Session::send(set_string("command not found\n"));
         }
         socket.async_read_some(
             //boost::asio::buffer(this->recv, max_length),
@@ -197,10 +197,10 @@ bool Session::login(std::string arguments, struct User user)
 
     this->database.uploadData(user);
     if (this->database.login(user) == this->database.SUCCESS) {
-        Session::send(set_string("logged"));
+        Session::send(set_string("logged\n"));
         return (true);
     }
-    Session::send(set_string("login failed"));
+    Session::send(set_string("login failed\n"));
 
     return (false);
 }
@@ -209,7 +209,7 @@ bool Session::logout(std::string arguments, struct User user)
 {
     Session::display(user);
     
-    Session::send(set_string("EXIT"));
+    Session::send(set_string("EXIT\n"));
 
     return (false);
 }
@@ -264,7 +264,7 @@ bool Session::leave(std::string arguments, struct User user)
 {
     Session::display(user);
 
-    Session::send(set_string("EXIT"));
+    Session::send(set_string("EXIT\n"));
 
     return (false);
 }
@@ -274,10 +274,10 @@ bool Session::call(std::string arguments, struct User user)
     Session::display(user);
 
     if (this->database.login(user) == this->database.SUCCESS) {
-        Session::send(set_string("calling..."));
+        Session::send(set_string("calling...\n"));
         return (true);
     }
-    Session::send(set_string("user not found"));
+    Session::send(set_string("user not found\n"));
 
     return (false);
 }
@@ -286,7 +286,7 @@ bool Session::ping(std::string arguments, struct User user)
 {
     Session::display(user);
 
-    Session::send(set_string("pong"));
+    Session::send(set_string("pong\n"));
 
     return (false);
 }
@@ -296,10 +296,10 @@ bool Session::close_server(std::string arguments, struct User user)
     Session::display(user);
 
     if (user.username == "admin" && user.password == "admin") {
-        Session::send(set_string("user authorized"));
+        Session::send(set_string("user authorized\n"));
         Session::close_socket();
     } else {
-        Session::send(set_string("user not authorized"));
+        Session::send(set_string("user not authorized\n"));
     }
 
     return (false);

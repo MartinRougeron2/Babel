@@ -100,9 +100,8 @@ bool TCP::run()
             full = logs + ";" + data;
             std::cout << "command: " << full << std::endl;
         }
-        std::cout << "msg: '" << msg << "'" << std::endl;
         strcpy(msg, full.c_str());
-        if (data == "/EXIT") {
+        if (data == "EXIT\n") {
             this->running = false;
         } else {
             send(this->client_socket, (char *)&msg, sizeof(msg), 0);
@@ -110,8 +109,6 @@ bool TCP::run()
             memset(&msg, 0, strlen(msg));
             recv(this->client_socket, (char *)&msg, sizeof(msg), 0);
             std::cout << "Received: " << msg << std::endl;
-            if (std::string(msg) == "EXIT")
-                this->running = false;
         }
     }
     close(this->client_socket);
