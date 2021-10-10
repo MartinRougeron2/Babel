@@ -264,7 +264,7 @@ bool Session::leave(std::string arguments, struct User user)
 {
     Session::display(user);
 
-    Session::send(set_string("EXIT\n"));
+    Session::send(set_string("EXIT"));
 
     return (false);
 }

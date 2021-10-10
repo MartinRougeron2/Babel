@@ -26,6 +26,20 @@ function run_client()
     printf "CLIENT STOPPED\n"
 }
 
+function run_debug_server()
+{
+    printf "RUNNING SERVER\n"
+    valgrind ./build/bin/babel_server
+    printf "SERVER STOPPED\n"
+}
+
+function run_debug_client()
+{
+    printf "RUNNING CLIENT\n"
+    valgrind ./build/bin/babel_client
+    printf "CLIENT STOPPED\n"
+}
+
 function main()
 {
     if [[ $1 == "server" ]]; then
@@ -33,8 +47,13 @@ function main()
     elif [[ $1 == "client" ]]; then
         run_client
     else
+        if [[ $1 == "debug" && $2 == "server" ]]; then
+            run_debug_server
+        elif [[ $1 == "debug" && $2 == "client" ]]; then
+            run_debug_client
+        fi
         build
     fi
 }
 
-main $1
+main $1 $2

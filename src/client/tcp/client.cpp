@@ -101,7 +101,7 @@ bool TCP::run()
             std::cout << "command: " << full << std::endl;
         }
         strcpy(msg, full.c_str());
-        if (data == "EXIT\n") {
+        if (data == "EXIT") {
             this->running = false;
         } else {
             send(this->client_socket, (char *)&msg, sizeof(msg), 0);
