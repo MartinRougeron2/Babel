@@ -32,26 +32,27 @@
 
     using boost::asio::ip::tcp;
 
-    class Session : public std::enable_shared_from_this<Session>
+    class TcpSession : public std::enable_shared_from_this<TcpSession>
     {
         public:
-            Session(boost::asio::io_service &);
+            TcpSession(boost::asio::io_service &);
 
             tcp::socket &get_socket();
 
             void start();
-            void handle_read(std::shared_ptr<Session> &, const boost::system::error_code &, std::size_t);
+            void handle_read(std::shared_ptr<TcpSession> &, const
+                boost::system::error_code &, std::size_t);
 
-            typedef bool (Session::*function_type)(std::string, struct User);
+            typedef bool (TcpSession::*function_type)(std::string, struct User);
 
             std::map<std::string, function_type> mapped = {
-                { "/login", &Session::login },
-                { "/logout", &Session::logout },
-                { "/join", &Session::join },
-                { "/leave", &Session::leave },
-                { "/call", &Session::call },
-                { "/ping", &Session::ping },
-                { "/exit", &Session::close_server }
+                { "/login", &TcpSession::login },
+                { "/logout", &TcpSession::logout },
+                { "/join", &TcpSession::join },
+                { "/leave", &TcpSession::leave },
+                { "/call", &TcpSession::call },
+                { "/ping", &TcpSession::ping },
+                { "/exit", &TcpSession::close_server }
             };
 
             bool login(std::string, struct User);
@@ -87,12 +88,13 @@
             void close_socket();
     };
 
-    class TCPServer
+    class TcpServer
     {
         public:
-            TCPServer(boost::asio::io_service &, short);
+            TcpServer(boost::asio::io_service &, short);
 
-            void handle_accept(std::shared_ptr<Session>, const boost::system::error_code &);
+            void handle_accept(std::shared_ptr<TcpSession>, const
+                boost::system::error_code &);
 
         private:
             boost::asio::io_service &ios;

@@ -5,13 +5,13 @@
 ** main.cpp
 */
 
-#include "server/TCP.hpp"
+#include "server/TcpServer.hpp"
 #include "server/UdpServer.hpp"
 
 int main(int argc, char **argv)
 {
     boost::asio::io_service ios;
-    __attribute__((unused)) TCPServer tcpServer(ios, TCP_PORT);
+    __attribute__((unused)) TcpServer tcpServer(ios, TCP_PORT);
     __attribute__((unused)) tcp::endpoint endpoint(tcp::v4(), TCP_PORT);
     __attribute__((unused)) UdpServer udpServer(ios);
 

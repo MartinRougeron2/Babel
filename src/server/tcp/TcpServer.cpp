@@ -5,17 +5,18 @@
 ** server.cpp
 */
 
-#include "server/TCP.hpp"
+#include "server/TcpServer.hpp"
 
 #include "Colors.hpp"
 
-TCPServer::TCPServer(boost::asio::io_service &ios, short port) : ios(ios), acceptor(ios, tcp::endpoint(tcp::v4(), port))
+TcpServer::TcpServer(boost::asio::io_service &ios, short port) : ios(ios),
+acceptor(ios, tcp::endpoint(tcp::v4(), port))
 {
-    std::shared_ptr<Session> session = std::make_shared<Session>(ios);
+    std::shared_ptr<TcpSession> session = std::make_shared<TcpSession>(ios);
     acceptor.async_accept(
         session->get_socket(),
         boost::bind(
-            &TCPServer::handle_accept,
+            &TcpServer::handle_accept,
             this,
             session,
             boost::asio::placeholders::error
@@ -23,15 +24,16 @@ TCPServer::TCPServer(boost::asio::io_service &ios, short port) : ios(ios), accep
     );
 }
 
-void TCPServer::handle_accept(std::shared_ptr<Session> session, const boost::system::error_code &err)
+void TcpServer::handle_accept(std::shared_ptr<TcpSession> session, const
+boost::system::error_code &err)
 {
     if (!err) {
         session->start();
-        session = std::make_shared<Session>(ios);
+        session = std::make_shared<TcpSession>(ios);
         acceptor.async_accept(
             session->get_socket(),
             boost::bind(
-                &TCPServer::handle_accept,
+                &TcpServer::handle_accept,
                 this,
                 session,
                 boost::asio::placeholders::error
@@ -43,23 +45,23 @@ void TCPServer::handle_accept(std::shared_ptr<Session> session, const boost::sys
     }
 }
 
-Session::Session(boost::asio::io_service &ios) : socket(ios)
+TcpSession::TcpSession(boost::asio::io_service &ios) : socket(ios)
 {
     this->database = Asqlite3();
 
     return;
 }
 
-tcp::socket &Session::get_socket()
+tcp::socket &TcpSession::get_socket()
 {
     return socket;
 }
 
-void Session::close_socket()
+void TcpSession::close_socket()
 {
     std::cout << colors::blue << WAIT << "closing socket..." << colors::reset << std::endl;
     try {
-        Session::get_socket().close();
+        TcpSession::get_socket().close();
     } catch (std::exception &e) {
         std::cout << colors::red << FAIL << "error in closing socket " << e.what() << colors::reset << std::endl;
         return;
@@ -68,13 +70,13 @@ void Session::close_socket()
     exit(0);
 }
 
-void Session::start()
+void TcpSession::start()
 {
     socket.async_read_some(
         //boost::asio::buffer(this->recv, max_length),
         boost::asio::buffer(this->buffer, max_length),
         boost::bind(
-            &Session::handle_read,
+            &TcpSession::handle_read,
             this,
             shared_from_this(),
             boost::asio::placeholders::error,
@@ -83,15 +85,17 @@ void Session::start()
     );
 }
 
-void Session::handle_read(std::shared_ptr<Session> &s, const boost::system::error_code &err, std::size_t bytes_transferred)
+void TcpSession::handle_read(std::shared_ptr<TcpSession> &s, const
+boost::system::error_code &err, std::size_t bytes_transferred)
 {
     // FIX: Bad Address
     S_Protocol response;
 
     if (!err) {
         /*
-        this->recv_user = Session::C_user_to_user(this->recv->user);
-        this->recv_commands = Session::C_command_to_commands(this->recv->command);
+        this->recv_user = TcpSession::C_user_to_user(this->recv->user);
+        this->recv_commands = TcpSession::C_command_to_commands
+         (this->recv->command);
 
         if (this->mapped.find(this->recv_commands.command) != this->mapped.end()) {
             std::cout << colors::cyan << DONE << "command found: " << this->recv_commands.command << colors::reset << std::endl;
@@ -101,17 +105,17 @@ void Session::handle_read(std::shared_ptr<Session> &s, const boost::system::erro
         }
         */
         std::cout << this->buffer << std::endl;
-        response = Session::decode(this->buffer);
+        response = TcpSession::decode(this->buffer);
         if (this->mapped.find(response.command.command) != this->mapped.end()) {
             (this->*this->mapped.at(response.command.command))(response.command.arguments, response.user);
         } else {
-            Session::send(set_string("command not found\n"));
+            TcpSession::send(set_string("command not found\n"));
         }
         socket.async_read_some(
             //boost::asio::buffer(this->recv, max_length),
             boost::asio::buffer(this->buffer, max_length),
             boost::bind(
-                &Session::handle_read,
+                &TcpSession::handle_read,
                 this,
                 shared_from_this(),
                 boost::asio::placeholders::error,
@@ -122,11 +126,11 @@ void Session::handle_read(std::shared_ptr<Session> &s, const boost::system::erro
         std::cerr << colors::magenta << DONE << "A client left" << colors::reset << std::endl;
     } else {
         std::cerr << colors::red << FAIL << "err (recv): " << err.message() << colors::reset << std::endl;
-        Session::close_socket();
+        TcpSession::close_socket();
     }
 }
 
-S_Protocol Session::decode(std::string recv)
+S_Protocol TcpSession::decode(std::string recv)
 {
     std::string delimiter = ";";
     std::string full(socket.local_endpoint().address().to_string() + ":" + std::to_string(socket.local_endpoint().port()));
@@ -152,12 +156,12 @@ S_Protocol Session::decode(std::string recv)
     protocol.command.command = recv.substr(0, recv.find(delimiter));
     protocol.command.arguments = recv.erase(0, recv.find(delimiter) + delimiter.length());
 
-    Session::display(protocol.user);
+    TcpSession::display(protocol.user);
 
     return (protocol);
 }
 
-void Session::display(User user)
+void TcpSession::display(User user)
 {
     std::cout << "-----------" << std::endl;
     std::cout << "Username:  " << user.username << std::endl;
@@ -167,7 +171,7 @@ void Session::display(User user)
     std::cout << "-----------" << std::endl;
 }
 
-User Session::C_user_to_user(C_User c_user)
+User TcpSession::C_user_to_user(C_User c_user)
 {
     User user;
 
@@ -176,12 +180,12 @@ User Session::C_user_to_user(C_User c_user)
     user.address = std::string(c_user.address);
     user.id = c_user.id;
 
-    Session::display(user);
+    TcpSession::display(user);
 
     return (user);
 }
 
-Commands Session::C_command_to_commands(C_Commands c_commands)
+Commands TcpSession::C_command_to_commands(C_Commands c_commands)
 {
     Commands commands;
 
@@ -191,30 +195,30 @@ Commands Session::C_command_to_commands(C_Commands c_commands)
     return (commands);
 }
 
-bool Session::login(std::string arguments, struct User user)
+bool TcpSession::login(std::string arguments, struct User user)
 {
-    Session::display(user);
+    TcpSession::display(user);
 
     this->database.uploadData(user);
     if (this->database.login(user) == this->database.SUCCESS) {
-        Session::send(set_string("logged\n"));
+        TcpSession::send(set_string("logged\n"));
         return (true);
     }
-    Session::send(set_string("login failed\n"));
+    TcpSession::send(set_string("login failed\n"));
 
     return (false);
 }
 
-bool Session::logout(std::string arguments, struct User user)
+bool TcpSession::logout(std::string arguments, struct User user)
 {
-    Session::display(user);
+    TcpSession::display(user);
     
-    Session::send(set_string("EXIT\n"));
+    TcpSession::send(set_string("EXIT\n"));
 
     return (false);
 }
 
-char *Session::set_string(char *data)
+char *TcpSession::set_string(char *data)
 {
     char *result = new char[strlen(data) + 1];
 
@@ -226,13 +230,13 @@ char *Session::set_string(char *data)
     return (result);
 }
 
-bool Session::send(char *data)
+bool TcpSession::send(char *data)
 {
     /*
     socket.async_send(
         boost::asio::buffer(data, strlen(data)),
         boost::bind(
-            &Session::handle_read,
+            &TcpSession::handle_read,
             this,
             shared_from_this(),
             boost::asio::placeholders::error,
@@ -251,55 +255,55 @@ bool Session::send(char *data)
     return (true);
 }
 
-bool Session::join(std::string arguments, struct User user)
+bool TcpSession::join(std::string arguments, struct User user)
 {
-    Session::display(user);
+    TcpSession::display(user);
 
     std::cout << colors::green << DONE << "joinned" << colors::reset << std::endl;
 
     return (false);
 }
 
-bool Session::leave(std::string arguments, struct User user)
+bool TcpSession::leave(std::string arguments, struct User user)
 {
-    Session::display(user);
+    TcpSession::display(user);
 
-    Session::send(set_string("EXIT"));
+    TcpSession::send(set_string("EXIT"));
 
     return (false);
 }
 
-bool Session::call(std::string arguments, struct User user)
+bool TcpSession::call(std::string arguments, struct User user)
 {
-    Session::display(user);
+    TcpSession::display(user);
 
     if (this->database.login(user) == this->database.SUCCESS) {
-        Session::send(set_string("calling...\n"));
+        TcpSession::send(set_string("calling...\n"));
         return (true);
     }
-    Session::send(set_string("user not found\n"));
+    TcpSession::send(set_string("user not found\n"));
 
     return (false);
 }
 
-bool Session::ping(std::string arguments, struct User user)
+bool TcpSession::ping(std::string arguments, struct User user)
 {
-    Session::display(user);
+    TcpSession::display(user);
 
-    Session::send(set_string("pong\n"));
+    TcpSession::send(set_string("pong\n"));
 
     return (false);
 }
 
-bool Session::close_server(std::string arguments, struct User user)
+bool TcpSession::close_server(std::string arguments, struct User user)
 {
-    Session::display(user);
+    TcpSession::display(user);
 
     if (user.username == "admin" && user.password == "admin") {
-        Session::send(set_string("user authorized\n"));
-        Session::close_socket();
+        TcpSession::send(set_string("user authorized\n"));
+        TcpSession::close_socket();
     } else {
-        Session::send(set_string("user not authorized\n"));
+        TcpSession::send(set_string("user not authorized\n"));
     }
 
     return (false);
