@@ -5,6 +5,9 @@
 ** ContactLabel
 */
 
+#ifndef CONTACTLABEL_HPP_
+#define CONTACTLABEL_HPP_
+
 #include <QLabel>
 #include <QWidget>
 #include <Qt>
@@ -14,16 +17,18 @@ class ContactLabel : public QLabel {
     Q_OBJECT
 
     public:
-        explicit ContactLabel(User user, QWidget* parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags()) : QLabel(parent, f), _user(user){}
-        ~ContactLabel() {};
-        User getUser() { return _user;}
+        explicit ContactLabel(User user, QWidget* parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
+        virtual ~ContactLabel();
+        User getUser();
 
-    // signals:
+    signals:
         void clicked(User);
 
     protected:
-        void mousePressEvent(QMouseEvent* event) { emit clicked(_user);};
+        void mousePressEvent(QMouseEvent* event);
 
     private:
         User _user;
 };
+
+#endif /* !CONTACTLABEL_HPP_ */

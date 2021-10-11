@@ -15,12 +15,12 @@ ContactLabel::~ContactLabel()
 {
 }
 
-void ContactLabel::mousePressEvent(QMouseEvent* event)
-{
-    emit clicked(_user);
-}
-
 User ContactLabel::getUser()
 {
     return _user;
+}
+
+void ContactLabel::mousePressEvent(QMouseEvent* event)
+{
+    emit clicked(_user);
 }
