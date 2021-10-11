@@ -17,6 +17,13 @@
 #include "sqlite3.h"
 #include <common/standard.h>
 
+//TODO TO ERASE
+struct UserApp {
+    std::string username;
+    std::string password;
+    std::string address;
+};
+
 class Asqlite3 {
     public:
         Asqlite3();
