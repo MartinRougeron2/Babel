@@ -30,6 +30,7 @@ else()
 	message(WARNING "The file conanbuildinfo.cmake doesn't exist, you have to run conan install first")
 endif()
 
+add_compile_options(-Wall -Wextra -g3)
 # set(SERVER_PATH "${CMAKE_SOURCE_DIR}/src/server")
 set(CLIENT_PATH "${CMAKE_SOURCE_DIR}/src/client/")
 
