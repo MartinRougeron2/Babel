@@ -37,7 +37,7 @@
     class TcpSession : public std::enable_shared_from_this<TcpSession>
     {
         public:
-            TcpSession(boost::asio::io_service &, UdpServer *copy);
+            TcpSession(boost::asio::io_service &, UdpServer *copy, std::mutex *copyMtx);
 
             tcp::socket &get_socket();
 
@@ -89,6 +89,7 @@
             Asqlite3 database;
             void close_socket();
             UdpServer *voiceServer;
+            std::mutex *mtx;
     };
 
     class TcpServer
@@ -103,6 +104,7 @@
             boost::asio::io_service &ios;
             tcp::acceptor acceptor;
             UdpServer *voiceServer;
+            std::mutex mtx;
     };
 
 #endif // CHAT_MESSAGE_HPP

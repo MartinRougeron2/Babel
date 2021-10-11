@@ -14,7 +14,8 @@ acceptor(ios, tcp::endpoint(tcp::v4(), port))
 {
     this->voiceServer = new UdpServer(ios);
     std::shared_ptr<TcpSession> session = std::make_shared<TcpSession>(ios,
-                                                                       this->voiceServer);
+                                                                       this->voiceServer,
+                                                                       &this->mtx);
     acceptor.async_accept(
         session->get_socket(),
         boost::bind(
@@ -31,7 +32,7 @@ boost::system::error_code &err)
 {
     if (!err) {
         session->start();
-        session = std::make_shared<TcpSession>(ios, voiceServer);
+        session = std::make_shared<TcpSession>(ios, voiceServer, &mtx);
         acceptor.async_accept(
             session->get_socket(),
             boost::bind(
@@ -47,12 +48,12 @@ boost::system::error_code &err)
     }
 }
 
-TcpSession::TcpSession(boost::asio::io_service &ios, UdpServer *voiceServer_) :
+TcpSession::TcpSession(boost::asio::io_service &ios, UdpServer *voiceServer_, std::mutex *mtx_) :
 socket(ios)
 {
     this->database = Asqlite3();
     this->voiceServer = voiceServer_;
-
+    this->mtx = mtx_;
     return;
 }
 
@@ -286,7 +287,10 @@ bool TcpSession::call(std::string arguments, struct User user)
         return (true);
     }
     TcpSession::send(set_string("user not found\n"));
+    
+    this->mtx->lock();
     this->voiceServer->join(user.address);
+    this->mtx->unlock();
 
     return (false);
 }
