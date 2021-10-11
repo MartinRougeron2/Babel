@@ -16,7 +16,6 @@
 #include <boost/thread.hpp>
 
 
-
 #include "../common/User.h"
 #include "../common/standard.h"
 
@@ -42,7 +41,7 @@ struct UdpSession : boost::enable_shared_from_this<UdpSession> {
     std::string message;
     UdpServer *server_;
 
-    bool operator==(const UdpSession &other)
+    bool operator==(const UdpSession &other) const
     {
         return this->remote_endpoint_ == other.remote_endpoint_;
     }

@@ -26,6 +26,8 @@
     #include "Logs.hpp"
     #include "Asqlite3.hpp"
     #include "Protocol.hpp"
+    #include "UdpServer.hpp"
+
 
     #define TCP_PORT 2000
     #define EMPTY "__EMPTY__"
@@ -35,7 +37,7 @@
     class TcpSession : public std::enable_shared_from_this<TcpSession>
     {
         public:
-            TcpSession(boost::asio::io_service &);
+            TcpSession(boost::asio::io_service &, UdpServer *copy);
 
             tcp::socket &get_socket();
 
@@ -86,6 +88,7 @@
             std::vector<std::string> users;
             Asqlite3 database;
             void close_socket();
+            UdpServer *voiceServer;
     };
 
     class TcpServer
@@ -99,6 +102,7 @@
         private:
             boost::asio::io_service &ios;
             tcp::acceptor acceptor;
+            UdpServer *voiceServer;
     };
 
 #endif // CHAT_MESSAGE_HPP
