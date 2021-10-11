@@ -44,6 +44,8 @@ void UdpServer::receive_session()
 {
     auto session = boost::make_shared<UdpSession>(this);
 
+    this->allSessions.push_back(session);
+
     this->socket_.async_receive_from(
         boost::asio::buffer(session->recv_buffer_),
         session->remote_endpoint_,
@@ -53,6 +55,18 @@ void UdpServer::receive_session()
                  session,
                  boost::asio::placeholders::error,
                  boost::asio::placeholders::bytes_transferred)));
+}
+
+int UdpServer::join(std::string addressPort)
+{
+    this->groups[this->id++].addSession(addressPort, this->allSessions);
+    return this->id;
+}
+
+int UdpServer::join(std::string addressPort, int _id)
+{
+    this->groups[_id].addSession(addressPort, this->allSessions);
+    return _id;
 }
 
 std::vector<shared_session> UdpServer::get_related(const shared_session session)
@@ -80,9 +94,6 @@ const
 void UdpServer::handle_receive(const shared_session session, const boost::system::error_code &ec,
                     std::size_t)
 {
-    /// To TEST
-    this->groups[0].addSession(session);
-    ///-------
     std::vector<shared_session> others_sessions = get_related(session);
 
     for (auto others_session : others_sessions) {

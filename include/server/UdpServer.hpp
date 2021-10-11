@@ -58,6 +58,8 @@ class Group {
         Group(std::vector<shared_session> sessions);
         ~Group();
 
+        int  addSession(const std::string address,
+                        std::vector<shared_session> allSessions);
         void addSession(const shared_session &session);
         void addSession(const std::vector<shared_session> sessions);
         std::vector<shared_session> sessions;
@@ -67,9 +69,11 @@ class UdpServer {
     public:
         UdpServer(boost::asio::io_service &io_service);
 
-        int createGroup(shared_session session);
-        int addToGroup(int groupId, shared_session sessionToAdd);
+        int  createGroup(shared_session session);
+        int  addToGroup(int groupId, shared_session sessionToAdd);
         bool removeFromGroup(int groupId, shared_session sessionToRemove);
+        int join(std::string addressPort);
+        int join(std::string addressPort, int id);
 
     private:
 
@@ -82,6 +86,7 @@ class UdpServer {
         udp::socket socket_;
         boost::asio::io_service::strand strand_;
         std::map<int, Group> groups;
+        std::vector<shared_session> allSessions;
 
         friend struct UdpSession;
 };
