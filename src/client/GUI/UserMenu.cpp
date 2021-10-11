@@ -57,12 +57,13 @@ void UserMenu::fetchContact()
     for (auto a : contactDraw)
         delete a;
     this->contactDraw.clear();
-    std::vector<User> linkeds = app->fetchContact();
-    for (auto contact : linkeds) {
+    std::vector<UserApp> linkeds = app->fetchContact();
+    for (auto &contact : linkeds) {
+        std::cout << contact.username << std::endl;
         ContactLabel *label = new ContactLabel(contact);
-        label->setText(QString::fromStdString(label->getUser().username));
+        label->setText(QString::fromStdString(contact.username));
         contactLayout->addWidget(label);
-        connect(label, SIGNAL(clicked(User)), this, SLOT(setSelectioned(User)));
+        connect(label, SIGNAL(clicked(UserApp)), this, SLOT(setSelectioned(UserApp)));
         contactDraw.push_back(label);
     }
 }
@@ -77,7 +78,7 @@ ContactLabel *UserMenu::findLabelWithId(int id)
     return NULL;
 }
 
-void UserMenu::setSelectioned(User user)
+void UserMenu::setSelectioned(UserApp user)
 {
     if (this->callWidget->getScene() != Call::Scene::NOCALL)
         return;
@@ -98,7 +99,7 @@ void UserMenu::addContact()
     if (dialog->exec() == 1) {
         std::string contactName = dialog->getUserAdded();
         if (app->checkUser(contactName)) {
-            User user = app->getUser(contactName);
+            UserApp user = app->getUser(contactName);
             app->addContact(user);
             fetchContact();
         } else {

@@ -17,19 +17,19 @@ App::App(QWidget *parent) : QWidget(parent)
     update();
 }
 
-std::vector<User> App::getUserInCall() const
+std::vector<UserApp> App::getUserInCall() const
 {
     //TODO RETURN USER IN CONTEXT CALL;
     return fetchContact();
 }
 
-User App::getUser(std::string username) const
+UserApp App::getUser(std::string username) const
 {
     //TODO RETURN USER WITH USERNAME;
     return {"user", "password", "address", 5};
 }
 
-void App::call(User contact_to_call)
+void App::call(UserApp contact_to_call)
 {
     //TODO CREATE CALL THEN ADD USER TO CALL
 }
@@ -55,25 +55,25 @@ void App::dismiss()
 
 }
 
-void App::addContactToCall(User contact_to_add)
+void App::addContactToCall(UserApp contact_to_add)
 {
     //TODO ADD CONTACT TO CONTEXT USER CALL
     //NEED TO CHECK IF USER IS IN YOUR CONTACT
 }
 
-void App::removeContactToCall(User contact_to_remove)
+void App::removeContactToCall(UserApp contact_to_remove)
 {
     //TODO REMOVE CONTACT TO CONTEXT USER CALL
     //NEED TO CHECK IF USER IS IN THE CALL
 }
 
-void App::addContact(User contact_to_add)
+void App::addContact(UserApp contact_to_add)
 {
     //TODO ADD CONTACT TO DB
     //ALREADY IN UR CONTACT ?
 }
 
-void App::removeContact(User contact_to_remove)
+void App::removeContact(UserApp contact_to_remove)
 {
     //TODO REMOVE CONTACT FROM DB
     //NOT IN YOUR CONTACT (should not be called)
@@ -85,12 +85,12 @@ bool App::checkUser(std::string username)
     return true;
 }
 
-std::vector<User> App::fetchContact() const
+std::vector<UserApp> App::fetchContact() const
 {
-    std::vector<User> linkeds;
-    linkeds.push_back({"dd", "dd", "dd", 0});
-    linkeds.push_back({"YOJ", "dd", "dd", 1});
-    linkeds.push_back({"Vat", "dd", "dd", 2});
+    std::vector<struct UserApp> linkeds;
+    linkeds.push_back(UserApp("dd", "dd", "dd", 0));
+    linkeds.push_back(UserApp("yoj", "dd", "dd", 1));
+    linkeds.push_back(UserApp("eedede", "dd", "dd", 2));
     //TODO GET LINKED
     return linkeds;
 }

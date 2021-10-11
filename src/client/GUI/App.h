@@ -28,34 +28,34 @@ class App : public QWidget
     public:
         App(QWidget *parent=NULL);
         virtual ~App() {};
-        std::vector<User> fetchContact() const;
+        std::vector<UserApp> fetchContact() const;
         bool checkUser(std::string usr);
         void hangup();
-        User getUser(std::string username) const;
-        std::vector<User> getUserInCall() const;
+        UserApp getUser(std::string username) const;
+        std::vector<UserApp> getUserInCall() const;
         void updateCall() const;
 
     public slots:
 
-        void call(User user_to_call);
+        void call(UserApp user_to_call);
         void acceptCall();
         void refuseCall();
         void dismiss();
 
-        void addContactToCall(User user_to_add);
-        void removeContactToCall(User user_to_remove);
+        void addContactToCall(UserApp user_to_add);
+        void removeContactToCall(UserApp user_to_remove);
 
-        void addContact(User user_to_add);
-        void removeContact(User user_to_remove);
+        void addContact(UserApp user_to_add);
+        void removeContact(UserApp user_to_remove);
 
-        User getContext() const { return this->user;};
+        UserApp getContext() const { return this->user;};
 
         loginCode login(std::string username, std::string password);
         void update();
 
     private:
         enum AppState {ToLog, Menu_};
-        User user = {"martin", "cringe", "127.0.0.1", 1};
+        UserApp user = {"martin", "cringe", "127.0.0.1", 1};
         AppState app_state = ToLog;
 
         QLineEdit *search_name;

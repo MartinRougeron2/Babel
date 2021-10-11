@@ -26,7 +26,7 @@ class UserMenu : public QWidget
         void addContact();
         void removeContact();
         void call();
-        void setSelectioned(User usr);
+        void setSelectioned(UserApp usr);
         Call *getCallW() const { return this->callWidget;};
 
     private:
@@ -44,7 +44,7 @@ class UserMenu : public QWidget
         QVBoxLayout *contactLayout;
 
         ModifyPopup *dialog;
-        User selection = {"", "", "", -1};
+        UserApp selection = {"", "", "", -1};
 
         App *app;
 };

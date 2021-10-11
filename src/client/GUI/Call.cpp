@@ -80,7 +80,7 @@ void Call::addToCall()
     if (dialog->exec() == 1) {
         std::string contactName = dialog->getUserAdded();
         if (app->checkUser(contactName)) {
-            User user = app->getUser(contactName);
+            UserApp user = app->getUser(contactName);
             app->addContactToCall(user);
         } else {
             QMessageBox::information(this, tr("Contact Not Found"),
@@ -97,7 +97,7 @@ void Call::removeFromCall()
     if (dialog->exec() == 1) {
         std::string contactName = dialog->getUserAdded();
         if (app->checkUser(contactName)) {
-            User user = app->getUser(contactName);
+            UserApp user = app->getUser(contactName);
             app->removeContactToCall(user);
         } else {
             QMessageBox::information(this, tr("Contact Not Found"),
@@ -113,8 +113,8 @@ void Call::updateCall()
     QLayoutItem *wItem;
     while ((wItem = contactList->takeAt(0)) != 0)
         delete wItem;
-    std::vector<User> linkeds = app->fetchContact();
-    for (auto contact : linkeds) {
+    std::vector<UserApp> linkeds = app->fetchContact();
+    for (auto &contact : linkeds) {
         ContactLabel *label = new ContactLabel(contact);
         label->setText(QString::fromStdString(label->getUser().username));
         contactList->addWidget(label);

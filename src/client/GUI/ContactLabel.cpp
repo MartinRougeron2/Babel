@@ -7,7 +7,7 @@
 
 #include "ContactLabel.h"
 
-ContactLabel::ContactLabel(User user, QWidget* parent, Qt::WindowFlags f) : QLabel(parent, f), _user(user)
+ContactLabel::ContactLabel(UserApp user, QWidget* parent, Qt::WindowFlags f) : QLabel(parent, f), _user(user)
 {
 }
 
@@ -15,7 +15,7 @@ ContactLabel::~ContactLabel()
 {
 }
 
-User ContactLabel::getUser()
+UserApp ContactLabel::getUser()
 {
     return _user;
 }

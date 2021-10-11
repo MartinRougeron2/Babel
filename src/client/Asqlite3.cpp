@@ -28,7 +28,7 @@ Asqlite3::~Asqlite3()
 {
 }
 
-bool Asqlite3::uploadData(struct User user)
+bool Asqlite3::uploadData(struct UserApp user)
 {
 	std::string sql("INSERT INTO user (pseudo, password, address)"
 	"VALUES('" + user.username + "', '" + user.password + "', '" + user.address + "');");
@@ -58,7 +58,7 @@ int Asqlite3::callbackGetUser(void *context, int argc, char** argv, char** azCol
 	return 0;
 }
 
-Asqlite3::loginCode Asqlite3::login(struct User user)
+Asqlite3::loginCode Asqlite3::login(struct UserApp user)
 {
 	std::string sql = SELECT_QUERY("pseudo") +
 	FROM_QUERY("user") +
@@ -136,7 +136,7 @@ int Asqlite3::callbackFillContact(void *context, int argc, char** argv, char** a
 	return 0;
 }
 
-std::vector<struct User> Asqlite3::getLinkedUser(std::string username)
+std::vector<struct UserApp> Asqlite3::getLinkedUser(std::string username)
 {
 	std::string id = getIdByUsername(username);
 	std::string sql = SELECT_QUERY("pseudo, address") +

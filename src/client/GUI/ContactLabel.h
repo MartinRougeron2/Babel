@@ -17,18 +17,18 @@ class ContactLabel : public QLabel {
     Q_OBJECT
 
     public:
-        explicit ContactLabel(User user, QWidget* parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
+        explicit ContactLabel(UserApp user, QWidget* parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
         virtual ~ContactLabel();
-        User getUser();
+        UserApp getUser();
 
     signals:
-        void clicked(User);
+        void clicked(UserApp);
 
     protected:
         void mousePressEvent(QMouseEvent* event);
 
     private:
-        User _user;
+        UserApp _user;
 };
 
 #endif /* !CONTACTLABEL_HPP_ */
