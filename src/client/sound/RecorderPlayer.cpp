@@ -10,23 +10,22 @@
 
 Sound::RecorderPlayer::RecorderPlayer()
 {
+    this->channelsNb = 1;
+    this->bufferSize = 480;
+    this->sampleRate = 48000;
 }
 
 Sound::RecorderPlayer::~RecorderPlayer()
 {
-    if (this->audio.IsStreamStopped(this->stream))
+    if (this->audio.IsStreamStopped(this->stream) == 0)
         this->audio.StopStream(this->stream);
-    if (this->audio.IsStreamActive(this->stream))
+    if (this->audio.IsStreamActive(this->stream) == 1)
         this->audio.CloseStream(this->stream);
     this->audio.Terminate();
 }
 
 void Sound::RecorderPlayer::init()
 {
-    this->channelsNb = 1;
-    this->bufferSize = 480;
-    this->sampleRate = 48000;
-
     if ((this->err = this->audio.Initialize()) != paNoError)
         throw this->audio.GetErrorText(this->err);
     if ((this->err = this->audio.OpenDefaultStream(&this->stream, this->channelsNb, this->channelsNb, paInt16, this->sampleRate, this->bufferSize, nullptr, nullptr)) != paNoError)
