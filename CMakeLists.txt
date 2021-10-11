@@ -51,13 +51,9 @@ add_executable(babel_client ${BABEL_CLIENT})
 
 # Find conan package + Qt5
 find_package(portaudio)
-find_package(opus)
+find_package(Opus)
+find_package(SQLite3)
 find_package(Qt5 COMPONENTS Widgets Core Gui REQUIRED)
 
 # Client link
-target_link_libraries(babel_client Qt5::Widgets portaudio::portaudio opus)
-
-# Server link
-# target_link_libraries(babel-server
-# 	sqlite3::sqlite3
-# 	boost_asio::boost_asio)
+target_link_libraries(babel_client Qt5::Widgets portaudio::portaudio opus sqlite3)
