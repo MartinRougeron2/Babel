@@ -135,7 +135,7 @@ PaError Aportaudio::AbortStream(PaStream *stream)
 
 PaError Aportaudio::IsStreamStopped(PaStream *stream)
 {
-    return Pa_AbortStream(stream);
+    return Pa_IsStreamStopped(stream);
 }
 
 PaError Aportaudio::IsStreamActive(PaStream *stream)
