@@ -10,7 +10,7 @@
 
 #include "App.h"
 #include "ModifyPopup.h"
-#include "ContactLabel.hpp"
+#include "ContactLabel.h"
 
 class Call : public QWidget {
     Q_OBJECT

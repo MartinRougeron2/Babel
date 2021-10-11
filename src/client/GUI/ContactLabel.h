@@ -8,7 +8,7 @@
 #include <QLabel>
 #include <QWidget>
 #include <Qt>
-#include "include/common/User.h"
+#include "common/User.h"
 
 class ContactLabel : public QLabel {
     Q_OBJECT
@@ -18,7 +18,7 @@ class ContactLabel : public QLabel {
         ~ContactLabel() {};
         User getUser() { return _user;}
 
-    signals:
+    // signals:
         void clicked(User);
 
     protected:

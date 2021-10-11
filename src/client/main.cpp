@@ -7,7 +7,7 @@
 
 #include <QtGui>
 #include <QApplication>
-#include "../GUI/App.h"
+#include "GUI/App.h"
 
 int main(int argc, char **argv)
 {

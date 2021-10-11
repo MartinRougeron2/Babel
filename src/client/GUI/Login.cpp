@@ -5,7 +5,7 @@
 ** Login
 */
 
-#include "Login.hpp"
+#include "Login.h"
 #include <iostream>
 
 Login::Login(QWidget *parent)
@@ -86,4 +86,3 @@ void Login::proceed_login()
 void Login::update()
 {
 }
-
