@@ -5,13 +5,14 @@
 ** ContactLabel
 */
 
-#ifndef CONTACTLABEL_HPP_
-#define CONTACTLABEL_HPP_
 
 #include <QLabel>
 #include <QWidget>
 #include <Qt>
 #include "common/User.h"
+
+#ifndef CONTACTLABEL_HPP_
+#define CONTACTLABEL_HPP_
 
 class ContactLabel : public QLabel {
     Q_OBJECT
