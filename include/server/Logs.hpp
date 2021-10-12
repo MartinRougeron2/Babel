@@ -8,14 +8,21 @@
 #ifndef LOGS_HPP
     #define LOGS_HPP
 
-    #define USER_LEFT "/left "
-    #define USER_JOINED "/joined "
+    #define USER_LEFT "/left"
+    #define USER_JOINED "/joined"
 
-    #define JOIN "/join "
-    #define CALL "/call "
-    #define RECEIVED "/received "
+    #define JOIN "/join"
+    #define CALL "/call"
+    #define RECEIVED "/received"
 
     #define BEGIN "/begin"
     #define END "/end"
+
+    #define COMMAND_NF "command not found: "
+    #define COMMAND_F "command found: "
+
+    #define DONE "[  DONE  ] "
+    #define FAIL "[  FAIL  ] "
+    #define WAIT "[  WAIT  ] "
 
 #endif /* LOGS_HPP */

@@ -25,6 +25,8 @@
     #include <fcntl.h>
     #include <fstream>
 
+    #include "Protocol.hpp"
+
     #define TCP_IP "127.0.0.1"
     #define TCP_PORT 2000
 
@@ -38,13 +40,21 @@
             bool build_connect();
             bool build();
             bool run();
+            char *stca(const char *);
+            char *stca_(std::string);
 
         private:
+            enum
+            {
+                max_length = 1024
+            };
+
             // client settings
             char *server_ip;
             int server_port;
 
-            char msg[1500];
+            char msg[max_length];
+            
 
             struct hostent *host;
             sockaddr_in address;

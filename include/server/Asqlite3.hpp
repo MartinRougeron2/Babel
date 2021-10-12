@@ -5,24 +5,19 @@
 ** ASqlite3
 */
 
+#include "sqlite3.h"
+#include <common/standard.h>
+#include <common/User.h>
+
 #ifndef ASQLITE3_HPP_
 #define ASQLITE3_HPP_
 
-#define DB_DIR "../user.db"
+#define DB_DIR "user.db"
 #define SELECT_QUERY(x) static_cast<std::string>("SELECT ") + x
 #define FROM_QUERY(x) static_cast<std::string>("FROM ") + x
 #define WHERE_QUERY(x) static_cast<std::string>("WHERE ") + x
 #define INNERJOIN_QUERY(x) static_cast<std::string>("INNER JOIN ") + x
 
-#include "sqlite3.h"
-#include <common/standard.h>
-
-//TODO TO ERASE
-struct UserApp {
-    std::string username;
-    std::string password;
-    std::string address;
-};
 
 class Asqlite3 {
     public:

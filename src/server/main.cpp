@@ -5,20 +5,27 @@
 ** main.cpp
 */
 
-#include "server/TCP.hpp"
+#include "server/TcpServer.hpp"
 #include "server/UdpServer.hpp"
 
 int main(int argc, char **argv)
 {
-    boost::asio::io_service io_service;
-    std::list<chat_server> servers;
-    tcp::endpoint endpoint(tcp::v4(), TCP_PORT);
-    UdpServer audioServer = UdpServer(io_service);
+    boost::asio::io_service ios;
+    __attribute__((unused)) TcpServer tcpServer(ios, TCP_PORT);
+    __attribute__((unused)) tcp::endpoint endpoint(tcp::v4(), TCP_PORT);
 
     try {
-        servers.emplace_back(io_service, endpoint);
         signals::handler();
-        io_service.run();
+        boost::thread_group group;
+
+        for (unsigned i = 0; i < std::thread::hardware_concurrency(); ++i)
+            group.create_thread(bind(&boost::asio::io_service::run, boost::ref
+                (ios)));
+        ios.run();
+        std::cout << "lol\n";
+
+        group.join_all();
+        // ios.run();
     } catch (std::exception &e) {
         std::cerr << "Exception: " << e.what() << std::endl;
     }
