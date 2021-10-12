@@ -14,7 +14,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QMessageBox>
-#include "include/common/User.h"
+#include "include/common/User.hpp"
 
 
 class ModifyPopup : public QDialog

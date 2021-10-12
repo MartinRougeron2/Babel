@@ -9,7 +9,7 @@
 #include <QLabel>
 #include <QWidget>
 #include <Qt>
-#include "common/User.h"
+#include "common/User.hpp"
 
 #ifndef CONTACTLABEL_HPP_
 #define CONTACTLABEL_HPP_

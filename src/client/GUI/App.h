@@ -16,7 +16,7 @@ class UserMenu;
 #include <QList>
 #include <QLineEdit>
 #include <string>
-#include "common/User.h"
+#include "common/User.hpp"
 
 enum loginCode {SUCCESS, USER_NOT_EXIST, BAD_PASSWORD};
 //TODO REMOVEAND USE SQLITE
