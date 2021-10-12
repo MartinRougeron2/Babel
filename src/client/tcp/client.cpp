@@ -13,7 +13,7 @@ int tcpMain()
         boost::asio::io_context io_context;
 
         tcp::resolver resolver(io_context);
-        tcp::resolver::results_type endpoints = resolver.resolve("127.0.0.1:2000", "daytime");
+        tcp::resolver::results_type endpoints = resolver.resolve("127.0.0.1:2000", "");
 
         tcp::socket socket(io_context);
         boost::asio::connect(socket, endpoints);
@@ -26,9 +26,9 @@ int tcpMain()
             size_t len = socket.read_some(boost::asio::buffer(buf), error);
 
             if (error == boost::asio::error::eof)
-                break; // Connection closed cleanly by peer.
+                break;
             else if (error)
-                throw boost::system::system_error(error); // Some other error.
+                throw boost::system::system_error(error);
 
             std::cout.write(buf.data(), len);
         }
