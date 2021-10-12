@@ -17,7 +17,8 @@
 #include "sqlite3.h"
 #include <common/standard.h>
 
-struct User {
+//TODO TO ERASE
+struct UserApp {
     std::string username;
     std::string password;
     std::string address;
@@ -29,17 +30,17 @@ class Asqlite3 {
         ~Asqlite3();
 
         enum loginCode {SUCCESS, USER_NOT_EXIST, BAD_PASSWORD};
-        bool uploadData(struct User user);
-        loginCode login(struct User user);
+        bool uploadData(struct UserApp user);
+        loginCode login(struct UserApp user);
         std::string getUser(std::string username);
         bool linkUser(std::string userfrom, std::string userto);
         std::string getIdByUsername(std::string username);
-        std::vector<struct User> getLinkedUser(std::string username);
+        std::vector<struct UserApp> getLinkedUser(std::string username);
 
     protected:
     private:
         std::string _res;
-        std::vector<struct User> _linkedUser;
+        std::vector<struct UserApp> _linkedUser;
 
         static int callbackUserExist(void *, int argc, char** argv, char** azColName);
         static int callbackGetUser(void *, int argc, char** argv, char** azColName);

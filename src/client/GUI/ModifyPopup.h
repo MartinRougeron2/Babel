@@ -14,6 +14,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QMessageBox>
+#include "include/common/User.h"
 
 
 class ModifyPopup : public QDialog
@@ -22,7 +23,7 @@ class ModifyPopup : public QDialog
     Q_OBJECT
     public:
         ModifyPopup(QWidget *parent = 0);
-        QString getFindText();
+        std::string getUserAdded();
 
     public slots:
         void findClicked();
@@ -30,7 +31,7 @@ class ModifyPopup : public QDialog
     private:
         QPushButton *findButton;
         QLineEdit *lineEdit;
-        QString findText;
+        std::string user = "";
 };
 
 

@@ -7,26 +7,26 @@
 
 
 #include <QtGui>
-#include "GUI/ModifyPopup.h"
+#include "ModifyPopup.h"
 
 ModifyPopup::ModifyPopup(QWidget *parent)
         : QDialog(parent)
 {
-    QLabel *findLabel = new QLabel(tr("Enter the name of a contact:"));
+    QLabel *nameLabel = new QLabel(tr("Enter the name of a contact:"));
     lineEdit = new QLineEdit;
 
     findButton = new QPushButton(tr("&Find"));
-    findText = "";
 
+    QVBoxLayout *mainlayout = new QVBoxLayout;
     QHBoxLayout *layout = new QHBoxLayout;
-    layout->addWidget(findLabel);
+    layout->addWidget(nameLabel);
     layout->addWidget(lineEdit);
-    layout->addWidget(findButton);
 
-    setLayout(layout);
-    setWindowTitle(tr("Find a Contact"));
+    mainlayout->addLayout(layout);
+    mainlayout->addWidget(findButton);
+    setLayout(mainlayout);
+    setWindowTitle(tr("Add a Contact"));
     connect(findButton, SIGNAL(clicked()), this, SLOT(findClicked()));
-    connect(findButton, SIGNAL(clicked()), this, SLOT(accept()));
 }
 
 void ModifyPopup::findClicked()
@@ -36,15 +36,15 @@ void ModifyPopup::findClicked()
     if (text.isEmpty()) {
         QMessageBox::information(this, tr("Empty Field"),
                                  tr("Please enter a name."));
-        return;
     } else {
-        findText = text;
+        user = text.toStdString();
         lineEdit->clear();
         hide();
+        accept();
     }
 }
 
-QString ModifyPopup::getFindText()
+std::string ModifyPopup::getUserAdded()
 {
-    return findText;
+    return user;
 }
