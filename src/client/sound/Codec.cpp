@@ -5,7 +5,7 @@
 ** Codec
 */
 
-#include "sound/Sound.hpp"
+#include "client/sound/Sound.hpp"
 
 Sound::Codec::Codec(size_t sampleRate, size_t channels, size_t bufferSize)
 {
