@@ -11,3 +11,5 @@ bin/qt.conf
 CMakeCache.txt
 Testing/Temporary/LastTest.log
 *.db
+babel_client
+Makefile
