@@ -6,8 +6,8 @@
 */
 
 #include "sqlite3.h"
-#include <common/standard.h>
-#include <common/User.h>
+#include "common/standard.h"
+#include "common/User.hpp"
 
 #ifndef ASQLITE3_HPP_
 #define ASQLITE3_HPP_

@@ -16,8 +16,8 @@
 #include <boost/thread.hpp>
 
 
-#include "../common/User.h"
-#include "../common/standard.h"
+#include "common/User.hpp"
+#include "common/standard.h"
 
 using boost::asio::ip::udp;
 
