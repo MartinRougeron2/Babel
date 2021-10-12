@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.14.5)
 
 set(CMAKE_CXX_STANDARD 17)
 
-project(babel-client)
-# project(babel-server)
+project(babel_client)
+# project(babel_server)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
