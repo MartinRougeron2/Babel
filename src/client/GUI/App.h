@@ -17,6 +17,7 @@ class UserMenu;
 #include <QLineEdit>
 #include <string>
 #include "common/User.hpp"
+#include "client/TCP.hpp"
 
 enum loginCode {SUCCESS, USER_NOT_EXIST, BAD_PASSWORD};
 //TODO REMOVEAND USE SQLITE
@@ -61,6 +62,7 @@ class App : public QWidget
         QLineEdit *search_name;
         QWidget *loginui;
         UserMenu *usermenu;
+        TCP *client;
 
 };
 

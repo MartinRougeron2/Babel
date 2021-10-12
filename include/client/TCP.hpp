@@ -10,20 +10,8 @@
 
     #include <iostream>
     #include <string>
-    #include <stdio.h>
-    #include <sys/types.h>
-    #include <sys/socket.h>
-    #include <netinet/in.h>
-    #include <arpa/inet.h>
-    #include <stdlib.h>
-    #include <unistd.h>
-    #include <string.h>
-    #include <netdb.h>
-    #include <sys/uio.h>
-    #include <sys/time.h>
-    #include <sys/wait.h>
-    #include <fcntl.h>
-    #include <fstream>
+    #include <boost/array.hpp>
+    #include <boost/asio.hpp>
 
     #include "Protocol.hpp"
 
@@ -42,28 +30,7 @@
             bool run();
             char *stca(const char *);
             char *stca_(std::string);
-
         private:
-            enum
-            {
-                max_length = 1024
-            };
-
-            // client settings
-            char *server_ip;
-            int server_port;
-
-            char msg[max_length];
-            
-
-            struct hostent *host;
-            sockaddr_in address;
-
-            int client_socket;
-            int client_status;
-
-            // status
-            bool running;
     };
 
 #endif /* TCP_HPP */

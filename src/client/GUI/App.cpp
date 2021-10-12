@@ -14,6 +14,7 @@
 App::App(QWidget *parent) : QWidget(parent)
 {
     setWindowTitle("Babel");
+    this->client = new TCP();
     update();
 }
 
@@ -26,7 +27,7 @@ std::vector<UserApp> App::getUserInCall() const
 UserApp App::getUser(std::string username) const
 {
     //TODO RETURN USER WITH USERNAME;
-    return {"user", "password", "address", 5};
+    return {"user", "address", "password", 5};
 }
 
 void App::call(UserApp contact_to_call)
@@ -99,7 +100,7 @@ loginCode App::login(std::string username, std::string password)
 {
     //TODO LOGIN
     this->app_state = Menu_;
-    this->user = {username, password, "", 0};
+    this->user = UserApp(username, "", password, 0);
     return SUCCESS;
 }
 
