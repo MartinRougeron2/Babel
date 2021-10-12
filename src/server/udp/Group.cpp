@@ -36,8 +36,8 @@ int Group::addSession(const std::string addressPort,
     int port = std::stoi(addressPort.substr(find));
 
     for (auto session : allSessions)
-        if (session->remote_endpoint_.address().to_string() == address &&
-            session->remote_endpoint_.port() == port) {
+        if (session->remoteEndpoint.address().to_string() == address &&
+            session->remoteEndpoint.port() == port) {
             this->addSession(session);
             return 0;
         }

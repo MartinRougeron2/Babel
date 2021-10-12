@@ -17,7 +17,7 @@ acceptor(ios, tcp::endpoint(tcp::v4(), port))
                                                                        this->voiceServer,
                                                                        &this->mtx);
     acceptor.async_accept(
-        session->get_socket(),
+        session->getSocket(),
         boost::bind(
             &TcpServer::handle_accept,
             this,
@@ -34,7 +34,7 @@ boost::system::error_code &err)
         session->start();
         session = std::make_shared<TcpSession>(ios, voiceServer, &mtx);
         acceptor.async_accept(
-            session->get_socket(),
+            session->getSocket(),
             boost::bind(
                 &TcpServer::handle_accept,
                 this,
@@ -57,7 +57,7 @@ socket(ios)
     return;
 }
 
-tcp::socket &TcpSession::get_socket()
+tcp::socket &TcpSession::getSocket()
 {
     return socket;
 }
@@ -66,7 +66,7 @@ void TcpSession::close_socket()
 {
     std::cout << colors::blue << WAIT << "closing socket..." << colors::reset << std::endl;
     try {
-        TcpSession::get_socket().close();
+        TcpSession::getSocket().close();
     } catch (std::exception &e) {
         std::cout << colors::red << FAIL << "error in closing socket " << e.what() << colors::reset << std::endl;
         return;
@@ -81,7 +81,7 @@ void TcpSession::start()
         //boost::asio::buffer(this->recv, max_length),
         boost::asio::buffer(this->buffer, max_length),
         boost::bind(
-            &TcpSession::handle_read,
+            &TcpSession::handleRead,
             this,
             shared_from_this(),
             boost::asio::placeholders::error,
@@ -90,7 +90,7 @@ void TcpSession::start()
     );
 }
 
-void TcpSession::handle_read(std::shared_ptr<TcpSession> &s, const
+void TcpSession::handleRead(std::shared_ptr<TcpSession> &s, const
 boost::system::error_code &err, std::size_t bytes_transferred)
 {
     // FIX: Bad Address
@@ -120,7 +120,7 @@ boost::system::error_code &err, std::size_t bytes_transferred)
             //boost::asio::buffer(this->recv, max_length),
             boost::asio::buffer(this->buffer, max_length),
             boost::bind(
-                &TcpSession::handle_read,
+                &TcpSession::handleRead,
                 this,
                 shared_from_this(),
                 boost::asio::placeholders::error,

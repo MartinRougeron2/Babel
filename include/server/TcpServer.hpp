@@ -39,10 +39,10 @@
         public:
             TcpSession(boost::asio::io_service &, UdpServer *copy, std::mutex *copyMtx);
 
-            tcp::socket &get_socket();
+            tcp::socket &getSocket();
 
             void start();
-            void handle_read(std::shared_ptr<TcpSession> &, const
+            void handleRead(std::shared_ptr<TcpSession> &, const
                 boost::system::error_code &, std::size_t);
 
             typedef bool (TcpSession::*function_type)(std::string, struct UserApp);
@@ -83,8 +83,8 @@
             Protocol *recv;
             char buffer[max_length];
 
-            UserApp recv_user;
-            Commands recv_commands;
+            UserApp recvUser;
+            Commands recvCommands;
             std::vector<std::string> users;
             Asqlite3 database;
             void close_socket();

@@ -36,14 +36,14 @@ struct UdpSession : boost::enable_shared_from_this<UdpSession> {
 
     void handle_sent(const boost::system::error_code &ec, std::size_t);
 
-    udp::endpoint remote_endpoint_;
-    boost::array<char, 100> recv_buffer_;
+    udp::endpoint remoteEndpoint;
+    boost::array<char, 100> recvBuffer;
     std::string message;
-    UdpServer *server_;
+    UdpServer *Server;
 
     bool operator==(const UdpSession &other) const
     {
-        return this->remote_endpoint_ == other.remote_endpoint_;
+        return this->remoteEndpoint == other.remoteEndpoint;
     }
 };
 
@@ -82,8 +82,8 @@ class UdpServer {
         void handle_receive(const shared_session session, const boost::system::error_code &ec, std::size_t);
 
         int id = 0;
-        udp::socket socket_;
-        boost::asio::io_service::strand strand_;
+        udp::socket socket;
+        boost::asio::io_service::strand strand;
         std::map<int, Group> groups;
         std::vector<shared_session> allSessions;
 
