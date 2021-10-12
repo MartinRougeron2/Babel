@@ -92,7 +92,6 @@ void UserMenu::setSelectioned(UserApp user)
 
 void UserMenu::addContact()
 {
-    callWidget->setScene(Call::RECEIVECALL, "adolphe");
     if (this->callWidget->getScene() != Call::Scene::NOCALL)
         return;
     dialog->show();
