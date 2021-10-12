@@ -40,7 +40,7 @@
     struct S_Protocol
     {
         Commands command;
-        User user;
+        UserApp user;
     };
 
 #endif /* PROTOCOL_HPP */

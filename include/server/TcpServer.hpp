@@ -45,7 +45,7 @@
             void handle_read(std::shared_ptr<TcpSession> &, const
                 boost::system::error_code &, std::size_t);
 
-            typedef bool (TcpSession::*function_type)(std::string, struct User);
+            typedef bool (TcpSession::*function_type)(std::string, struct UserApp);
 
             std::map<std::string, function_type> mapped = {
                 { "/login", &TcpSession::login },
@@ -57,16 +57,16 @@
                 { "/exit", &TcpSession::close_server }
             };
 
-            bool login(std::string, struct User);
-            bool logout(std::string, struct User);
-            bool join(std::string, struct User);
-            bool leave(std::string, struct User);
-            bool call(std::string, struct User);
-            bool ping(std::string, struct User);
-            bool close_server(std::string, struct User);
+            bool login(std::string, struct UserApp);
+            bool logout(std::string, struct UserApp);
+            bool join(std::string, struct UserApp);
+            bool leave(std::string, struct UserApp);
+            bool call(std::string, struct UserApp);
+            bool ping(std::string, struct UserApp);
+            bool close_server(std::string, struct UserApp);
 
-            void display(User);
-            User C_user_to_user(C_User);
+            void display(UserApp);
+            UserApp C_user_to_user(C_User);
             Commands C_command_to_commands(C_Commands);
 
             S_Protocol decode(std::string);
@@ -83,7 +83,7 @@
             Protocol *recv;
             char buffer[max_length];
 
-            User recv_user;
+            UserApp recv_user;
             Commands recv_commands;
             std::vector<std::string> users;
             Asqlite3 database;

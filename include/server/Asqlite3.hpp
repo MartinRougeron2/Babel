@@ -5,6 +5,10 @@
 ** ASqlite3
 */
 
+#include "sqlite3.h"
+#include <common/standard.h>
+#include <common/User.h>
+
 #ifndef ASQLITE3_HPP_
 #define ASQLITE3_HPP_
 
@@ -14,9 +18,6 @@
 #define WHERE_QUERY(x) static_cast<std::string>("WHERE ") + x
 #define INNERJOIN_QUERY(x) static_cast<std::string>("INNER JOIN ") + x
 
-#include "sqlite3.h"
-#include <common/standard.h>
-#include <common/User.h>
 
 class Asqlite3 {
     public:

@@ -36,6 +36,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR} ${CMAKE_MODULE_PATH})
 file(GLOB_RECURSE BABEL_SERVER RELATIVE ${CMAKE_SOURCE_DIR} "${SERVER_PATH}*/*.cpp" "${SERVER_PATH}*.cpp")
 file(GLOB_RECURSE BABEL_CLIENT RELATIVE ${CMAKE_SOURCE_DIR} "${CLIENT_PATH}*/*.cpp" "${CLIENT_PATH}*.cpp")
 
+
 add_executable(babel_server ${BABEL_SERVER})
 add_executable(babel_client ${BABEL_CLIENT})
 
@@ -45,9 +46,10 @@ find_package(asio)
 find_package(portaudio)
 find_package(Opus)
 find_package(SQLite3)
+find_package(Boost REQUIRED COMPONENTS thread)
 find_package(Qt5 COMPONENTS Widgets Core Gui REQUIRED)
 
 
 
-target_link_libraries(babel_server asio::asio SQLite::SQLite3)
+target_link_libraries(babel_server asio::asio SQLite::SQLite3 Boost::thread)
 target_link_libraries(babel_client portaudio::portaudio Opus::opus Qt5::Widgets)

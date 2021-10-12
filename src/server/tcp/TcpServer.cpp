@@ -166,7 +166,7 @@ S_Protocol TcpSession::decode(std::string recv)
     return (protocol);
 }
 
-void TcpSession::display(User user)
+void TcpSession::display(UserApp  user)
 {
     std::cout << "-----------" << std::endl;
     std::cout << "Username:  " << user.username << std::endl;
@@ -176,9 +176,9 @@ void TcpSession::display(User user)
     std::cout << "-----------" << std::endl;
 }
 
-User TcpSession::C_user_to_user(C_User c_user)
+UserApp  TcpSession::C_user_to_user(C_User c_user)
 {
-    User user;
+    UserApp  user;
 
     user.username = std::string(c_user.username);
     user.password = std::string(c_user.password);
@@ -200,7 +200,7 @@ Commands TcpSession::C_command_to_commands(C_Commands c_commands)
     return (commands);
 }
 
-bool TcpSession::login(std::string arguments, struct User user)
+bool TcpSession::login(std::string arguments, struct UserApp user)
 {
     TcpSession::display(user);
 
@@ -214,7 +214,7 @@ bool TcpSession::login(std::string arguments, struct User user)
     return (false);
 }
 
-bool TcpSession::logout(std::string arguments, struct User user)
+bool TcpSession::logout(std::string arguments, struct UserApp user)
 {
     TcpSession::display(user);
     
@@ -260,7 +260,7 @@ bool TcpSession::send(char *data)
     return (true);
 }
 
-bool TcpSession::join(std::string arguments, struct User user)
+bool TcpSession::join(std::string arguments, struct UserApp user)
 {
     TcpSession::display(user);
 
@@ -269,7 +269,7 @@ bool TcpSession::join(std::string arguments, struct User user)
     return (false);
 }
 
-bool TcpSession::leave(std::string arguments, struct User user)
+bool TcpSession::leave(std::string arguments, struct UserApp user)
 {
     TcpSession::display(user);
 
@@ -278,7 +278,7 @@ bool TcpSession::leave(std::string arguments, struct User user)
     return (false);
 }
 
-bool TcpSession::call(std::string arguments, struct User user)
+bool TcpSession::call(std::string arguments, struct UserApp user)
 {
     TcpSession::display(user);
 
@@ -295,7 +295,7 @@ bool TcpSession::call(std::string arguments, struct User user)
     return (false);
 }
 
-bool TcpSession::ping(std::string arguments, struct User user)
+bool TcpSession::ping(std::string arguments, struct UserApp user)
 {
     TcpSession::display(user);
 
@@ -304,7 +304,7 @@ bool TcpSession::ping(std::string arguments, struct User user)
     return (false);
 }
 
-bool TcpSession::close_server(std::string arguments, struct User user)
+bool TcpSession::close_server(std::string arguments, struct UserApp user)
 {
     TcpSession::display(user);
 
