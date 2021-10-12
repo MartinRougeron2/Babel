@@ -72,42 +72,47 @@ namespace Sound
             std::string errMsg;
     };
 
-    // ** Codec **
-
-
-    class Encoder
+    class Codec
     {
         public:
-            Encoder();
-            ~Encoder();
+            /**
+             * * Create codec to encode and decode audio
+             * @param sampleRate frequency of sample
+             * @param sampleRate number of channels
+             * @param bufferSize buffer size
+             * @throw const char *
+             */
+            Codec(size_t sampleRate, size_t channels, size_t bufferSize);
+            ~Codec();
 
-            int EncodeAudioStream(const SoundFormat);
-            PacketDataFormat getOuput() const;
+            /**
+             * Encode frames
+             * @param captured frames get by mic
+             * @return encoded frames
+             * @throw const char *
+             */
+            std::vector<unsigned char> encodeFrames(std::vector<unsigned short> captured);
 
-        protected:
+            /**
+             * Decode frames
+             * @param encoded frames encoded
+             * @return decoded frames
+             * @throw const char *
+             */
+            std::vector<unsigned short> decodeFrames(std::vector<unsigned char> encoded);
+
         private:
-            OpusEncoder *state;
-            int error_code;
-            int frameSize;
-            PacketDataFormat outputData;
+            size_t bufferSize;
+            size_t channels;
+
+            int opusErr;
+
+            opus_int32 enc_bytes;
+            opus_int32 dec_bytes;
+
+            OpusEncoder *enc;
+            OpusDecoder *dec;
     };
-
-    class Decoder
-    {
-        public:
-            Decoder();
-            ~Decoder();
-
-            int decodeData(const PacketDataFormat data, const int frameSize);
-            SoundFormat getOutput() const;
-
-        protected:
-        private:
-            OpusDecoder *state;
-            int error_code;
-            SoundFormat sound;
-    };
-
 }; // namespace Sound
 
 #endif /* !SOUND_HPP_ */
