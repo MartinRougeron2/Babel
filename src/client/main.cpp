@@ -9,6 +9,8 @@
 #include <QApplication>
 #include "GUI/App.h"
 
+int tcpMain();
+
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
@@ -43,6 +45,7 @@ int main(int argc, char **argv)
     //     std::cerr << "Exception: " << e.what() << "\n";
     // }
 
+    tcpMain();
     main_app.show(); //show the widget and its children
     return app.exec(); // execute the application
 }
