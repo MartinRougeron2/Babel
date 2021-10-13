@@ -102,10 +102,12 @@ bool Asqlite3::linkUser(std::string from, std::string to)
 		return false;
 	}
 	this->getLinkedUser(from);
-	for (auto user : this->_linkedUser)
-		if (from != user.username)
+	for (auto user : this->_linkedUser) {
+		if (from == user.username)
 			return false;
+	}
 	std::string sql = "INSERT INTO contact(idfrom, idto) VALUES(" + idfrom + ", " + idto + ");";
+	std::cout << sql << std::endl;
 	if (!executeQuery(sql, NULL, 0)) {
 		std::cerr << "Error in linkUser function." << std::endl;
 		return false;
@@ -169,6 +171,19 @@ std::vector<UserApp> Asqlite3::getLinkedUser(std::string username)
 	if (!executeQuery(sql, callbackFillContact, this))
 		std::cerr << "Error in getlinkeduser function." << std::endl;
 	return this->_linkedUser;
+}
+
+bool Asqlite3::checkUser(std::string username)
+{
+	std::string sql = SELECT_QUERY("pseudo ") +
+		FROM_QUERY("user ") +
+		WHERE_QUERY("pseudo = '" + username + "'");
+	this->_res.clear();
+	if (!executeQuery(sql, callbackUserExist, this))
+		std::cerr << "Error in getlinkeduser function." << std::endl;
+	if (this->_res.empty())
+		return false;
+	return true;
 }
 
 bool Asqlite3::executeQuery(std::string sql, int (*callback)(void *, int, char **, char **), void *context)

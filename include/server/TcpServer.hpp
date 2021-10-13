@@ -60,7 +60,8 @@
                 { "/check", &TcpSession::check_user },
                 { "/linked", &TcpSession::check_linked },
                 { "/exit", &TcpSession::close_server },
-                { "/guic", &TcpSession::get_users_in_call }
+                { "/guic", &TcpSession::get_users_in_call },
+                { "/getcontacts", &TcpSession::get_contacts }
             };
 
             std::map<std::string, int> encoder = {
@@ -104,6 +105,7 @@
 
             bool add(std::string, struct UserApp);
             bool remove(std::string, struct UserApp);
+            bool get_contacts(std::string, struct UserApp);
 
             bool get_users_in_call(std::string, struct UserApp);
 

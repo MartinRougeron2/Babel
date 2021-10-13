@@ -32,6 +32,7 @@ class Asqlite3 {
         bool unlinkUser(std::string userfrom, std::string userto);
         std::string getIdByUsername(std::string username);
         std::vector<struct UserApp> getLinkedUser(std::string username);
+        bool checkUser(std::string username);
 
     protected:
     private:

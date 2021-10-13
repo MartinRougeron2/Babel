@@ -71,13 +71,13 @@ void App::hangup()
 
 void App::acceptCall()
 {
-    this->client->sendCommand(USERCMD("/acceptcall"));
+    this->client->sendCommand(USERCMD("/accept"));
     updateCall();
 }
 
 void App::refuseCall()
 {
-    this->client->sendCommand(USERCMD("/refusecall"));
+    this->client->sendCommand(USERCMD("/refuse"));
 }
 
 void App::addContactToCall(UserApp contact_to_add)
@@ -123,7 +123,6 @@ bool App::checkUser(std::string username)
 std::vector<UserApp> App::fetchContact() const
 {
     std::string response = this->client->sendCommand(std::string(USERCMD("/getcontacts")));
-    std::cout << response << std::endl;
     std::stringstream ss(response);
     std::string item;
     std::vector<UserApp> elems;
