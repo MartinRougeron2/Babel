@@ -21,16 +21,12 @@
     class TCP
     {
         public:
-            TCP();
+            TCP(boost::asio::io_context &io_context);
             ~TCP();
 
-            bool build_init();
-            bool build_connect();
-            bool build();
-            bool run();
-            char *stca(const char *);
-            char *stca_(std::string);
+            std::string sendCommand(std::string command);
         private:
+            boost::asio::ip::tcp::socket socket;
     };
 
 #endif /* TCP_HPP */

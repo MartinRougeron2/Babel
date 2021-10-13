@@ -9,30 +9,13 @@
 
 using boost::asio::ip::tcp;
 
-TCP::TCP()
+TCP::TCP(boost::asio::io_context &io_context) : socket(io_context)
 {
     try
     {
-        boost::asio::io_context io_context;
         tcp::resolver resolver(io_context);
-        tcp::resolver::results_type endpoints = resolver.resolve("127.0.0.1:2000", "");
-
-        tcp::socket socket(io_context);
-        boost::asio::connect(socket, endpoints);
-
-        for (;;)
-        {
-            boost::array<char, 128> buf;
-            boost::system::error_code error;
-            size_t len = socket.read_some(boost::asio::buffer(buf), error);
-
-            if (error == boost::asio::error::eof)
-                break;
-            else if (error)
-                throw boost::system::system_error(error);
-
-            std::cout.write(buf.data(), len);
-        }
+        tcp::endpoint ep(boost::asio::ip::address::from_string("127.0.0.1"), 2000);
+        socket.connect(ep);
     }
     catch (std::exception &e)
     {
@@ -42,4 +25,14 @@ TCP::TCP()
 
 TCP::~TCP()
 {
+}
+
+std::string TCP::sendCommand(std::string command)
+{
+    boost::array<char, 128> buf;
+    boost::system::error_code error;
+    socket.send(boost::asio::buffer(command));
+    size_t len = socket.read_some(boost::asio::buffer(buf), error);
+    std::string data(reinterpret_cast<const char*>(buf.data()), len);
+    return data;
 }

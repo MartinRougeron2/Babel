@@ -11,7 +11,6 @@
 
 #include <QWidget>
 #include <QtWidgets>
-#include <QMap>
 #include <QList>
 
 #include "Call.h"

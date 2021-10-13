@@ -94,7 +94,7 @@
 
             S_Protocol decode(std::string);
             bool send(char *);
-            char *set_string(char *);
+            char *set_string(char const *);
 
         private:
             enum

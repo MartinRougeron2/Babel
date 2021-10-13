@@ -41,18 +41,19 @@ class App : public QWidget
         void call(UserApp user_to_call);
         void acceptCall();
         void refuseCall();
-        void dismiss();
 
         void addContactToCall(UserApp user_to_add);
         void removeContactToCall(UserApp user_to_remove);
 
-        void addContact(UserApp user_to_add);
-        void removeContact(UserApp user_to_remove);
+        bool addContact(UserApp user_to_add);
+        bool removeContact(UserApp user_to_remove);
 
         UserApp getContext() const { return this->user;};
 
         loginCode login(std::string username, std::string password);
         void update();
+
+        static UserApp convertUserFromString(std::string username);
 
     private:
         enum AppState {ToLog, Menu_};
