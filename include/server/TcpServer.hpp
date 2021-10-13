@@ -59,7 +59,7 @@
                 { "/call", &TcpSession::call },
                 { "/ping", &TcpSession::ping },
                 { "/check", &TcpSession::check_user },
-                { "/linked", &TcpSession::check_user },
+                { "/linked", &TcpSession::check_linked },
                 { "/exit", &TcpSession::close_server }
             };
 

@@ -109,14 +109,15 @@ boost::system::error_code &err, std::size_t bytes_transferred)
             std::cout << colors::yellow << FAIL << "command not found: " << this->recv_commands.command << colors::reset << std::endl;
         }
         */
+       std::cout << this->buffer << std::endl;
         response = TcpSession::decode(this->buffer);
         if (this->mapped.find(response.command.command) != this->mapped.end()) {
             (this->*this->mapped.at(response.command.command))(response.command.arguments, response.user);
         } else {
             TcpSession::send(set_string("command not found"));
         }
+        free(this->buffer);
         socket.async_read_some(
-            //boost::asio::buffer(this->recv, max_length),
             boost::asio::buffer(this->buffer, max_length),
             boost::bind(
                 &TcpSession::handleRead,
@@ -325,10 +326,10 @@ bool TcpSession::add(std::string arguments, struct UserApp user)
 
     if (TcpSession::check_linked(arguments, user) == false) {
         this->database.linkUser(user.username, arguments);
-        TcpSession::send(set_string("added"));
+        TcpSession::send(set_string("true"));
         return (true);
     }
-    TcpSession::send(set_string("user already linked"));
+    TcpSession::send(set_string("false"));
 
     return (false);
 }
@@ -339,12 +340,10 @@ bool TcpSession::remove(std::string arguments, struct UserApp user)
 
     if (TcpSession::check_linked(arguments, user) == true) {
         // this->database.unlinkUser(user.username, arguments);
-        TcpSession::send(set_string("removed"));
+        TcpSession::send(set_string("true"));
         return (true);
     }
-    TcpSession::send(set_string("user not linked"));
-
-
+    TcpSession::send(set_string("false"));
     return (false);
 }
 
@@ -353,11 +352,11 @@ bool TcpSession::check_user(std::string arguments, struct UserApp user)
     TcpSession::display(user);
 
     if (this->database.login(user) == this->database.SUCCESS) {
-        TcpSession::send(set_string("user exists"));
+        TcpSession::send(set_string("true"));
         return (true);
     }
 
-    TcpSession::send(set_string("user not found"));
+    TcpSession::send(set_string("false"));
 
     return (false);
 }
@@ -370,12 +369,12 @@ bool TcpSession::check_linked(std::string arguments, struct UserApp user)
     if (linked.size() > 0) {
         for (auto i = linked.begin(); i != linked.end(); i++) {
             if (i->username == arguments) {
-                TcpSession::send(set_string("user linked"));
+                TcpSession::send(set_string("true"));
                 return (true);
             }
         }
     }
-    TcpSession::send(set_string("user not linked"));
+    TcpSession::send(set_string("false"));
 
     return (false);
 }
