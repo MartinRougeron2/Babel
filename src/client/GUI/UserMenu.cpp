@@ -98,8 +98,12 @@ void UserMenu::addContact()
         std::string contactName = dialog->getUserAdded();
         if (app->checkUser(contactName)) {
             UserApp user = app->getUser(contactName);
-            app->addContact(user);
-            fetchContact();
+            if (app->addContact(user))
+                fetchContact();
+            else
+                QMessageBox::information(this, tr("Contact Add Error"),
+                                tr("Can't add \"%1\", already in your contact list")
+                                .arg(QString::fromStdString(contactName)));
         } else {
             QMessageBox::information(this, tr("Contact Not Found"),
                                      tr("Sorry, canno't find \"%1\"")

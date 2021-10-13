@@ -95,7 +95,7 @@ void App::removeContactToCall(UserApp contact_to_remove)
 
 bool App::addContact(UserApp user)
 {
-    std::string response = this->client->sendCommand(std::string(USERCMDPARAM("/addcontact", user.username)));
+    std::string response = this->client->sendCommand(std::string(USERCMDPARAM("/add", user.username)));
 
     if (response == "true")
         return true;
@@ -104,7 +104,7 @@ bool App::addContact(UserApp user)
 
 bool App::removeContact(UserApp user)
 {
-    std::string response = this->client->sendCommand(std::string(USERCMDPARAM("/removecontact", user.username)));
+    std::string response = this->client->sendCommand(std::string(USERCMDPARAM("/remove", user.username)));
 
     if (response == "true")
         return true;
@@ -113,7 +113,7 @@ bool App::removeContact(UserApp user)
 
 bool App::checkUser(std::string username)
 {
-    std::string response = this->client->sendCommand(std::string(USERCMDPARAM("/checkuser", username)));
+    std::string response = this->client->sendCommand(std::string(USERCMDPARAM("/check", username)));
 
     if (response == "true")
         return true;
