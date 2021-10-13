@@ -10,8 +10,8 @@
 
 #include <string>
 #include <boost/asio.hpp>
+#include <boost/bind.hpp>
 #include <array>
-
 #define UPD_PORT 2001
 
 class ClientUdp {
