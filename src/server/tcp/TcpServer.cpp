@@ -109,8 +109,7 @@ boost::system::error_code &err, std::size_t bytes_transferred)
             std::cout << colors::yellow << FAIL << "command not found: " << this->recv_commands.command << colors::reset << std::endl;
         }
         */
-       std::cout << this->buffer << std::endl;
-        response = TcpSession::decode(this->buffer);
+        response = TcpSession::decode(std::string(reinterpret_cast<const char*>(buffer.data()), this->max_length));
         if (this->mapped.find(response.command.command) != this->mapped.end()) {
             (this->*this->mapped.at(response.command.command))(response.command.arguments, response.user);
         } else {
@@ -137,6 +136,7 @@ boost::system::error_code &err, std::size_t bytes_transferred)
 
 S_Protocol TcpSession::decode(std::string recv)
 {
+    std::cout << recv << std::endl;
     std::string delimiter = ";";
     std::string full(socket.local_endpoint().address().to_string() + ":" + std::to_string(socket.local_endpoint().port()));
     S_Protocol protocol;
@@ -163,7 +163,7 @@ S_Protocol TcpSession::decode(std::string recv)
     protocol.command.arguments = recv.erase(0, recv.find(delimiter) + delimiter.length());
 
     TcpSession::display(protocol.user);
-
+    this->buffer.assign(0);
     return (protocol);
 }
 

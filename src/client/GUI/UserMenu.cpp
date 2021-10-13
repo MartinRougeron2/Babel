@@ -97,8 +97,7 @@ void UserMenu::addContact()
     if (dialog->exec() == 1) {
         std::string contactName = dialog->getUserAdded();
         if (app->checkUser(contactName)) {
-            UserApp user = app->getUser(contactName);
-            if (app->addContact(user))
+            if (app->addContact(contactName))
                 fetchContact();
             else
                 QMessageBox::information(this, tr("Contact Add Error"),
@@ -122,7 +121,7 @@ void UserMenu::removeContact()
     int index = 0;
     for (auto label : contactDraw) {
         if (this->selection.id == label->getUser().id) {
-            app->removeContact(label->getUser());
+            app->removeContact(label->getUser().username);
             delete label;
             contactDraw.erase(contactDraw.begin() + index);
             this->selection.id = -1;
