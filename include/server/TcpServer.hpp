@@ -65,7 +65,7 @@
                 { "/guic", &TcpSession::get_users_in_call }
             };
 
-            // get_users_in_call
+            // DONE get_users_in_call
             // userapp get_user(user_name)
             // accept
             // refuse
@@ -93,7 +93,8 @@
             std::vector<UserApp> get_users_in_call(std::string, struct UserApp);
 
 
-            UserApp get_username_by_address(std::string);
+            UserApp get_username_by_id(std::string);
+            UserApp get_user(std::string);
 
             void display(UserApp);
             UserApp C_user_to_user(C_User);

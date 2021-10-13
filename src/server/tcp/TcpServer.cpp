@@ -384,10 +384,20 @@ std::vector<UserApp> TcpSession::get_users_in_call(std::string arguments, struct
     return (usersInSession);
 }
 
-UserApp TcpSession::get_username_by_address(std::string address)
+UserApp TcpSession::get_username_by_id(std::string address)
 {
     for (auto i = this->users.begin(); i != this->users.end(); i++) {
         if (i->second == address)
+            return (i->first);
+    }
+
+    return (EMPTY);
+}
+
+UserApp TcpSession::get_user(std::string username)
+{
+    for (auto i = this->users.begin(); i != this->users.end(); i++) {
+        if (i->first.username == username)
             return (i->first);
     }
 
