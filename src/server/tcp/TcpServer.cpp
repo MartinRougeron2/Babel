@@ -433,3 +433,10 @@ bool TcpSession::close_server(std::string arguments, UserApp user)
 
     return (false);
 }
+
+boost::array<char, this->max_length> TcpSession::encode(boost::array<char, this->max_length>)
+{
+    boost::array<char, this->max_length> encoded;
+
+    
+}

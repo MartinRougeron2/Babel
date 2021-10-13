@@ -28,7 +28,6 @@
     #include "Protocol.hpp"
     #include "UdpServer.hpp"
 
-
     #define TCP_PORT 2000
     #define EMPTY "__EMPTY__"
 
@@ -61,7 +60,6 @@
                 { "/check", &TcpSession::check_user },
                 { "/linked", &TcpSession::check_linked },
                 { "/exit", &TcpSession::close_server },
-
                 { "/guic", &TcpSession::get_users_in_call }
             };
 
@@ -91,7 +89,6 @@
             bool remove(std::string, struct UserApp);
 
             std::vector<UserApp> get_users_in_call(std::string, struct UserApp);
-
 
             UserApp get_username_by_id(std::string);
             UserApp get_user(std::string);
