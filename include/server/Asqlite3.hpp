@@ -29,6 +29,7 @@ class Asqlite3 {
         loginCode login(struct UserApp user);
         std::string getUser(std::string username);
         bool linkUser(std::string userfrom, std::string userto);
+        bool unlinkUser(std::string userfrom, std::string userto);
         std::string getIdByUsername(std::string username);
         std::vector<struct UserApp> getLinkedUser(std::string username);
 

@@ -109,7 +109,7 @@ boost::system::error_code &err, std::size_t bytes_transferred)
             std::cout << colors::yellow << FAIL << "command not found: " << this->recv_commands.command << colors::reset << std::endl;
         }
         */
-        response = TcpSession::decode(std::string(reinterpret_cast<const char*>(buffer.data()), this->max_length));
+        response = TcpSession::decode(std::string(reinterpret_cast<const char*>(buffer.data())));
         if (this->mapped.find(response.command.command) != this->mapped.end()) {
             (this->*this->mapped.at(response.command.command))(response.command.arguments, response.user);
         } else {
@@ -344,7 +344,7 @@ bool TcpSession::remove(std::string arguments, struct UserApp user)
     TcpSession::display(user);
 
     if (TcpSession::check_linked(arguments, user) == true) {
-        // this->database.unlinkUser(user.username, arguments);
+        this->database.unlinkUser(user.username, arguments);
         TcpSession::send(set_string("true"));
         return (true);
     }

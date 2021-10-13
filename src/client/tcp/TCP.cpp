@@ -34,5 +34,6 @@ std::string TCP::sendCommand(std::string command)
     socket.send(boost::asio::buffer(command));
     size_t len = socket.read_some(boost::asio::buffer(buf), error);
     std::string data(reinterpret_cast<const char*>(buf.data()), len);
+    std::cout << data << std::endl;
     return data;
 }
