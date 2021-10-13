@@ -34,3 +34,7 @@ Default port: **2000**
 ```
 <username>;<password>;<command>;<argument>
 ```
+
+### UML
+```plantuml
+```
