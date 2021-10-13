@@ -109,12 +109,11 @@ boost::system::error_code &err, std::size_t bytes_transferred)
             std::cout << colors::yellow << FAIL << "command not found: " << this->recv_commands.command << colors::reset << std::endl;
         }
         */
-        std::cout << this->buffer << std::endl;
         response = TcpSession::decode(this->buffer);
         if (this->mapped.find(response.command.command) != this->mapped.end()) {
             (this->*this->mapped.at(response.command.command))(response.command.arguments, response.user);
         } else {
-            TcpSession::send(set_string("command not found\n"));
+            TcpSession::send(set_string("command not found"));
         }
         socket.async_read_some(
             //boost::asio::buffer(this->recv, max_length),
@@ -178,15 +177,13 @@ void TcpSession::display(UserApp  user)
 
 UserApp  TcpSession::C_user_to_user(C_User c_user)
 {
-    UserApp  user;
+    UserApp user;
 
     user.username = std::string(c_user.username);
     user.password = std::string(c_user.password);
     user.address = std::string(c_user.address);
     user.id = c_user.id;
-
     TcpSession::display(user);
-
     return (user);
 }
 
@@ -200,35 +197,33 @@ Commands TcpSession::C_command_to_commands(C_Commands c_commands)
     return (commands);
 }
 
-bool TcpSession::login(std::string arguments, struct UserApp user)
+bool TcpSession::login(std::string arguments, UserApp user)
 {
-    TcpSession::display(user);
-
     this->database.uploadData(user);
     if (this->database.login(user) == this->database.SUCCESS) {
-        TcpSession::send(set_string("logged\n"));
+        TcpSession::send(set_string(std::to_string(user.id).c_str()));
         return (true);
     }
-    TcpSession::send(set_string("login failed\n"));
-
+    if (this->database.login(user) == this->database.BAD_PASSWORD) {
+        TcpSession::send(set_string("BAD_PASSWORD"));
+        return (false);
+    }
+    TcpSession::send(set_string("login failed"));
     return (false);
 }
 
-bool TcpSession::logout(std::string arguments, struct UserApp user)
+bool TcpSession::logout(std::string arguments, UserApp user)
 {
-    TcpSession::display(user);
-    
     TcpSession::send(set_string("EXIT\n"));
-
     return (false);
 }
 
-char *TcpSession::set_string(char *data)
+char *TcpSession::set_string(char const *data)
 {
-    char *result = new char[strlen(data) + 1];
+    char *result = new char[std::strlen(data) + 1];
 
-    result[strlen(data)] = '\0';
-    for (int i = 0; i < strlen(data); i++) {
+    result[std::strlen(data)] = '\0';
+    for (int i = 0; i < std::strlen(data); i++) {
         result[i] = data[i];
     }
 
@@ -260,7 +255,7 @@ bool TcpSession::send(char *data)
     return (true);
 }
 
-bool TcpSession::join(std::string arguments, struct UserApp user)
+bool TcpSession::join(std::string arguments, UserApp user)
 {
     TcpSession::display(user);
 
@@ -269,7 +264,7 @@ bool TcpSession::join(std::string arguments, struct UserApp user)
     return (false);
 }
 
-bool TcpSession::leave(std::string arguments, struct UserApp user)
+bool TcpSession::leave(std::string arguments, UserApp user)
 {
     TcpSession::display(user);
 
@@ -278,7 +273,7 @@ bool TcpSession::leave(std::string arguments, struct UserApp user)
     return (false);
 }
 
-bool TcpSession::call(std::string arguments, struct UserApp user)
+bool TcpSession::call(std::string arguments, UserApp user)
 {
     TcpSession::display(user);
 
@@ -287,7 +282,6 @@ bool TcpSession::call(std::string arguments, struct UserApp user)
         return (true);
     }
     TcpSession::send(set_string("user not found\n"));
-    
     this->mtx->lock();
     this->voiceServer->join(user.address);
     this->mtx->unlock();
@@ -295,7 +289,7 @@ bool TcpSession::call(std::string arguments, struct UserApp user)
     return (false);
 }
 
-bool TcpSession::ping(std::string arguments, struct UserApp user)
+bool TcpSession::ping(std::string arguments, UserApp user)
 {
     TcpSession::display(user);
 
@@ -304,7 +298,7 @@ bool TcpSession::ping(std::string arguments, struct UserApp user)
     return (false);
 }
 
-bool TcpSession::close_server(std::string arguments, struct UserApp user)
+bool TcpSession::close_server(std::string arguments, UserApp user)
 {
     TcpSession::display(user);
 

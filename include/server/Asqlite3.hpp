@@ -12,7 +12,7 @@
 #ifndef ASQLITE3_HPP_
 #define ASQLITE3_HPP_
 
-#define DB_DIR "user.db"
+#define DB_DIR "../user.db"
 #define SELECT_QUERY(x) static_cast<std::string>("SELECT ") + x
 #define FROM_QUERY(x) static_cast<std::string>("FROM ") + x
 #define WHERE_QUERY(x) static_cast<std::string>("WHERE ") + x

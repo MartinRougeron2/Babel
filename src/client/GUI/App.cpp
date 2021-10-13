@@ -11,55 +11,80 @@
 #include "UserMenu.h"
 #include <iostream>
 
+#define USERCMDPARAM(cmd, param) this->user.username + ";" + this->user.password + ";" + cmd + ";" + param
+#define USERCMD(cmd) this->user.username + ";" + this->user.password + ";" + cmd
+
 App::App(QWidget *parent) : QWidget(parent)
 {
     setWindowTitle("Babel");
-    this->client = new TCP();
+    boost::asio::io_context io_context;
+    this->client = new TCP(io_context);
     update();
 }
 
 std::vector<UserApp> App::getUserInCall() const
 {
-    //TODO RETURN USER IN CONTEXT CALL;
-    return fetchContact();
+    std::string response = this->client->sendCommand(std::string(USERCMD("/getusersincall")));
+    std::stringstream ss(response);
+    std::string item;
+    std::vector<UserApp> elems;
+    while (std::getline(ss, item, '\n')) {
+        UserApp user = convertUserFromString(item);
+        if (user.username == "")
+            continue;
+        elems.push_back(user);
+    }
+    return elems;
+}
+
+UserApp App::convertUserFromString(std::string response)
+{
+    std::stringstream ss(response);
+    std::string item;
+    std::vector<std::string> elems;
+    if (std::count(response.begin(), response.end(), ';') != 3)
+        return UserApp();
+    while (std::getline(ss, item, ';')) {
+        elems.push_back(item);
+    }
+    return UserApp(elems[0], elems[1], elems[2], std::stoi(elems[3]));
 }
 
 UserApp App::getUser(std::string username) const
 {
-    //TODO RETURN USER WITH USERNAME;
-    return {"user", "address", "password", 5};
+    std::string response = this->client->sendCommand(std::string(USERCMDPARAM("/getuser", username)));
+    if (response == "user not found")
+        return UserApp();
+    return convertUserFromString(response);
 }
 
-void App::call(UserApp contact_to_call)
+void App::call(UserApp user)
 {
-    //TODO CREATE CALL THEN ADD USER TO CALL
+    std::string response = this->client->sendCommand(std::string(USERCMDPARAM("/call", user.username)));
+    //TODO SERV CHECK USER ONLINE
 }
 
 void App::hangup()
 {
-    //TODO HANGUP
+    this->client->sendCommand(USERCMD("/hangup"));
 }
 
 void App::acceptCall()
 {
-    //TODO ACCEPT CALL
+    this->client->sendCommand(USERCMD("/acceptcall"));
     updateCall();
 }
 
 void App::refuseCall()
 {
-    //TODO REFUSE CALL
-}
-
-void App::dismiss()
-{
-
+    this->client->sendCommand(USERCMD("/refusecall"));
 }
 
 void App::addContactToCall(UserApp contact_to_add)
 {
     //TODO ADD CONTACT TO CONTEXT USER CALL
     //NEED TO CHECK IF USER IS IN YOUR CONTACT
+    //NEED TO CHECK IF USER ONLINE
 }
 
 void App::removeContactToCall(UserApp contact_to_remove)
@@ -68,39 +93,56 @@ void App::removeContactToCall(UserApp contact_to_remove)
     //NEED TO CHECK IF USER IS IN THE CALL
 }
 
-void App::addContact(UserApp contact_to_add)
+bool App::addContact(UserApp user)
 {
-    //TODO ADD CONTACT TO DB
-    //ALREADY IN UR CONTACT ?
+    std::string response = this->client->sendCommand(std::string(USERCMDPARAM("/addcontact", user.username)));
+
+    if (response == "true")
+        return true;
+    return false;
 }
 
-void App::removeContact(UserApp contact_to_remove)
+bool App::removeContact(UserApp user)
 {
-    //TODO REMOVE CONTACT FROM DB
-    //NOT IN YOUR CONTACT (should not be called)
+    std::string response = this->client->sendCommand(std::string(USERCMDPARAM("/removecontact", user.username)));
+
+    if (response == "true")
+        return true;
+    return false;
 }
 
 bool App::checkUser(std::string username)
 {
-    //TODO CHECK IF USER EXIST
-    return true;
+    std::string response = this->client->sendCommand(std::string(USERCMDPARAM("/checkuser", username)));
+
+    if (response == "true")
+        return true;
+    return false;
 }
 
 std::vector<UserApp> App::fetchContact() const
 {
-    std::vector<struct UserApp> linkeds;
-    linkeds.push_back(UserApp("dd", "dd", "dd", 0));
-    linkeds.push_back(UserApp("yoj", "dd", "dd", 1));
-    linkeds.push_back(UserApp("eedede", "dd", "dd", 2));
-    //TODO GET LINKED
-    return linkeds;
+    std::string response = this->client->sendCommand(std::string(USERCMD("/getcontacts")));
+    std::cout << response << std::endl;
+    std::stringstream ss(response);
+    std::string item;
+    std::vector<UserApp> elems;
+    while (std::getline(ss, item, '\n')) {
+        UserApp user = convertUserFromString(item);
+        if (user.username == "")
+            continue;
+        elems.push_back(user);
+    }
+    return elems;
 }
 
 loginCode App::login(std::string username, std::string password)
 {
-    //TODO LOGIN
+    std::string response = this->client->sendCommand(std::string(username + ";" + password + ";" + "/login"));
+    if (response == "BAD_PASSWORD")
+        return BAD_PASSWORD;
     this->app_state = Menu_;
-    this->user = UserApp(username, "", password, 0);
+    this->user = UserApp(username, "", password, std::atoi(response.c_str()));
     return SUCCESS;
 }
 

@@ -28,7 +28,7 @@ Asqlite3::~Asqlite3()
 {
 }
 
-bool Asqlite3::uploadData(struct UserApp user)
+bool Asqlite3::uploadData(UserApp user)
 {
 	std::string sql("INSERT INTO user (pseudo, password, address)"
 	"VALUES('" + user.username + "', '" + user.password + "', '" + user.address + "');");
@@ -57,7 +57,7 @@ int Asqlite3::callbackGetUser(void *context, int argc, char** argv, char** azCol
 	return 0;
 }
 
-Asqlite3::loginCode Asqlite3::login(struct UserApp user)
+Asqlite3::loginCode Asqlite3::login(UserApp user)
 {
 	std::string sql = SELECT_QUERY("pseudo ") + FROM_QUERY("user ") + WHERE_QUERY("pseudo = '" + user.username + "';");
 	this->_res.clear();
@@ -68,7 +68,7 @@ Asqlite3::loginCode Asqlite3::login(struct UserApp user)
 	this->_res.clear();
 	sql = SELECT_QUERY("pseudo ") +
 	FROM_QUERY("user ") +
-	WHERE_QUERY("pseudo = '" + user.username + "' AND pseudo = '" + user.username + "';");
+	WHERE_QUERY("pseudo = '" + user.username + "' AND password = '" + user.password + "';");
 	if (!executeQuery(sql, callbackUserExist, this))
 		std::cerr << "Error in login function.2" << std::endl;
 	if (user.username != this->_res)
@@ -133,7 +133,7 @@ int Asqlite3::callbackFillContact(void *context, int argc, char** argv, char** a
 	return 0;
 }
 
-std::vector<struct UserApp> Asqlite3::getLinkedUser(std::string username)
+std::vector<UserApp> Asqlite3::getLinkedUser(std::string username)
 {
 	std::string id = getIdByUsername(username);
 	std::string sql = SELECT_QUERY("pseudo, address ") +
