@@ -92,9 +92,13 @@ std::string Asqlite3::getUser(std::string name)
 bool Asqlite3::linkUser(std::string from, std::string to)
 {
 	std::string idfrom = getIdByUsername(from);
+	if (idfrom.empty()) {
+		std::cerr << "Not valid user 1" << std::endl;
+		return false;
+	}
 	std::string idto = getIdByUsername(to);
-	if (idfrom.empty() || idto.empty()) {
-		std::cerr << "Not valid user" << std::endl;
+	if (idto.empty()) {
+		std::cerr << "Not valid user 2" << std::endl;
 		return false;
 	}
 	this->getLinkedUser(from);
@@ -113,7 +117,8 @@ std::string Asqlite3::getIdByUsername(std::string username)
 {
 	std::string sql = SELECT_QUERY("id ") +
 		FROM_QUERY("user ") +
-		WHERE_QUERY("pseudo = '" + username + "';");
+		WHERE_QUERY("pseudo='" + username + "';");
+	std::cout << sql << std::endl;
 	this->_res.clear();
 	if (!executeQuery(sql, callbackUserExist, this))
 		std::cerr << "Error in getid function." << std::endl;
@@ -142,7 +147,7 @@ std::vector<UserApp> Asqlite3::getLinkedUser(std::string username)
 		WHERE_QUERY("user.id != "+id+" AND (contact.idfrom = "+id+" OR contact.idto = "+id+")");
 	this->_linkedUser.clear();
 	if (!executeQuery(sql, callbackFillContact, this))
-		std::cerr << "Error in getid function." << std::endl;
+		std::cerr << "Error in getlinkeduser function." << std::endl;
 	return this->_linkedUser;
 }
 
@@ -154,6 +159,7 @@ bool Asqlite3::executeQuery(std::string sql, int (*callback)(void *, int, char *
 
 	exit = sqlite3_exec(DB, sql.c_str(), callback, context, &messageError);
 	if (exit != SQLITE_OK) {
+		std::cout << messageError << std::endl;
 		sqlite3_free(messageError);
 		return false;
 	}
