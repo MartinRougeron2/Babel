@@ -22,6 +22,8 @@ if (NOT WIN32)
 	set(CMAKE_CXX_FLAGS_DEBUG "-g3")
 endif ()
 
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
 
 set(SERVER_PATH "${CMAKE_SOURCE_DIR}/src/server")
 set(CLIENT_PATH "${CMAKE_SOURCE_DIR}/src/client/")
@@ -51,5 +53,7 @@ find_package(Qt5 COMPONENTS Widgets Core Gui REQUIRED)
 
 
 
-target_link_libraries(babel_server asio::asio SQLite::SQLite3 Boost::thread)
-target_link_libraries(babel_client portaudio::portaudio Opus::opus Qt5::Widgets)
+# target_link_libraries(babel_server asio::asio SQLite::SQLite3 Boost::thread)
+# target_link_libraries(babel_client portaudio::portaudio Opus::opus Qt5::Widgets)
+target_link_libraries(babel_client ${CONAN_LIBS})
+target_link_libraries(babel_server ${CONAN_LIBS} Boost::thread)
