@@ -6,7 +6,6 @@
 */
 
 #include "server/UdpServer.hpp"
-#include "../../../include/server/UdpServer.hpp"
 
 UdpServer::UdpServer(boost::asio::io_service &io_service) : socket(io_service,
                                                               udp::endpoint(udp::v4(), UDP_PORT)), strand(io_service)
@@ -101,7 +100,7 @@ void UdpServer::handle_receive(const shared_session session, const boost::system
 
 
     socket_.async_send_to(
-        boost::asio::buffer("Test"),
+        boost::asio::buffer(session->recv_buffer_),
         session->remote_endpoint_,
         strand_.wrap(
             bind(
