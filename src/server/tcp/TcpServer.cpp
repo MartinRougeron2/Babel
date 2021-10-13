@@ -116,7 +116,6 @@ boost::system::error_code &err, std::size_t bytes_transferred)
         } else {
             TcpSession::send(set_string("command not found"));
         }
-        free(this->buffer);
         socket.async_read_some(
             boost::asio::buffer(this->buffer, max_length),
             boost::bind(
