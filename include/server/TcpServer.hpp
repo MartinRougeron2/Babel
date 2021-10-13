@@ -60,7 +60,9 @@
                 { "/ping", &TcpSession::ping },
                 { "/check", &TcpSession::check_user },
                 { "/linked", &TcpSession::check_linked },
-                { "/exit", &TcpSession::close_server }
+                { "/exit", &TcpSession::close_server },
+
+                { "/guic", &TcpSession::get_users_in_call }
             };
 
             // get_users_in_call
@@ -88,6 +90,11 @@
             bool add(std::string, struct UserApp);
             bool remove(std::string, struct UserApp);
 
+            std::vector<UserApp> get_users_in_call(std::string, struct UserApp);
+
+
+            UserApp get_username_by_address(std::string);
+
             void display(UserApp);
             UserApp C_user_to_user(C_User);
             Commands C_command_to_commands(C_Commands);
@@ -108,7 +115,7 @@
 
             UserApp recvUser;
             Commands recvCommands;
-            std::vector<std::string> users;
+            std::map<UserApp, int> users;
             Asqlite3 database;
             void close_socket();
             UdpServer *voiceServer;
