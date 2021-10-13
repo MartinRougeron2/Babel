@@ -152,6 +152,7 @@ S_Protocol TcpSession::decode(std::string recv)
     recv = recv.erase(0, recv.find(delimiter) + delimiter.length());
 
     protocol.user.address = full;
+
     /*
     ids.address = recv.substr(0, recv.find(delimiter));
     recv = recv.erase(0, recv.find(delimiter) + delimiter.length());
@@ -218,7 +219,7 @@ bool TcpSession::logout(std::string arguments, struct UserApp user)
 {
     TcpSession::display(user);
     
-    TcpSession::send(set_string("EXIT\n"));
+    TcpSession::send(set_string("EXIT"));
 
     return (false);
 }
@@ -269,7 +270,7 @@ bool TcpSession::join(std::string arguments, struct UserApp user)
     return (false);
 }
 
-bool TcpSession::leave(std::string arguments, struct UserApp user)
+bool TcpSession::hangup(std::string arguments, struct UserApp user)
 {
     TcpSession::display(user);
 
@@ -283,10 +284,10 @@ bool TcpSession::call(std::string arguments, struct UserApp user)
     TcpSession::display(user);
 
     if (this->database.login(user) == this->database.SUCCESS) {
-        TcpSession::send(set_string("calling...\n"));
+        TcpSession::send(set_string("calling..."));
         return (true);
     }
-    TcpSession::send(set_string("user not found\n"));
+    TcpSession::send(set_string("user not found"));
     
     this->mtx->lock();
     this->voiceServer->join(user.address);
@@ -299,7 +300,86 @@ bool TcpSession::ping(std::string arguments, struct UserApp user)
 {
     TcpSession::display(user);
 
-    TcpSession::send(set_string("pong\n"));
+    TcpSession::send(set_string("pong"));
+
+    return (false);
+}
+
+bool TcpSession::accept(std::string arguments, struct UserApp user)
+{
+    TcpSession::display(user);
+
+    TcpSession::send(set_string("accepted"));
+
+    return (false);
+}
+
+bool TcpSession::refuse(std::string arguments, struct UserApp user)
+{
+    TcpSession::display(user);
+
+    TcpSession::send(set_string("refused"));
+
+    return (false);
+}
+
+bool TcpSession::add(std::string arguments, struct UserApp user)
+{
+    TcpSession::display(user);
+
+    if (TcpSession::check_linked(arguments, user) == false) {
+        this->database.linkUser(user.username, arguments);
+        TcpSession::send(set_string("added"));
+        return (true);
+    }
+    TcpSession::send(set_string("user already linked"));
+
+    return (false);
+}
+
+bool TcpSession::remove(std::string arguments, struct UserApp user)
+{
+    TcpSession::display(user);
+
+    if (TcpSession::check_linked(arguments, user) == true) {
+        // this->database.unlinkUser(user.username, arguments);
+        TcpSession::send(set_string("removed"));
+        return (true);
+    }
+    TcpSession::send(set_string("user not linked"));
+
+
+    return (false);
+}
+
+bool TcpSession::check_user(std::string arguments, struct UserApp user)
+{
+    TcpSession::display(user);
+
+    if (this->database.login(user) == this->database.SUCCESS) {
+        TcpSession::send(set_string("user exists"));
+        return (true);
+    }
+
+    TcpSession::send(set_string("user not found"));
+
+    return (false);
+}
+
+bool TcpSession::check_linked(std::string arguments, struct UserApp user)
+{
+    TcpSession::display(user);
+    std::vector<UserApp> linked = this->database.getLinkedUser(user.username);
+
+    if (linked.size() > 0) {
+        for (auto i = linked.begin(); i != linked.end(); i++) {
+            if (i->username == arguments) {
+                TcpSession::send(set_string("user linked"));
+                return (true);
+            }
+        }
+    }
+    TcpSession::send(set_string("user not linked"));
 
     return (false);
 }
@@ -309,10 +389,10 @@ bool TcpSession::close_server(std::string arguments, struct UserApp user)
     TcpSession::display(user);
 
     if (user.username == "admin" && user.password == "admin") {
-        TcpSession::send(set_string("user authorized\n"));
+        TcpSession::send(set_string("user authorized"));
         TcpSession::close_socket();
     } else {
-        TcpSession::send(set_string("user not authorized\n"));
+        TcpSession::send(set_string("user not authorized"));
     }
 
     return (false);
