@@ -79,7 +79,7 @@ void TcpSession::start()
 {
     socket.async_read_some(
         //boost::asio::buffer(this->recv, max_length),
-        boost::asio::buffer(this->buffer, max_length),
+        boost::asio::buffer(this->buffer),
         boost::bind(
             &TcpSession::handleRead,
             this,
@@ -117,7 +117,8 @@ boost::system::error_code &err, std::size_t bytes_transferred)
             TcpSession::send(set_string("command not found"));
         }
         socket.async_read_some(
-            boost::asio::buffer(this->buffer, max_length),
+            //boost::asio::buffer(this->recv, max_length),
+            boost::asio::buffer(this->buffer),
             boost::bind(
                 &TcpSession::handleRead,
                 this,
@@ -371,12 +372,10 @@ bool TcpSession::check_linked(std::string arguments, struct UserApp user)
     if (linked.size() > 0) {
         for (auto i = linked.begin(); i != linked.end(); i++) {
             if (i->username == arguments) {
-                TcpSession::send(set_string("true"));
                 return (true);
             }
         }
     }
-    TcpSession::send(set_string("false"));
 
     return (false);
 }
