@@ -326,6 +326,7 @@ bool TcpSession::add(std::string arguments, struct UserApp user)
     TcpSession::display(user);
 
     if (TcpSession::check_linked(arguments, user) == false) {
+        std::cout << user.username << " " << arguments << std::endl;
         if (this->database.linkUser(user.username, arguments) == true) {
             TcpSession::send(set_string("true"));
             return (true);
