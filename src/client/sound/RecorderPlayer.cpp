@@ -44,7 +44,7 @@ void Sound::RecorderPlayer::stop()
         throw this->audio.GetErrorText(this->err);
 }
 
-const std::vector<unsigned short> Sound::RecorderPlayer::getMic(void)
+std::vector<unsigned short> Sound::RecorderPlayer::getMic(void)
 {
     std::vector<unsigned short> captured(this->bufferSize * this->channelsNb);
 

@@ -45,7 +45,7 @@ namespace Sound
              * @return get a buffer of frame
              * @throw const char *
              */
-            const std::vector<unsigned short> getMic(void);
+            std::vector<unsigned short> getMic(void);
 
             /**
              * @brief decode audio
