@@ -37,10 +37,10 @@ void ClientUdp::read(const boost::system::error_code &error, size_t bytes_recvd)
 {
 }
 
-std::string ClientUdp::getMessage()
+std::vector<unsigned short> ClientUdp::getMessage()
 {
     udp::endpoint senderEndpoint;
-    std::string recv;
+    std::vector<unsigned short> recv;
 
     this->sock->async_receive_from(boost::asio::buffer(recv), this->receiverEndpoint,
                             boost::bind(&ClientUdp::read, this,

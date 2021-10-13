@@ -22,7 +22,7 @@ class ClientUdp {
         void sendMessage(const std::string &msg);
         void sendMessage(const std::vector<unsigned char> &msg);
 
-        std::string getMessage();
+        std::vector<unsigned short> getMessage();
         void read(const boost::system::error_code &error, size_t bytes_recvd);
 
 protected:
