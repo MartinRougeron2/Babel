@@ -24,7 +24,7 @@ App::App(QWidget *parent) : QWidget(parent)
 
 std::vector<UserApp> App::getUserInCall() const
 {
-    std::string response = this->client->sendCommand(std::string(USERCMD("/getusersincall")));
+    std::string response = this->client->sendCommand(std::string(USERCMD("/guic")));
     std::stringstream ss(response);
     std::string item;
     std::vector<UserApp> elems;

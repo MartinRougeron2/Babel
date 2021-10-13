@@ -40,7 +40,7 @@ UserMenu::UserMenu(QWidget *parent)
     contactLayout = new QVBoxLayout;
     contactLayout->addWidget(addressLabel);
 
-    callWidget = new Call;
+    callWidget = new Call(app);
 
     mainLayout = new QGridLayout;
     mainLayout->addWidget(nameLabel, 0, 0);
@@ -58,7 +58,7 @@ void UserMenu::fetchContact()
         delete a;
     this->contactDraw.clear();
     std::vector<UserApp> linkeds = app->fetchContact();
-    for (auto &contact : linkeds) {
+    for (auto contact : linkeds) {
         ContactLabel *label = new ContactLabel(contact);
         label->setText(QString::fromStdString(contact.username));
         contactLayout->addWidget(label);

@@ -154,8 +154,8 @@ int Asqlite3::callbackFillContact(void *context, int argc, char** argv, char** a
 	Asqlite3 *db = static_cast<Asqlite3 *>(context);
 	std::string username, address;
 
-	for (int i = 0; i < argc; i = i + 2) {
-		db->_linkedUser.push_back({std::string(argv[i]), std::string(""), std::string(argv[i + 1])});
+	for (int i = 0; i < argc; i = i + 3) {
+		db->_linkedUser.push_back(UserApp(argv[i], argv[i + 1], "", std::atoi(argv[i + 2])));
 	}
 	return 0;
 }
@@ -163,7 +163,7 @@ int Asqlite3::callbackFillContact(void *context, int argc, char** argv, char** a
 std::vector<UserApp> Asqlite3::getLinkedUser(std::string username)
 {
 	std::string id = getIdByUsername(username);
-	std::string sql = SELECT_QUERY("pseudo, address ") +
+	std::string sql = SELECT_QUERY("pseudo, address, id ") +
 		FROM_QUERY("contact ") +
 		INNERJOIN_QUERY("user ON user.id=contact.idfrom OR user.id=contact.idto ") +
 		WHERE_QUERY("user.id != "+id+" AND (contact.idfrom = "+id+" OR contact.idto = "+id+")");
