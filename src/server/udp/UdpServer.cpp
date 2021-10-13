@@ -96,21 +96,38 @@ void UdpServer::handle_receive(const shared_session session, const boost::system
 {
     std::vector<shared_session> others_sessions = get_related(session);
 
-    for (auto others_session : others_sessions) {
-        socket.async_send_to(
-            boost::asio::buffer(session->recvBuffer),
-            others_session->remoteEndpoint,
-            strand.wrap(
-                bind(
-                    &UdpSession::handle_sent,
-                    others_session,
-                    boost::asio::placeholders::error,
-                    boost::asio::placeholders::bytes_transferred
-                )
+    std::cout << session->recv_buffer_.c_array() << std::endl;
+    std::cout << session->remote_endpoint_.port() << std::endl;
+
+
+    socket_.async_send_to(
+        boost::asio::buffer("Test"),
+        session->remote_endpoint_,
+        strand_.wrap(
+            bind(
+                &UdpSession::handle_sent,
+                session,
+                boost::asio::placeholders::error,
+                boost::asio::placeholders::bytes_transferred
             )
-        );
-    }
-    session->recvBuffer.assign(0);
+        )
+    );
+//    );
+//    for (const auto& others_session : others_sessions) {
+//        socket_.async_send_to(
+//            boost::asio::buffer(session->recv_buffer_),
+//            others_session->remote_endpoint_,
+//            strand_.wrap(
+//                bind(
+//                    &UdpSession::handle_sent,
+//                    others_session,
+//                    boost::asio::placeholders::error,
+//                    boost::asio::placeholders::bytes_transferred
+//                )
+//            )
+//        );
+//    }
+    session->recv_buffer_.assign(0);
 
     receive_session();
 }

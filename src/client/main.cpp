@@ -8,14 +8,24 @@
 #include <QtGui>
 #include <QApplication>
 #include "GUI/App.h"
+#include "client/protocol/ClientUdp.hpp"
 
 using boost::asio::ip::tcp;
 
 int main(int argc, char **argv)
 {
-    QApplication app(argc, argv);
-    App main_app;
+    boost::asio::io_service ios;
 
-    main_app.show(); //show the widget and its children
-    return app.exec(); // execute the application
+    ClientUdp voiceClient = ClientUdp("127.0.0.1", ios);
+
+    voiceClient.sendMessage("LOL");
+
+    while (1)
+        std::cout << voiceClient.getMessage();
+
+//    QApplication app(argc, argv);
+//    App main_app;
+//
+//    main_app.show(); //show the widget and its children
+    return 0;//app.exec(); // execute the application
 }

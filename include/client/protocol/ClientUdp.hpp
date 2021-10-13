@@ -16,16 +16,17 @@
 
 class ClientUdp {
     public:
-        ClientUdp(const std::string ip, boost::asio::io_service ioService);
+        ClientUdp(const std::string ip, boost::asio::io_service &ioService);
         ~ClientUdp();
 
         void sendMessage(const std::string &msg);
         std::string getMessage();
+        void read(const boost::system::error_code &error, size_t bytes_recvd);
 
-    protected:
+protected:
     private:
         boost::asio::ip::udp::endpoint receiverEndpoint;
-        boost::asio::ip::udp::socket sock;
+        boost::asio::ip::udp::socket *sock;
 };
 
 #endif /* !UDP_HPP_ */

@@ -9,35 +9,37 @@
 
 using boost::asio::ip::udp;
 
-ClientUdp::ClientUdp(const std::string ip, boost::asio::io_service ioService): sock(ioService)
-{
+ClientUdp::ClientUdp(const std::string ip, boost::asio::io_service &ioService) {
+
     udp::resolver resolver(ioService);
+    this->receiverEndpoint = udp::endpoint
+        (boost::asio::ip::address::from_string(ip), 2001);
 
-//     // type ip (IP V4) | IP | hostname
-     udp::resolver::query query(udp::v4(), ip);
-//     //  udp::resolver::query query(udp::v4(), ip.c_str(), "daytime");
-
-    this->receiverEndpoint = *resolver.resolve(query);
-    udp::socket socket(ioService);
-    sock.open(udp::v4());
+    this->sock = new udp::socket(ioService);
+    this->sock->open(udp::v4());
 }
 
-ClientUdp::~ClientUdp()
-{
+ClientUdp::~ClientUdp() {
 }
 
-void ClientUdp::sendMessage(const std::string &msg)
-{
-    sock.send_to(boost::asio::buffer(msg), this->receiverEndpoint);
+void ClientUdp::sendMessage(const std::string &msg) {
+    this->sock->send_to(boost::asio::buffer(msg), this->receiverEndpoint);
 }
 
-std::string ClientUdp::getMessage()
-{
+void
+ClientUdp::read(const boost::system::error_code &error, size_t bytes_recvd) {
+}
+
+std::string ClientUdp::getMessage() {
     udp::endpoint senderEndpoint;
     std::string recv;
 
     // TODO Init recv to sample size with codec
-    sock.receive_from(boost::asio::buffer(recv), senderEndpoint);
+    this->sock->async_receive_from(boost::asio::buffer(recv), this->receiverEndpoint,
+                                   boost::asio::io_service::strand::wrap(
+                                       boost::bind(&ClientUdp::read,
+                                             boost::asio::placeholders::error,
+                                            boost::asio::placeholders::bytes_transferred)));
     return recv;
 }
 
