@@ -5,7 +5,7 @@
 ** test
 */
 
-#include "client/sound/Sound.hpp"
+#include "sound/Sound.hpp"
 
 
 Sound::RecorderPlayer::RecorderPlayer()

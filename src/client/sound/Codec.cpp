@@ -26,7 +26,7 @@ Sound::Codec::~Codec()
     opus_encoder_destroy(this->enc);
 }
 
-std::vector<unsigned char> Sound::Codec::encodeFrames(std::vector<unsigned short> captured)
+std::vector<unsigned char> Sound::Codec::encodeFrames(const std::vector<unsigned short> captured)
 {
     std::vector<unsigned char> encoded(this->bufferSize * this->channels * 2);
 
@@ -36,7 +36,7 @@ std::vector<unsigned char> Sound::Codec::encodeFrames(std::vector<unsigned short
     return encoded;
 }
 
-std::vector<unsigned short> Sound::Codec::decodeFrames(std::vector<unsigned char> encode)
+std::vector<unsigned short> Sound::Codec::decodeFrames(const std::vector<unsigned char> encode)
 {
     std::vector<unsigned short> decoded(this->bufferSize * this->channels);
 

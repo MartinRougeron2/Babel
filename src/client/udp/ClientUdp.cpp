@@ -28,6 +28,11 @@ void ClientUdp::sendMessage(const std::string &msg)
     this->sock->send_to(boost::asio::buffer(msg), this->receiverEndpoint);
 }
 
+void ClientUdp::sendMessage(const std::vector<unsigned char> &msg)
+{
+    this->sock->send_to(boost::asio::buffer(msg), this->receiverEndpoint);
+}
+
 void ClientUdp::read(const boost::system::error_code &error, size_t bytes_recvd)
 {
 }
