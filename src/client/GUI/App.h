@@ -45,8 +45,8 @@ class App : public QWidget
         void addContactToCall(UserApp user_to_add);
         void removeContactToCall(UserApp user_to_remove);
 
-        bool addContact(UserApp user_to_add);
-        bool removeContact(UserApp user_to_remove);
+        bool addContact(std::string user_to_add);
+        bool removeContact(std::string user_to_remove);
 
         UserApp getContext() const { return this->user;};
 
