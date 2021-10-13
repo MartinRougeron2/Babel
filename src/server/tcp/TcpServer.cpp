@@ -203,7 +203,7 @@ bool TcpSession::login(std::string arguments, UserApp user)
 {
     this->database.uploadData(user);
     if (this->database.login(user) == this->database.SUCCESS) {
-        this->users.insert(user, user.id);
+        this->users[user.id] = user;
         TcpSession::send(set_string(std::to_string(user.id).c_str()));
         return (true);
     }
@@ -288,7 +288,7 @@ bool TcpSession::call(std::string arguments, UserApp user)
     }
     TcpSession::send(set_string("user not found"));
     this->mtx->lock();
-    this->voiceServer->join(user.address);
+    this->voiceServer->join(user.address, user.id);
     this->mtx->unlock();
 
     return (false);
@@ -365,43 +365,61 @@ bool TcpSession::check_user(std::string arguments, struct UserApp user)
     return (false);
 }
 
-std::vector<UserApp> TcpSession::get_users_in_call(std::string arguments, struct UserApp user)
+bool TcpSession::get_users_in_call(std::string arguments, struct UserApp user)
 {
     TcpSession::display(user);
     std::string userAddress = user.address.erase(user.address.find(':'), user.address.length());
-    std::vector<UdpSession> sessionsInCommon;
+    std::vector<shared_session> sessionsInCommon;
     std::vector<UserApp> usersInSession;
 
-    for (auto const &group : voiceServer->getAllGroups())
-        for (auto const &session: group.second.sessions)
-            if (session.get()->remoteEndpoint.address().to_string() == userAdress)
+    for (auto const &group : voiceServer->getAllGroups()) {
+        for (auto const &session: group.second.sessions) {
+            if (session.get()->remoteEndpoint.address().to_string() == user.address)
                 sessionsInCommon = group.second.sessions;
+        }
+    }
 
     for (const auto &session : sessionsInCommon) {
-        usersInSession.push_back(this->users[session.id]);
+        usersInSession.push_back(this->users[session->id]);
     }
 
-    return (usersInSession);
+    this->usersincall = usersInSession;
+
+    return (false);
 }
 
-UserApp TcpSession::get_username_by_id(std::string address)
+UserApp TcpSession::get_username_by_id(int address)
 {
+    UserApp failed;
+
+    failed.address = EMPTY;
+    failed.id = -1;
+    failed.password = EMPTY;
+    failed.username = EMPTY;
+
     for (auto i = this->users.begin(); i != this->users.end(); i++) {
-        if (i->second == address)
-            return (i->first);
+        if (i->first == address)
+            return (i->second);
     }
 
-    return (EMPTY);
+    return (failed);
 }
 
 UserApp TcpSession::get_user(std::string username)
 {
+    UserApp failed;
+
+    failed.address = EMPTY;
+    failed.id = -1;
+    failed.password = EMPTY;
+    failed.username = EMPTY;
+
     for (auto i = this->users.begin(); i != this->users.end(); i++) {
-        if (i->first.username == username)
-            return (i->first);
+        if (i->second.username == username)
+            return (i->second);
     }
 
-    return (EMPTY);
+    return (failed);
 }
 
 bool TcpSession::check_linked(std::string arguments, struct UserApp user)
@@ -432,11 +450,4 @@ bool TcpSession::close_server(std::string arguments, UserApp user)
     }
 
     return (false);
-}
-
-boost::array<char, this->max_length> TcpSession::encode(boost::array<char, this->max_length>)
-{
-    boost::array<char, this->max_length> encoded;
-
-    
 }

@@ -63,6 +63,23 @@
                 { "/guic", &TcpSession::get_users_in_call }
             };
 
+            std::map<std::string, int> encoder = {
+                { "/login", 0b00000001 },
+                { "/logout", 0b00000010 },
+                { "/join", 0b00000011 },
+                { "/hangup", 0b00000100 },
+                { "/accept", 0b00000101 },
+                { "/refuse", 0b00000111 },
+                { "/add", 0b00001000 },
+                { "/remove", 0b00001001 },
+                { "/call", 0b00001011 },
+                { "/ping", 0b00001111 },
+                { "/check", 0b00010000 },
+                { "/linked", 0b00010011 },
+                { "/exit", 0b00010111 },
+                { "/guic", 0b00011111 }
+            };
+
             // DONE get_users_in_call
             // userapp get_user(user_name)
             // accept
@@ -88,9 +105,9 @@
             bool add(std::string, struct UserApp);
             bool remove(std::string, struct UserApp);
 
-            std::vector<UserApp> get_users_in_call(std::string, struct UserApp);
+            bool get_users_in_call(std::string, struct UserApp);
 
-            UserApp get_username_by_id(std::string);
+            UserApp get_username_by_id(int);
             UserApp get_user(std::string);
 
             void display(UserApp);
@@ -100,6 +117,8 @@
             S_Protocol decode(std::string);
             bool send(char *);
             char *set_string(char const *);
+
+            std::vector<UserApp> usersincall;
 
         private:
             enum
@@ -113,7 +132,7 @@
 
             UserApp recvUser;
             Commands recvCommands;
-            std::map<UserApp, int> users;
+            std::map<int, UserApp> users;
             Asqlite3 database;
             void close_socket();
             UdpServer *voiceServer;
