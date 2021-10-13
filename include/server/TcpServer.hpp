@@ -104,7 +104,7 @@
             tcp::socket socket;
 
             Protocol *recv;
-            char buffer[max_length];
+            std::string buffer;
 
             UserApp recvUser;
             Commands recvCommands;
