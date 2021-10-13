@@ -39,10 +39,10 @@
         public:
             TcpSession(boost::asio::io_service &, UdpServer *copy, std::mutex *copyMtx);
 
-            tcp::socket &get_socket();
+            tcp::socket &getSocket();
 
             void start();
-            void handle_read(std::shared_ptr<TcpSession> &, const
+            void handleRead(std::shared_ptr<TcpSession> &, const
                 boost::system::error_code &, std::size_t);
 
             typedef bool (TcpSession::*function_type)(std::string, struct UserApp);
@@ -51,19 +51,42 @@
                 { "/login", &TcpSession::login },
                 { "/logout", &TcpSession::logout },
                 { "/join", &TcpSession::join },
-                { "/leave", &TcpSession::leave },
+                { "/hangup", &TcpSession::hangup },
+                { "/accept", &TcpSession::accept },
+                { "/refuse", &TcpSession::refuse },
+                { "/add", &TcpSession::add },
+                { "/remove", &TcpSession::remove },
                 { "/call", &TcpSession::call },
                 { "/ping", &TcpSession::ping },
+                { "/check", &TcpSession::check_user },
+                { "/linked", &TcpSession::check_user },
                 { "/exit", &TcpSession::close_server }
             };
+
+            // get_users_in_call
+            // userapp get_user(user_name)
+            // accept
+            // refuse
+            // DONE add contact
+            // DONE remove contact
+            // DONE check if users are linked
+            // DONE check if user exists
 
             bool login(std::string, struct UserApp);
             bool logout(std::string, struct UserApp);
             bool join(std::string, struct UserApp);
-            bool leave(std::string, struct UserApp);
+            bool hangup(std::string, struct UserApp);
             bool call(std::string, struct UserApp);
             bool ping(std::string, struct UserApp);
             bool close_server(std::string, struct UserApp);
+            bool check_user(std::string, struct UserApp);
+            bool check_linked(std::string, struct UserApp);
+
+            bool accept(std::string, struct UserApp);
+            bool refuse(std::string, struct UserApp);
+
+            bool add(std::string, struct UserApp);
+            bool remove(std::string, struct UserApp);
 
             void display(UserApp);
             UserApp C_user_to_user(C_User);
@@ -83,8 +106,8 @@
             Protocol *recv;
             char buffer[max_length];
 
-            UserApp recv_user;
-            Commands recv_commands;
+            UserApp recvUser;
+            Commands recvCommands;
             std::vector<std::string> users;
             Asqlite3 database;
             void close_socket();

@@ -17,7 +17,7 @@ acceptor(ios, tcp::endpoint(tcp::v4(), port))
                                                                        this->voiceServer,
                                                                        &this->mtx);
     acceptor.async_accept(
-        session->get_socket(),
+        session->getSocket(),
         boost::bind(
             &TcpServer::handle_accept,
             this,
@@ -34,7 +34,7 @@ boost::system::error_code &err)
         session->start();
         session = std::make_shared<TcpSession>(ios, voiceServer, &mtx);
         acceptor.async_accept(
-            session->get_socket(),
+            session->getSocket(),
             boost::bind(
                 &TcpServer::handle_accept,
                 this,
@@ -57,7 +57,7 @@ socket(ios)
     return;
 }
 
-tcp::socket &TcpSession::get_socket()
+tcp::socket &TcpSession::getSocket()
 {
     return socket;
 }
@@ -66,7 +66,7 @@ void TcpSession::close_socket()
 {
     std::cout << colors::blue << WAIT << "closing socket..." << colors::reset << std::endl;
     try {
-        TcpSession::get_socket().close();
+        TcpSession::getSocket().close();
     } catch (std::exception &e) {
         std::cout << colors::red << FAIL << "error in closing socket " << e.what() << colors::reset << std::endl;
         return;
@@ -81,7 +81,7 @@ void TcpSession::start()
         //boost::asio::buffer(this->recv, max_length),
         boost::asio::buffer(this->buffer, max_length),
         boost::bind(
-            &TcpSession::handle_read,
+            &TcpSession::handleRead,
             this,
             shared_from_this(),
             boost::asio::placeholders::error,
@@ -90,7 +90,7 @@ void TcpSession::start()
     );
 }
 
-void TcpSession::handle_read(std::shared_ptr<TcpSession> &s, const
+void TcpSession::handleRead(std::shared_ptr<TcpSession> &s, const
 boost::system::error_code &err, std::size_t bytes_transferred)
 {
     // FIX: Bad Address
@@ -119,7 +119,7 @@ boost::system::error_code &err, std::size_t bytes_transferred)
             //boost::asio::buffer(this->recv, max_length),
             boost::asio::buffer(this->buffer, max_length),
             boost::bind(
-                &TcpSession::handle_read,
+                &TcpSession::handleRead,
                 this,
                 shared_from_this(),
                 boost::asio::placeholders::error,
@@ -151,6 +151,7 @@ S_Protocol TcpSession::decode(std::string recv)
     recv = recv.erase(0, recv.find(delimiter) + delimiter.length());
 
     protocol.user.address = full;
+
     /*
     ids.address = recv.substr(0, recv.find(delimiter));
     recv = recv.erase(0, recv.find(delimiter) + delimiter.length());
@@ -214,7 +215,9 @@ bool TcpSession::login(std::string arguments, UserApp user)
 
 bool TcpSession::logout(std::string arguments, UserApp user)
 {
-    TcpSession::send(set_string("EXIT\n"));
+    TcpSession::display(user);
+    TcpSession::send(set_string("EXIT"));
+
     return (false);
 }
 
@@ -264,7 +267,7 @@ bool TcpSession::join(std::string arguments, UserApp user)
     return (false);
 }
 
-bool TcpSession::leave(std::string arguments, UserApp user)
+bool TcpSession::hangup(std::string arguments, struct UserApp user)
 {
     TcpSession::display(user);
 
@@ -278,10 +281,10 @@ bool TcpSession::call(std::string arguments, UserApp user)
     TcpSession::display(user);
 
     if (this->database.login(user) == this->database.SUCCESS) {
-        TcpSession::send(set_string("calling...\n"));
+        TcpSession::send(set_string("calling..."));
         return (true);
     }
-    TcpSession::send(set_string("user not found\n"));
+    TcpSession::send(set_string("user not found"));
     this->mtx->lock();
     this->voiceServer->join(user.address);
     this->mtx->unlock();
@@ -293,7 +296,86 @@ bool TcpSession::ping(std::string arguments, UserApp user)
 {
     TcpSession::display(user);
 
-    TcpSession::send(set_string("pong\n"));
+    TcpSession::send(set_string("pong"));
+
+    return (false);
+}
+
+bool TcpSession::accept(std::string arguments, struct UserApp user)
+{
+    TcpSession::display(user);
+
+    TcpSession::send(set_string("accepted"));
+
+    return (false);
+}
+
+bool TcpSession::refuse(std::string arguments, struct UserApp user)
+{
+    TcpSession::display(user);
+
+    TcpSession::send(set_string("refused"));
+
+    return (false);
+}
+
+bool TcpSession::add(std::string arguments, struct UserApp user)
+{
+    TcpSession::display(user);
+
+    if (TcpSession::check_linked(arguments, user) == false) {
+        this->database.linkUser(user.username, arguments);
+        TcpSession::send(set_string("added"));
+        return (true);
+    }
+    TcpSession::send(set_string("user already linked"));
+
+    return (false);
+}
+
+bool TcpSession::remove(std::string arguments, struct UserApp user)
+{
+    TcpSession::display(user);
+
+    if (TcpSession::check_linked(arguments, user) == true) {
+        // this->database.unlinkUser(user.username, arguments);
+        TcpSession::send(set_string("removed"));
+        return (true);
+    }
+    TcpSession::send(set_string("user not linked"));
+
+
+    return (false);
+}
+
+bool TcpSession::check_user(std::string arguments, struct UserApp user)
+{
+    TcpSession::display(user);
+
+    if (this->database.login(user) == this->database.SUCCESS) {
+        TcpSession::send(set_string("user exists"));
+        return (true);
+    }
+
+    TcpSession::send(set_string("user not found"));
+
+    return (false);
+}
+
+bool TcpSession::check_linked(std::string arguments, struct UserApp user)
+{
+    TcpSession::display(user);
+    std::vector<UserApp> linked = this->database.getLinkedUser(user.username);
+
+    if (linked.size() > 0) {
+        for (auto i = linked.begin(); i != linked.end(); i++) {
+            if (i->username == arguments) {
+                TcpSession::send(set_string("user linked"));
+                return (true);
+            }
+        }
+    }
+    TcpSession::send(set_string("user not linked"));
 
     return (false);
 }
@@ -303,10 +385,10 @@ bool TcpSession::close_server(std::string arguments, UserApp user)
     TcpSession::display(user);
 
     if (user.username == "admin" && user.password == "admin") {
-        TcpSession::send(set_string("user authorized\n"));
+        TcpSession::send(set_string("user authorized"));
         TcpSession::close_socket();
     } else {
-        TcpSession::send(set_string("user not authorized\n"));
+        TcpSession::send(set_string("user not authorized"));
     }
 
     return (false);
