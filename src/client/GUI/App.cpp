@@ -17,8 +17,7 @@
 App::App(QWidget *parent) : QWidget(parent)
 {
     setWindowTitle("Babel");
-    boost::asio::io_context io_context;
-    this->client = new TCP(io_context);
+    this->client = new TCP;
     update();
 }
 
@@ -138,8 +137,11 @@ std::vector<UserApp> App::fetchContact() const
 loginCode App::login(std::string username, std::string password)
 {
     std::string response = this->client->sendCommand(std::string(username + ";" + password + ";" + "/login"));
+    std::cout << response << std::endl;
     if (response == "BAD_PASSWORD")
         return BAD_PASSWORD;
+    if (response == "not connected" || response == "")
+        return NOT_CONNECTED;
     this->app_state = Menu_;
     this->user = UserApp(username, "", password, std::atoi(response.c_str()));
     return SUCCESS;

@@ -31,6 +31,7 @@ class Login : public QWidget{
     protected:
     public slots:
         void proceed_login();
+        void reconnect();
     private:
         QLineEdit *username_edit;
         QLineEdit *password_edit;
@@ -39,6 +40,7 @@ class Login : public QWidget{
         QLabel *username_error;
         QLabel *password_error;
         QPushButton *login_button;
+        QPushButton *reconnect_button;
 
         QGridLayout *login_layout;
 

@@ -12,6 +12,7 @@
     #include <string>
     #include <boost/array.hpp>
     #include <boost/asio.hpp>
+    #include <QWidget>
 
     #include "Protocol.hpp"
 
@@ -21,12 +22,16 @@
     class TCP
     {
         public:
-            TCP(boost::asio::io_context &io_context);
+            TCP();
             ~TCP();
 
             std::string sendCommand(std::string command);
+            bool isConnected() { sendCommand("/ping"); return this->_connected;};
+            void doConnect();
         private:
-            boost::asio::ip::tcp::socket socket;
+            boost::asio::io_context io_context;
+            boost::asio::ip::tcp::socket *socket;
+            bool _connected = true;
     };
 
 #endif /* TCP_HPP */

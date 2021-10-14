@@ -25,6 +25,7 @@ Login::Login(QWidget *parent)
     this->password_error->setStyleSheet("font-weight: bold; color: red");
     this->password_error->hide();
     this->login_button = new QPushButton("LOGIN", this);
+    this->reconnect_button = new QPushButton("reconnect", this);
 
     this->login_layout = new QGridLayout(this);
     login_layout->addWidget(this->username_info, 0, 0);
@@ -34,9 +35,13 @@ Login::Login(QWidget *parent)
     login_layout->addWidget(this->password_edit, 5, 0);
     login_layout->addWidget(this->password_error, 6, 0);
     login_layout->addWidget(this->login_button, 7, 0, 1, 2);
+    login_layout->addWidget(reconnect_button, 8, 0, 1, 2);
     parent->setLayout(login_layout);
     connect(login_button, SIGNAL(clicked()), this, SLOT(proceed_login()));
+    connect(reconnect_button, SIGNAL(clicked()), this, SLOT(reconnect()));
     this->parent = static_cast<App *>(parent);
+    if (this->parent->getTcp()->isConnected())
+        reconnect_button->hide();
 }
 
 Login::~Login()
@@ -49,6 +54,13 @@ Login::~Login()
         delete item;
     }
     delete login_layout;
+}
+
+void Login::reconnect()
+{
+    this->parent->getTcp()->doConnect();
+    if (this->parent->getTcp()->isConnected())
+        this->reconnect_button->hide();
 }
 
 void Login::proceed_login()
@@ -79,6 +91,9 @@ void Login::proceed_login()
             break;
         case SUCCESS:
             parent->update();
+            break;
+        case NOT_CONNECTED:
+            this->reconnect_button->show();
             break;
     }
 }
