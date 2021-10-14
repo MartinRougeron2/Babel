@@ -46,25 +46,23 @@ void ClientUdp::read(const boost::system::error_code &error, size_t bytes_recvd)
         std::cout << error.message() << std::endl;
         return;
     }
-    std::cout << "e\n";
-    for (auto const m : this->recv)
-        std::cout << int(m) << ",";
-    std::cout << std::endl;
-    this->recvVec.clear();
-    this->recvVec = std::vector<unsigned char>(this->recv.begin(), this->recv.end());
-    player.frameToSpeaker(codec.decodeFrames(this->recvVec));
-
 }
 
 void ClientUdp::getMessage()
 {
     udp::endpoint senderEndpoint;
+    std::array<unsigned char, 100> buff;
 
-    this->sock->async_receive(boost::asio::buffer(this->recv),
-                              boost::bind(&ClientUdp::read, this,
+    this->sock->async_receive_from(boost::asio::buffer(buff),
+                                   this->receiverEndpoint,
+                                    boost::bind(&ClientUdp::read, this,
                                     boost::asio::placeholders::error,
                                     boost::asio::placeholders::bytes_transferred));
-
+    for (auto const m : buff)
+        std::cout << int(m) << ",";
+    std::cout << std::endl;
+    this->recvVec = std::vector(buff.begin(),  buff.end());
+    // player.frameToSpeaker(codec.decodeFrames(this->recvVec));
     this->sendMessage(codec.encodeFrames(player.getMic()));
 }
 
