@@ -9,13 +9,19 @@
 
 using boost::asio::ip::udp;
 
-ClientUdp::ClientUdp(const std::string ip, boost::asio::io_service &ioService)
+ClientUdp::ClientUdp(const std::string ip, boost::asio::io_service
+*ioService, Sound::RecorderPlayer player) :
+    codec(player.getSampleRate(), player.getChannelNumber(), player.getBufferSize())
 {
-    udp::resolver resolver(ioService);
-
+    this->player = player;
+    this->player.init();
+    udp::resolver resolver(*ioService);
     this->receiverEndpoint = udp::endpoint(boost::asio::ip::address::from_string(ip), 2001);
-    this->sock = new udp::socket(ioService);
+    this->sock = new udp::socket(*ioService);
     this->sock->open(udp::v4());
+    ioService->run();
+    // <------>
+    getMessage();
 }
 
 ClientUdp::~ClientUdp()
@@ -31,6 +37,7 @@ void ClientUdp::sendMessage(const std::string &msg)
 void ClientUdp::sendMessage(const std::vector<unsigned char> &msg)
 {
     this->sock->send_to(boost::asio::buffer(msg), this->receiverEndpoint);
+    getMessage();
 }
 
 void ClientUdp::read(const boost::system::error_code &error, size_t bytes_recvd)
@@ -39,21 +46,26 @@ void ClientUdp::read(const boost::system::error_code &error, size_t bytes_recvd)
         std::cout << error.message() << std::endl;
         return;
     }
+    std::cout << "e\n";
+    for (auto const m : this->recv)
+        std::cout << int(m) << ",";
+    std::cout << std::endl;
+    this->recvVec.clear();
+    this->recvVec = std::vector<unsigned char>(this->recv.begin(), this->recv.end());
+    player.frameToSpeaker(codec.decodeFrames(this->recvVec));
+
 }
 
-std::vector<unsigned char> ClientUdp::getMessage()
+void ClientUdp::getMessage()
 {
     udp::endpoint senderEndpoint;
-    std::array<unsigned char, 480> recv = {};
-    std::vector<unsigned char> recvVec;
 
-    this->sock->async_receive(boost::asio::buffer(recv),
+    this->sock->async_receive(boost::asio::buffer(this->recv),
                               boost::bind(&ClientUdp::read, this,
                                     boost::asio::placeholders::error,
                                     boost::asio::placeholders::bytes_transferred));
 
-    recvVec = std::vector(recv.begin(), recv.end());
-    return recvVec;
+    this->sendMessage(codec.encodeFrames(player.getMic()));
 }
 
 /*

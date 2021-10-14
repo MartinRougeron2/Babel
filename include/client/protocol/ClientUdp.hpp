@@ -15,21 +15,29 @@
 #include <iostream>
 #define UPD_PORT 2001
 
+#include "client/sound/Sound.hpp"
+
+
 class ClientUdp {
     public:
-        ClientUdp(const std::string ip, boost::asio::io_service &ioService);
+        ClientUdp(const std::string ip, boost::asio::io_service *ioService,
+                  Sound::RecorderPlayer player);
         ~ClientUdp();
 
         void sendMessage(const std::string &msg);
         void sendMessage(const std::vector<unsigned char> &msg);
 
-        std::vector<unsigned char> getMessage();
+        void getMessage();
         void read(const boost::system::error_code &error, size_t bytes_recvd);
 
 protected:
     private:
         boost::asio::ip::udp::endpoint receiverEndpoint;
         boost::asio::ip::udp::socket *sock;
+        Sound::Codec codec;
+        Sound::RecorderPlayer player;
+        std::vector<unsigned char> recvVec;
+        std::array<unsigned char, 100> recv;
 };
 
 #endif /* !UDP_HPP_ */
