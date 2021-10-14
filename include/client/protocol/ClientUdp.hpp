@@ -12,6 +12,7 @@
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <array>
+#include <iostream>
 #define UPD_PORT 2001
 
 class ClientUdp {
@@ -22,7 +23,7 @@ class ClientUdp {
         void sendMessage(const std::string &msg);
         void sendMessage(const std::vector<unsigned char> &msg);
 
-        std::string getMessage();
+        std::vector<unsigned char> getMessage();
         void read(const boost::system::error_code &error, size_t bytes_recvd);
 
 protected:

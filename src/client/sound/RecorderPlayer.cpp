@@ -49,14 +49,14 @@ std::vector<unsigned short> Sound::RecorderPlayer::getMic(void)
     std::vector<unsigned short> captured(this->bufferSize * this->channelsNb);
 
     if ((this->err = this->audio.ReadStream(this->stream, captured.data(), this->bufferSize)) != paNoError)
-        throw this->audio.GetErrorText(this->err);
+        return {};// this->audio.GetErrorText(this->err);
     return captured;
 }
 
 void Sound::RecorderPlayer::frameToSpeaker(const std::vector<unsigned short> &decoded)
 {
     if ((this->err = this->audio.WriteStream(this->stream, decoded.data(), this->bufferSize)) != paNoError) {
-        throw this->audio.GetErrorText(this->err);
+        ;//throw this->audio.GetErrorText(this->err);
     }
 }
 

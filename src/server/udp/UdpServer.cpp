@@ -95,9 +95,12 @@ void UdpServer::handle_receive(const shared_session session, const boost::system
 {
     std::vector<shared_session> others_sessions = get_related(session);
 
-    std::cout << session->recvBuffer.c_array() << std::endl;
-    std::cout << session->remoteEndpoint.port() << std::endl;
+    for (int i = 0; i < 100; i++)
+        std::cout << int(session->recvBuffer.data()[i]) << ",";
+    std::cout << std::endl;
 
+    std::cout << session->remoteEndpoint.address().to_string() << ":" <<
+    session->remoteEndpoint.port() << std::endl;
 
     socket.async_send_to(
         boost::asio::buffer(session->recvBuffer),

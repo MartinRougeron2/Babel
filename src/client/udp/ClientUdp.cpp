@@ -35,18 +35,25 @@ void ClientUdp::sendMessage(const std::vector<unsigned char> &msg)
 
 void ClientUdp::read(const boost::system::error_code &error, size_t bytes_recvd)
 {
+    if (error) {
+        std::cout << error.message() << std::endl;
+        return;
+    }
 }
 
-std::string ClientUdp::getMessage()
+std::vector<unsigned char> ClientUdp::getMessage()
 {
     udp::endpoint senderEndpoint;
-    std::string recv;
+    std::array<unsigned char, 480> recv = {};
+    std::vector<unsigned char> recvVec;
 
-    this->sock->async_receive_from(boost::asio::buffer(recv), this->receiverEndpoint,
-                            boost::bind(&ClientUdp::read, this,
+    this->sock->async_receive(boost::asio::buffer(recv),
+                              boost::bind(&ClientUdp::read, this,
                                     boost::asio::placeholders::error,
                                     boost::asio::placeholders::bytes_transferred));
-    return recv;
+
+    recvVec = std::vector(recv.begin(), recv.end());
+    return recvVec;
 }
 
 /*
