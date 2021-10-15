@@ -9,6 +9,7 @@
 #include "App.h"
 #include "Login.h"
 #include "UserMenu.h"
+
 #include <iostream>
 
 #define USERCMDPARAM(cmd, param) this->user.username + ";" + this->user.password + ";" + cmd + ";" + param

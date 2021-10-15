@@ -25,14 +25,32 @@ TCP::TCP(boost::asio::io_context &io_context) : socket(io_context)
 
 TCP::~TCP()
 {
+    return;
 }
 
 std::string TCP::sendCommand(std::string command)
 {
-    boost::array<char, 128> buf;
+    boost::array<std::bitset<6>, max_length> buf;
+    boost::array<std::bitset<6>, max_length> encoded = security::encoder(command);
     boost::system::error_code error;
-    socket.send(boost::asio::buffer(command));
-    size_t len = socket.read_some(boost::asio::buffer(buf), error);
-    std::string data(reinterpret_cast<const char*>(buf.data()), len);
-    return data;
+    std::string raw;
+
+    socket.send(
+        boost::asio::buffer(
+            encoded,
+            max_length
+        )
+    );
+    raw = security::decoder(buf);
+    size_t len = socket.read_some(
+        boost::asio::buffer(
+            raw,
+            raw.size()
+        ),
+        error
+    );
+    // std::string data(reinterpret_cast<const char*>(buf.data()), len);
+    buf.assign(0);
+
+    return raw;
 }

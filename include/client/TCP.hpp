@@ -13,7 +13,7 @@
     #include <boost/array.hpp>
     #include <boost/asio.hpp>
 
-    #include "Protocol.hpp"
+    #include "security.hpp"
 
     #define TCP_IP "127.0.0.1"
     #define TCP_PORT 2000

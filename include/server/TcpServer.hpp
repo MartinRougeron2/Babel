@@ -19,15 +19,16 @@
     #include <utility>
     #include <algorithm>
     #include <string>
+    #include <bitset>
     #include <boost/asio.hpp>
     #include <boost/bind.hpp>
+    #include <boost/array.hpp>
 
     #include "Signals.hpp"
     #include "Logs.hpp"
     #include "Asqlite3.hpp"
     #include "Protocol.hpp"
     #include "UdpServer.hpp"
-
 
     #define TCP_PORT 2000
     #define EMPTY "__EMPTY__"
@@ -96,15 +97,15 @@
             bool send(char *);
             char *set_string(char const *);
 
+            boost::array<std::bitset<6>, max_length> encoder(std::string);
+            std::string decoder(boost::array<std::bitset<6>, max_length>);
+
         private:
-            enum
-            {
-                max_length = 1024
-            };
             tcp::socket socket;
 
             Protocol *recv;
-            char buffer[max_length];
+            boost::array<std::bitset<6>, max_length> buffer;
+            // char buffer[max_length];
 
             UserApp recvUser;
             Commands recvCommands;

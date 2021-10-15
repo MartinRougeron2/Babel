@@ -9,6 +9,8 @@
 
 #include "Colors.hpp"
 
+#include "security.hpp"
+
 TcpServer::TcpServer(boost::asio::io_service &ios, short port) : ios(ios),
 acceptor(ios, tcp::endpoint(tcp::v4(), port))
 {
@@ -78,7 +80,6 @@ void TcpSession::close_socket()
 void TcpSession::start()
 {
     socket.async_read_some(
-        //boost::asio::buffer(this->recv, max_length),
         boost::asio::buffer(this->buffer, max_length),
         boost::bind(
             &TcpSession::handleRead,
@@ -93,24 +94,14 @@ void TcpSession::start()
 void TcpSession::handleRead(std::shared_ptr<TcpSession> &s, const
 boost::system::error_code &err, std::size_t bytes_transferred)
 {
-    // FIX: Bad Address
     S_Protocol response;
+    std::string raw;
 
     if (!err) {
-        /*
-        this->recv_user = TcpSession::C_user_to_user(this->recv->user);
-        this->recv_commands = TcpSession::C_command_to_commands
-         (this->recv->command);
-
-        if (this->mapped.find(this->recv_commands.command) != this->mapped.end()) {
-            std::cout << colors::cyan << DONE << "command found: " << this->recv_commands.command << colors::reset << std::endl;
-            (this->*this->mapped.at(this->recv_commands.command))(this->recv_commands.arguments, this->recv_user);
-        } else {
-            std::cout << colors::yellow << FAIL << "command not found: " << this->recv_commands.command << colors::reset << std::endl;
-        }
-        */
-       std::cout << this->buffer << std::endl;
-        response = TcpSession::decode(this->buffer);
+        std::cout << "received: " << std::endl;
+        security::display(this->buffer);
+        raw = security::decoder(this->buffer);
+        response = TcpSession::decode(raw);
         if (this->mapped.find(response.command.command) != this->mapped.end()) {
             (this->*this->mapped.at(response.command.command))(response.command.arguments, response.user);
         } else {
@@ -151,11 +142,6 @@ S_Protocol TcpSession::decode(std::string recv)
     recv = recv.erase(0, recv.find(delimiter) + delimiter.length());
 
     protocol.user.address = full;
-
-    /*
-    ids.address = recv.substr(0, recv.find(delimiter));
-    recv = recv.erase(0, recv.find(delimiter) + delimiter.length());
-    */
 
     // GET COMMAND
     protocol.command.command = recv.substr(0, recv.find(delimiter));
@@ -235,22 +221,14 @@ char *TcpSession::set_string(char const *data)
 
 bool TcpSession::send(char *data)
 {
-    /*
-    socket.async_send(
-        boost::asio::buffer(data, strlen(data)),
-        boost::bind(
-            &TcpSession::handle_read,
-            this,
-            shared_from_this(),
-            boost::asio::placeholders::error,
-            boost::asio::placeholders::bytes_transferred
-        )
-    );
-    */
-   boost::system::error_code ignored_ec;
+    boost::system::error_code ignored_ec;
+    boost::array<std::bitset<6>, max_length> encoded = security::encoder(data);
 
     socket.send(
-        boost::asio::buffer(data, strlen(data)),
+        boost::asio::buffer(
+            encoded,
+            security::get_size(encoded)
+        ),
         0,
         ignored_ec
     );
