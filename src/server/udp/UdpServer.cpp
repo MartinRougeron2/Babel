@@ -6,7 +6,6 @@
 */
 
 #include "server/UdpServer.hpp"
-#include "../../../include/server/UdpServer.hpp"
 
 UdpServer::UdpServer(boost::asio::io_service &io_service) : socket(io_service,
                                                               udp::endpoint(udp::v4(), UDP_PORT)), strand(io_service)
@@ -96,20 +95,40 @@ void UdpServer::handle_receive(const shared_session session, const boost::system
 {
     std::vector<shared_session> others_sessions = get_related(session);
 
-    for (auto others_session : others_sessions) {
-        socket.async_send_to(
-            boost::asio::buffer(session->recvBuffer),
-            others_session->remoteEndpoint,
-            strand.wrap(
-                bind(
-                    &UdpSession::handle_sent,
-                    others_session,
-                    boost::asio::placeholders::error,
-                    boost::asio::placeholders::bytes_transferred
-                )
+    for (int i = 0; i < 100; i++)
+        std::cout << int(session->recvBuffer.data()[i]) << ",";
+    std::cout << std::endl;
+
+    std::cout << session->remoteEndpoint.address().to_string() << ":" <<
+    session->remoteEndpoint.port() << std::endl;
+
+    socket.async_send_to(
+        boost::asio::buffer(session->recvBuffer),
+        session->remoteEndpoint,
+        strand.wrap(
+            bind(
+                &UdpSession::handle_sent,
+                session,
+                boost::asio::placeholders::error,
+                boost::asio::placeholders::bytes_transferred
             )
-        );
-    }
+        )
+    );
+//    );
+//    for (const auto& others_session : others_sessions) {
+//        socket_.async_send_to(
+//            boost::asio::buffer(session->recv_buffer_),
+//            others_session->remote_endpoint_,
+//            strand_.wrap(
+//                bind(
+//                    &UdpSession::handle_sent,
+//                    others_session,
+//                    boost::asio::placeholders::error,
+//                    boost::asio::placeholders::bytes_transferred
+//                )
+//            )
+//        );
+//    }
     session->recvBuffer.assign(0);
 
     receive_session();

@@ -37,7 +37,7 @@ struct UdpSession : boost::enable_shared_from_this<UdpSession> {
     void handle_sent(const boost::system::error_code &ec, std::size_t);
 
     udp::endpoint remoteEndpoint;
-    boost::array<char, 100> recvBuffer;
+    boost::array<unsigned char, 120> recvBuffer;
     std::string message;
     UdpServer *Server;
     int id = -1;

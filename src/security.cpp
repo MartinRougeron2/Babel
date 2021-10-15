@@ -33,7 +33,6 @@ std::string security::decoder(boost::array<std::bitset<6>, max_length> data)
     std::cout << "DECODED: " << std::endl;
     for (std::size_t i = 0; data[i] != security::limit && i < max_length; i++) {
         tmp = static_cast<char>(std::bitset<6>(data[i]).to_ulong() + 64);
-
         if (replace.find(tmp) != replace.end())
             tmp = replace[tmp];
         if (tmp == 'o' && previous == ';')
