@@ -26,7 +26,7 @@
             ~TCP();
 
             std::string sendCommand(std::string command);
-            bool isConnected() { sendCommand("/ping"); return this->_connected;};
+            bool isConnected() { sendCommand("EMPTY;EMPTY;/ping"); return this->_connected;};
             void doConnect();
         private:
             boost::asio::io_context io_context;

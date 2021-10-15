@@ -59,13 +59,13 @@ std::string TCP::sendCommand(std::string command)
     boost::system::error_code error;
     std::string raw;
 
-    socket.send(
+    socket->send(
         boost::asio::buffer(
             encoded,
             max_length
         )
     );
-    socket.read_some(
+    socket->read_some(
         boost::asio::buffer(
             buf,
             max_length
