@@ -12,8 +12,7 @@ using boost::asio::ip::udp;
 
 ClientUdp::ClientUdp(const std::string ip, boost::asio::io_service &ioService,
                      Sound::RecorderPlayer player) :
-    codec(player.getSampleRate(), player.getChannelNumber(), player
-    .getBufferSize()), strand(ioService)
+    codec(player.getSampleRate(), player.getChannelNumber(), player.getBufferSize()), strand(ioService)
 {
     this->player = player;
     this->player.init();

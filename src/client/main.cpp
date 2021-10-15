@@ -12,9 +12,6 @@
 
 using boost::asio::ip::tcp;
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "EndlessLoop"
-
 int main(int argc, char **argv)
 {
     // boost::asio::io_service ios;
@@ -25,8 +22,6 @@ int main(int argc, char **argv)
    QApplication app(argc, argv);
    App main_app;
 
-   main_app.show(); //show the widget and its children
+    main_app.show(); //show the widget and its children
     return app.exec(); // execute the application
 }
-
-#pragma clang diagnostic pop
