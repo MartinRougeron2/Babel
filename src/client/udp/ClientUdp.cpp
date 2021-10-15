@@ -5,23 +5,27 @@
 ** Udp
 */
 
+#include <boost/array.hpp>
 #include "client/protocol/ClientUdp.hpp"
 
 using boost::asio::ip::udp;
 
-ClientUdp::ClientUdp(const std::string ip, boost::asio::io_service
-*ioService, Sound::RecorderPlayer player) :
-    codec(player.getSampleRate(), player.getChannelNumber(), player.getBufferSize())
+ClientUdp::ClientUdp(const std::string ip, boost::asio::io_service &ioService,
+                     Sound::RecorderPlayer player) :
+    codec(player.getSampleRate(), player.getChannelNumber(), player
+    .getBufferSize()), strand(ioService)
 {
     this->player = player;
     this->player.init();
-    udp::resolver resolver(*ioService);
+
+    udp::resolver resolver(ioService);
     this->receiverEndpoint = udp::endpoint(boost::asio::ip::address::from_string(ip), 2001);
-    this->sock = new udp::socket(*ioService);
+    this->sock = new udp::socket(ioService);
     this->sock->open(udp::v4());
-    ioService->run();
-    // <------>
     getMessage();
+    // <------>
+    ioService.run();
+
 }
 
 ClientUdp::~ClientUdp()
@@ -36,8 +40,15 @@ void ClientUdp::sendMessage(const std::string &msg)
 
 void ClientUdp::sendMessage(const std::vector<unsigned char> &msg)
 {
-    this->sock->send_to(boost::asio::buffer(msg), this->receiverEndpoint);
-    getMessage();
+    this->sock->async_send_to(boost::asio::buffer(msg),
+                              this->receiverEndpoint,
+                              strand.wrap(
+                                  boost::bind(
+                                      &ClientUdp::getMessage,
+                                      this
+                                  )
+                              )
+                          );
 }
 
 void ClientUdp::read(const boost::system::error_code &error, size_t bytes_recvd)
@@ -46,23 +57,27 @@ void ClientUdp::read(const boost::system::error_code &error, size_t bytes_recvd)
         std::cout << error.message() << std::endl;
         return;
     }
+    this->recvVec = std::vector(recv.begin(),  recv.end());
+    for (auto const m : recvVec)
+            std::cout << int(m) << ",";
+    std::cout << std::endl;
+    player.frameToSpeaker(codec.decodeFrames(this->recvVec));
 }
 
 void ClientUdp::getMessage()
 {
     udp::endpoint senderEndpoint;
-    std::array<unsigned char, 100> buff;
 
-    this->sock->async_receive_from(boost::asio::buffer(buff),
-                                   this->receiverEndpoint,
-                                    boost::bind(&ClientUdp::read, this,
-                                    boost::asio::placeholders::error,
-                                    boost::asio::placeholders::bytes_transferred));
-    for (auto const m : buff)
-        std::cout << int(m) << ",";
-    std::cout << std::endl;
-    this->recvVec = std::vector(buff.begin(),  buff.end());
-    // player.frameToSpeaker(codec.decodeFrames(this->recvVec));
+    this->sock->async_receive(boost::asio::buffer(recv),
+                              strand.wrap(
+                                    boost::bind(
+                                        &ClientUdp::read,
+                                        this,
+                                        boost::asio::placeholders::error,
+                                        boost::asio::placeholders::bytes_transferred
+                                        )
+                                    )
+                                );
     this->sendMessage(codec.encodeFrames(player.getMic()));
 }
 

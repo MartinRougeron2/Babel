@@ -19,7 +19,7 @@ int main()
 {
     boost::asio::io_service ios;
     Sound::RecorderPlayer player;
-    ClientUdp voiceClient = ClientUdp("127.0.0.1", &ios, player);
+    ClientUdp voiceClient = ClientUdp("127.0.0.1", ios, player);
 
 
 //    QApplication app(argc, argv);

@@ -20,7 +20,7 @@
 
 class ClientUdp {
     public:
-        ClientUdp(const std::string ip, boost::asio::io_service *ioService,
+        ClientUdp(const std::string ip, boost::asio::io_service &ioService,
                   Sound::RecorderPlayer player);
         ~ClientUdp();
 
@@ -37,7 +37,9 @@ protected:
         Sound::Codec codec;
         Sound::RecorderPlayer player;
         std::vector<unsigned char> recvVec;
-        std::array<unsigned char, 100> recv;
+        std::array<unsigned char, 480> recv;
+        boost::asio::io_service::strand strand;
 };
+
 
 #endif /* !UDP_HPP_ */
