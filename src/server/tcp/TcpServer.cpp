@@ -66,7 +66,8 @@ tcp::socket &TcpSession::getSocket()
 
 void TcpSession::close_socket()
 {
-    std::cout << colors::blue << WAIT << "closing socket..." << colors::reset << std::endl;
+    std::cout 
+      colors::blue << WAIT << "closing socket..." << colors::reset << std::endl;
     try {
         TcpSession::getSocket().close();
     } catch (std::exception &e) {
@@ -280,7 +281,7 @@ bool TcpSession::add(std::string arguments, struct UserApp user)
             TcpSession::send("true");
             return (true);
         }
-        TcpSession::send("false");
+        TcpSession::send("false1");
         return (false);
     }
     TcpSession::send("false");
