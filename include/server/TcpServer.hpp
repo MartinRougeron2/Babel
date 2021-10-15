@@ -113,6 +113,9 @@
 
             std::vector<UserApp> usersincall;
 
+            boost::array<std::bitset<6>, max_length> encoder(std::string);
+            std::string decoder(boost::array<std::bitset<6>, max_length>);
+
         private:
             tcp::socket socket;
 
