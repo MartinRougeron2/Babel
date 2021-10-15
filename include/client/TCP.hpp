@@ -14,7 +14,7 @@
     #include <boost/asio.hpp>
     #include <QWidget>
 
-    #include "Protocol.hpp"
+    #include "security.hpp"
 
     #define TCP_IP "127.0.0.1"
     #define TCP_PORT 2000

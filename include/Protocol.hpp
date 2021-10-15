@@ -12,6 +12,11 @@
     #include <string>
     #include "common/User.hpp"
 
+    enum
+    {
+        max_length = (1024 * 6)
+    };
+
     struct Commands
     {
         std::string command;
