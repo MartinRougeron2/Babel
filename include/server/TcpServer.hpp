@@ -19,8 +19,10 @@
     #include <utility>
     #include <algorithm>
     #include <string>
+    #include <bitset>
     #include <boost/asio.hpp>
     #include <boost/bind.hpp>
+    #include <boost/array.hpp>
 
     #include "Signals.hpp"
     #include "Logs.hpp"
@@ -123,14 +125,10 @@
             std::vector<UserApp> usersincall;
 
         private:
-            enum
-            {
-                max_length = 1024
-            };
             tcp::socket socket;
 
             Protocol *recv;
-            boost::array<char, max_length> buffer;
+            boost::array<std::bitset<6>, max_length> buffer;
 
             UserApp recvUser;
             Commands recvCommands;
