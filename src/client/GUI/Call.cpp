@@ -64,18 +64,30 @@ void Call::setScene(Scene scene, std::string context)
 
 void Call::refuseCall()
 {
+    if (!this->app->getTcp()->isConnected()) {
+        this->app->layout()->takeAt(1)->widget()->show();
+        return;
+    }
     this->app->refuseCall();
     setScene(NOCALL, "");
 }
 
 void Call::takeCall()
 {
+    if (!this->app->getTcp()->isConnected()) {
+        this->app->layout()->takeAt(1)->widget()->show();
+        return;
+    }
     this->app->acceptCall();
     setScene(ONCALL, "");
 }
 
 void Call::addToCall()
 {
+    if (!this->app->getTcp()->isConnected()) {
+        this->app->layout()->takeAt(1)->widget()->show();
+        return;
+    }
     dialog->show();
     if (dialog->exec() == 1) {
         std::string contactName = dialog->getUserAdded();
@@ -93,6 +105,10 @@ void Call::addToCall()
 
 void Call::removeFromCall()
 {
+    if (!this->app->getTcp()->isConnected()) {
+        this->app->layout()->takeAt(1)->widget()->show();
+        return;
+    }
     dialog->show();
     if (dialog->exec() == 1) {
         std::string contactName = dialog->getUserAdded();
