@@ -99,9 +99,9 @@ boost::system::error_code &err, std::size_t bytes_transferred)
 
     if (!err) {
         std::cout << "received: " << std::endl;
-        security::display(this->buffer);
         raw = security::decoder(this->buffer);
         response = TcpSession::decode(raw);
+        std::cout << "command: " << response.command.command << std::endl;
         if (this->mapped.find(response.command.command) != this->mapped.end()) {
             (this->*this->mapped.at(response.command.command))(response.command.arguments, response.user);
         } else if (this->getter.find(response.command.command) != this->getter.end()) {
@@ -123,7 +123,7 @@ boost::system::error_code &err, std::size_t bytes_transferred)
             )
         );
         this->buffer.assign(0);
-    } else if (err == boost::asio::error::eof) {
+    } else if (err == boost::asio::error::eof || err == boost::asio::error::connection_reset) {
         std::cerr << colors::magenta << DONE << "A client left" << colors::reset << std::endl;
     } else {
         std::cerr << colors::red << FAIL << "err (recv): " << err.message() << colors::reset << std::endl;
@@ -293,7 +293,7 @@ bool TcpSession::remove(std::string arguments, struct UserApp user)
     TcpSession::display(user);
 
     if (TcpSession::check_linked(arguments, user) == true) {
-        // this->database.unlinkUser(user.username, arguments);
+        this->database.unlinkUser(user.username, arguments);
         TcpSession::send("true");
         return (true);
     }
@@ -315,7 +315,7 @@ bool TcpSession::check_user(std::string arguments, struct UserApp user)
     return (false);
 }
 
-UserApp TcpSession::get_username_by_id(int address)
+UserApp TcpSession::get_user_by_id(std::string address)
 {
     UserApp failed;
 
@@ -325,7 +325,7 @@ UserApp TcpSession::get_username_by_id(int address)
     failed.username = EMPTY;
 
     for (auto i = this->users.begin(); i != this->users.end(); i++) {
-        if (i->first == address)
+        if (i->first == std::stoi(address))
             return (i->second);
     }
 
@@ -386,7 +386,7 @@ bool TcpSession::get_users_in_call(std::string arguments, struct UserApp user)
     TcpSession::display(user);
     std::string userAddress = user.address.erase(user.address.find(':'), user.address.length());
     std::vector<shared_session> sessionsInCommon;
-    std::vector<UserApp> usersInSession;
+    std::string usersInSession;
 
     for (auto const &group : voiceServer->getAllGroups()) {
         for (auto const &session: group.second.sessions) {
@@ -396,27 +396,15 @@ bool TcpSession::get_users_in_call(std::string arguments, struct UserApp user)
     }
 
     for (const auto &session : sessionsInCommon) {
-        usersInSession.push_back(this->users[session.id]);
+        usersInSession += this->users[session->id].username;
+        usersInSession += "\n";
     }
 
     this->usersincall = usersInSession;
 
-    std::string users(this->usersincall.begin(), this->usersincall.end());
-    TcpSession::send(users);
+    TcpSession::send(this->usersincall.c_str());
 
     return (false);
-}
-
-UserApp TcpSession::get_user(std::string username)
-{
-    UserApp failed = new UserApp;
-
-    for (auto i = this->users_index.begin(); i != this->users_index.end(); i++) {
-        if (i->second->username == username)
-            return (i->second);
-    }
-
-    return (failed);
 }
 
 bool TcpSession::get_contacts(std::string arguments, struct UserApp user)
@@ -429,7 +417,8 @@ bool TcpSession::get_contacts(std::string arguments, struct UserApp user)
     }
     if (answer == "")
         answer = "none";
-    TcpSession::send(answer);
+
+    TcpSession::send(answer.c_str());
 
     return (true);
 }

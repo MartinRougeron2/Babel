@@ -68,17 +68,9 @@
             };
 
             std::map<std::string, function_get> getter = {
-                { "/getuser", &TcpSession::get_user }
+                { "/getuser", &TcpSession::get_user },
+                { "/getuserbyid", &TcpSession::get_user_by_id }
             };
-
-            // DONE get_users_in_call
-            // DONE userapp get_user(user_name)
-            // accept
-            // refuse
-            // DONE add contact
-            // DONE remove contact
-            // DONE check if users are linked
-            // DONE check if user exists
 
             // MAPPED
             bool login(std::string, struct UserApp);
@@ -96,25 +88,17 @@
             bool refuse(std::string, struct UserApp);
             bool add(std::string, struct UserApp);
             bool remove(std::string, struct UserApp);
-            bool get_contacts(std::string, struct UserApp);
-
-            bool get_users_in_call(std::string, struct UserApp);
-
-            UserApp get_username_by_id(int);
-            UserApp get_user(std::string);
 
             // GETTER
             UserApp get_user(std::string);
+            UserApp get_user_by_id(std::string);
 
             void display(UserApp);
-
-            S_Protocol decode(std::string);
             bool send(const char *);
 
-            std::vector<UserApp> usersincall;
+            S_Protocol decode(std::string);
 
-            boost::array<std::bitset<6>, max_length> encoder(std::string);
-            std::string decoder(boost::array<std::bitset<6>, max_length>);
+            std::string usersincall;
 
         private:
             tcp::socket socket;
@@ -129,7 +113,6 @@
             void close_socket();
             UdpServer *voiceServer;
             std::mutex *mtx;
-            std::vector<UserApp> usersincall;
             std::map<std::string, UserApp> users_index;
     };
 
