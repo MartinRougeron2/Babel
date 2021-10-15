@@ -15,18 +15,18 @@ using boost::asio::ip::tcp;
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EndlessLoop"
 
-int main()
+int main(int argc, char **argv)
 {
-    boost::asio::io_service ios;
-    Sound::RecorderPlayer player;
-    ClientUdp voiceClient = ClientUdp("127.0.0.1", ios, player);
+    // boost::asio::io_service ios;
+    // Sound::RecorderPlayer player;
+    // ClientUdp voiceClient = ClientUdp("127.0.0.1", ios, player);
 
 
-//    QApplication app(argc, argv);
-//    App main_app;
-//
-//    main_app.show(); //show the widget and its children
-    return 0;//app.exec(); // execute the application
+   QApplication app(argc, argv);
+   App main_app;
+
+   main_app.show(); //show the widget and its children
+    return app.exec(); // execute the application
 }
 
 #pragma clang diagnostic pop

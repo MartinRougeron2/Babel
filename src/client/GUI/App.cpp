@@ -19,6 +19,8 @@ App::App(QWidget *parent) : QWidget(parent)
 {
     setWindowTitle("Babel");
     this->client = new TCP;
+    boost::asio::io_service ioService;
+    this->clientudp = new ClientUdp("127.0.0.1", ioService, Sound::RecorderPlayer());
     update();
 }
 

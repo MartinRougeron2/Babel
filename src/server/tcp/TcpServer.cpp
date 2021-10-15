@@ -66,8 +66,7 @@ tcp::socket &TcpSession::getSocket()
 
 void TcpSession::close_socket()
 {
-    std::cout 
-      colors::blue << WAIT << "closing socket..." << colors::reset << std::endl;
+    std::cout << colors::blue << WAIT << "closing socket..." << colors::reset << std::endl;
     try {
         TcpSession::getSocket().close();
     } catch (std::exception &e) {

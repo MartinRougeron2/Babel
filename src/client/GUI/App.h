@@ -18,6 +18,7 @@ class UserMenu;
 #include <string>
 #include "common/User.hpp"
 #include "client/TCP.hpp"
+#include "client/protocol/ClientUdp.hpp"
 
 enum loginCode {SUCCESS, USER_NOT_EXIST, NOT_CONNECTED, BAD_PASSWORD};
 //TODO REMOVEAND USE SQLITE
@@ -65,7 +66,7 @@ class App : public QWidget
         QWidget *loginui;
         UserMenu *usermenu;
         TCP *client;
-
+        ClientUdp *clientudp;
 };
 
 #endif //BABEL_APP_H
