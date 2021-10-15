@@ -58,9 +58,6 @@ void ClientUdp::read(const boost::system::error_code &error, size_t bytes_recvd)
         return;
     }
     this->recvVec = std::vector(recv.begin(),  recv.end());
-    for (auto const m : recvVec)
-            std::cout << int(m) << ",";
-    std::cout << std::endl;
     player.frameToSpeaker(codec.decodeFrames(this->recvVec));
 }
 

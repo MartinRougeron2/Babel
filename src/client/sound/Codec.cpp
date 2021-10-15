@@ -43,14 +43,11 @@ std::vector<unsigned short> Sound::Codec::decodeFrames(const std::vector<unsigne
 {
     std::vector<unsigned short> decoded(this->bufferSize * this->channels);
 
-    for (auto data : encode)
-        std::cout << int(data) << ",";
     if (encode.empty())
         return {};
     if (!encode[0])
         return {};
     // ! ERROR
-    std::cout << std::endl;
     if ((this->dec_bytes = opus_decode(this->dec, encode.data(),
                                         this->enc_bytes,
                                         reinterpret_cast<opus_int16 *>(decoded.data()),
