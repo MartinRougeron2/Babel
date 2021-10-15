@@ -280,7 +280,7 @@ bool TcpSession::add(std::string arguments, struct UserApp user)
             TcpSession::send("true");
             return (true);
         }
-        TcpSession::send("false");
+        TcpSession::send("false1");
         return (false);
     }
     TcpSession::send("false");
