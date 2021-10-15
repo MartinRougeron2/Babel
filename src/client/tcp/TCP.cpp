@@ -74,6 +74,7 @@ std::string TCP::sendCommand(std::string command)
     );
     raw = security::decoder(buf);
     buf.assign(0);
+    encoded.assign(0);
 
     return raw;
 }

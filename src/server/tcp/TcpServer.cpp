@@ -122,7 +122,6 @@ boost::system::error_code &err, std::size_t bytes_transferred)
                 boost::asio::placeholders::bytes_transferred
             )
         );
-        this->buffer.assign(0);
     } else if (err == boost::asio::error::eof || err == boost::asio::error::connection_reset) {
         std::cerr << colors::magenta << DONE << "A client left" << colors::reset << std::endl;
     } else {
@@ -156,6 +155,7 @@ S_Protocol TcpSession::decode(std::string recv)
 
     TcpSession::display(protocol.user);
     this->buffer.assign(0);
+
     return (protocol);
 }
 
