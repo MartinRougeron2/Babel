@@ -92,16 +92,42 @@ std::string Asqlite3::getUser(std::string name)
 bool Asqlite3::linkUser(std::string from, std::string to)
 {
 	std::string idfrom = getIdByUsername(from);
+	if (idfrom.empty()) {
+		std::cerr << "Not valid user 1" << std::endl;
+		return false;
+	}
 	std::string idto = getIdByUsername(to);
-	if (idfrom.empty() || idto.empty()) {
-		std::cerr << "Not valid user" << std::endl;
+	if (idto.empty()) {
+		std::cerr << "Not valid user 2" << std::endl;
 		return false;
 	}
 	this->getLinkedUser(from);
-	for (auto user : this->_linkedUser)
-		if (from != user.username)
+	for (auto user : this->_linkedUser) {
+		if (from == user.username)
 			return false;
+	}
 	std::string sql = "INSERT INTO contact(idfrom, idto) VALUES(" + idfrom + ", " + idto + ");";
+	std::cout << sql << std::endl;
+	if (!executeQuery(sql, NULL, 0)) {
+		std::cerr << "Error in linkUser function." << std::endl;
+		return false;
+	}
+	return true;
+}
+
+bool Asqlite3::unlinkUser(std::string from, std::string to)
+{
+	std::string idfrom = getIdByUsername(from);
+	if (idfrom.empty()) {
+		std::cerr << "Not valid user 1" << std::endl;
+		return false;
+	}
+	std::string idto = getIdByUsername(to);
+	if (idto.empty()) {
+		std::cerr << "Not valid user 2" << std::endl;
+		return false;
+	}
+	std::string sql = "DELETE FROM contact WHERE (idfrom = " + idfrom + " AND idto = " + idto + ") OR (idto = " + idfrom + " AND idfrom = " + idto + ");";
 	if (!executeQuery(sql, NULL, 0)) {
 		std::cerr << "Error in linkUser function." << std::endl;
 		return false;
@@ -113,7 +139,8 @@ std::string Asqlite3::getIdByUsername(std::string username)
 {
 	std::string sql = SELECT_QUERY("id ") +
 		FROM_QUERY("user ") +
-		WHERE_QUERY("pseudo = '" + username + "';");
+		WHERE_QUERY("pseudo='" + username + "';");
+
 	this->_res.clear();
 	if (!executeQuery(sql, callbackUserExist, this))
 		std::cerr << "Error in getid function." << std::endl;
@@ -127,8 +154,8 @@ int Asqlite3::callbackFillContact(void *context, int argc, char** argv, char** a
 	Asqlite3 *db = static_cast<Asqlite3 *>(context);
 	std::string username, address;
 
-	for (int i = 0; i < argc; i = i + 2) {
-		db->_linkedUser.push_back({std::string(argv[i]), std::string(""), std::string(argv[i + 1])});
+	for (int i = 0; i < argc; i = i + 3) {
+		db->_linkedUser.push_back(UserApp(argv[i], argv[i + 1], "", std::atoi(argv[i + 2])));
 	}
 	return 0;
 }
@@ -136,14 +163,27 @@ int Asqlite3::callbackFillContact(void *context, int argc, char** argv, char** a
 std::vector<UserApp> Asqlite3::getLinkedUser(std::string username)
 {
 	std::string id = getIdByUsername(username);
-	std::string sql = SELECT_QUERY("pseudo, address ") +
+	std::string sql = SELECT_QUERY("pseudo, address, id ") +
 		FROM_QUERY("contact ") +
 		INNERJOIN_QUERY("user ON user.id=contact.idfrom OR user.id=contact.idto ") +
 		WHERE_QUERY("user.id != "+id+" AND (contact.idfrom = "+id+" OR contact.idto = "+id+")");
 	this->_linkedUser.clear();
 	if (!executeQuery(sql, callbackFillContact, this))
-		std::cerr << "Error in getid function." << std::endl;
+		std::cerr << "Error in getlinkeduser function." << std::endl;
 	return this->_linkedUser;
+}
+
+bool Asqlite3::checkUser(std::string username)
+{
+	std::string sql = SELECT_QUERY("pseudo ") +
+		FROM_QUERY("user ") +
+		WHERE_QUERY("pseudo = '" + username + "'");
+	this->_res.clear();
+	if (!executeQuery(sql, callbackUserExist, this))
+		std::cerr << "Error in getlinkeduser function." << std::endl;
+	if (this->_res.empty())
+		return false;
+	return true;
 }
 
 bool Asqlite3::executeQuery(std::string sql, int (*callback)(void *, int, char **, char **), void *context)
@@ -154,6 +194,7 @@ bool Asqlite3::executeQuery(std::string sql, int (*callback)(void *, int, char *
 
 	exit = sqlite3_exec(DB, sql.c_str(), callback, context, &messageError);
 	if (exit != SQLITE_OK) {
+		std::cout << messageError << std::endl;
 		sqlite3_free(messageError);
 		return false;
 	}

@@ -28,7 +28,6 @@
     #include "Protocol.hpp"
     #include "UdpServer.hpp"
 
-
     #define TCP_PORT 2000
     #define EMPTY "__EMPTY__"
 
@@ -60,10 +59,29 @@
                 { "/ping", &TcpSession::ping },
                 { "/check", &TcpSession::check_user },
                 { "/linked", &TcpSession::check_linked },
-                { "/exit", &TcpSession::close_server }
+                { "/exit", &TcpSession::close_server },
+                { "/guic", &TcpSession::get_users_in_call },
+                { "/getcontacts", &TcpSession::get_contacts }
             };
 
-            // get_users_in_call
+            std::map<std::string, int> encoder = {
+                { "/login", 0b00000001 },
+                { "/logout", 0b00000010 },
+                { "/join", 0b00000011 },
+                { "/hangup", 0b00000100 },
+                { "/accept", 0b00000101 },
+                { "/refuse", 0b00000111 },
+                { "/add", 0b00001000 },
+                { "/remove", 0b00001001 },
+                { "/call", 0b00001011 },
+                { "/ping", 0b00001111 },
+                { "/check", 0b00010000 },
+                { "/linked", 0b00010011 },
+                { "/exit", 0b00010111 },
+                { "/guic", 0b00011111 }
+            };
+
+            // DONE get_users_in_call
             // userapp get_user(user_name)
             // accept
             // refuse
@@ -87,6 +105,12 @@
 
             bool add(std::string, struct UserApp);
             bool remove(std::string, struct UserApp);
+            bool get_contacts(std::string, struct UserApp);
+
+            bool get_users_in_call(std::string, struct UserApp);
+
+            UserApp get_username_by_id(int);
+            UserApp get_user(std::string);
 
             void display(UserApp);
             UserApp C_user_to_user(C_User);
@@ -96,6 +120,8 @@
             bool send(char *);
             char *set_string(char const *);
 
+            std::vector<UserApp> usersincall;
+
         private:
             enum
             {
@@ -104,11 +130,11 @@
             tcp::socket socket;
 
             Protocol *recv;
-            char buffer[max_length];
+            boost::array<char, max_length> buffer;
 
             UserApp recvUser;
             Commands recvCommands;
-            std::vector<std::string> users;
+            std::map<int, UserApp> users;
             Asqlite3 database;
             void close_socket();
             UdpServer *voiceServer;

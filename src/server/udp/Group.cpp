@@ -28,7 +28,7 @@ Group::~Group()
 {
 }
 
-int Group::addSession(const std::string addressPort,
+int Group::addSession(const std::string addressPort, int id,
                       std::vector<shared_session> allSessions)
 {
     size_t find = addressPort.find(':');
@@ -38,6 +38,7 @@ int Group::addSession(const std::string addressPort,
     for (auto session : allSessions)
         if (session->remoteEndpoint.address().to_string() == address &&
             session->remoteEndpoint.port() == port) {
+            session->id = id;
             this->addSession(session);
             return 0;
         }

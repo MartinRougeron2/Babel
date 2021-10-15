@@ -57,15 +57,15 @@ void UdpServer::receive_session()
                  boost::asio::placeholders::bytes_transferred)));
 }
 
-int UdpServer::join(std::string addressPort)
+int UdpServer::join(std::string addressPort, int id)
 {
-    this->groups[this->id++].addSession(addressPort, this->allSessions);
+    this->groups[this->id++].addSession(addressPort, id, this->allSessions);
     return this->id;
 }
 
-int UdpServer::join(std::string addressPort, int _id)
+int UdpServer::join(std::string addressPort, int _id, int idUser)
 {
-    this->groups[_id].addSession(addressPort, this->allSessions);
+    this->groups[_id].addSession(addressPort, idUser, this->allSessions);
     return _id;
 }
 
@@ -113,4 +113,9 @@ void UdpServer::handle_receive(const shared_session session, const boost::system
     session->recvBuffer.assign(0);
 
     receive_session();
+}
+
+std::map<int, Group> UdpServer::getAllGroups()
+{
+    return this->groups;
 }
