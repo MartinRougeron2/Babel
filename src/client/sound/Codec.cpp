@@ -32,7 +32,8 @@ std::vector<unsigned char> Sound::Codec::encodeFrames(const std::vector<unsigned
 
     if (captured.empty())
         return {};
-    if ((this->enc_bytes = opus_encode(this->enc, reinterpret_cast<opus_int16 const *>(captured.data()), 480, encoded.data(), encoded.size())) < 0) {
+    if ((this->enc_bytes = opus_encode(this->enc, reinterpret_cast<opus_int16
+    const *>(captured.data()), 120, encoded.data(), encoded.size())) < 0) {
         throw (std::string("opus_encode failed: ") + std::to_string(this->enc_bytes) + std::string("\n")).c_str();
     }
     return encoded;
@@ -53,7 +54,7 @@ std::vector<unsigned short> Sound::Codec::decodeFrames(const std::vector<unsigne
     if ((this->dec_bytes = opus_decode(this->dec, encode.data(),
                                         this->enc_bytes,
                                         reinterpret_cast<opus_int16 *>(decoded.data()),
-                                        480,
+                                        120,
                                         0)
                                         )
                                         < 0) {

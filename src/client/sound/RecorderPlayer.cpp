@@ -11,8 +11,8 @@
 Sound::RecorderPlayer::RecorderPlayer()
 {
     this->channelsNb = 1;
-    this->bufferSize = 480;
-    this->sampleRate = 48000;
+    this->bufferSize = 120;
+    this->sampleRate = 12000;
 }
 
 Sound::RecorderPlayer::~RecorderPlayer()

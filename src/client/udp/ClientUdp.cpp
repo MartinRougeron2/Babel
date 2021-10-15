@@ -70,14 +70,14 @@ void ClientUdp::getMessage()
 
     this->sock->async_receive(boost::asio::buffer(recv),
                               strand.wrap(
-                                    boost::bind(
-                                        &ClientUdp::read,
-                                        this,
-                                        boost::asio::placeholders::error,
-                                        boost::asio::placeholders::bytes_transferred
-                                        )
-                                    )
-                                );
+                                  boost::bind(
+                                      &ClientUdp::read,
+                                      this,
+                                      boost::asio::placeholders::error,
+                                      boost::asio::placeholders::bytes_transferred
+                                  )
+                              )
+    );
     this->sendMessage(codec.encodeFrames(player.getMic()));
 }
 

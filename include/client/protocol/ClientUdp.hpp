@@ -37,7 +37,7 @@ protected:
         Sound::Codec codec;
         Sound::RecorderPlayer player;
         std::vector<unsigned char> recvVec;
-        std::array<unsigned char, 480> recv;
+        std::array<unsigned char, 120> recv;
         boost::asio::io_service::strand strand;
 };
 
