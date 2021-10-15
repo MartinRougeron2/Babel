@@ -27,6 +27,7 @@ conan_basic_setup()
 
 set(SERVER_PATH "${CMAKE_SOURCE_DIR}/src/server")
 set(CLIENT_PATH "${CMAKE_SOURCE_DIR}/src/client/")
+set(SECURITY_PATH "${CMAKE_SOURCE_DIR}/src/")
 
 # Include headers
 include_directories(include/)
@@ -35,14 +36,11 @@ include_directories(src/client/GUI/)
 
 set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR} ${CMAKE_MODULE_PATH})
 
-file(GLOB_RECURSE BABEL_SERVER RELATIVE ${CMAKE_SOURCE_DIR} "${SERVER_PATH}*/*.cpp" "${SERVER_PATH}*.cpp")
-file(GLOB_RECURSE BABEL_CLIENT RELATIVE ${CMAKE_SOURCE_DIR} "${CLIENT_PATH}*/*.cpp" "${CLIENT_PATH}*.cpp")
-
+file(GLOB_RECURSE BABEL_SERVER RELATIVE ${CMAKE_SOURCE_DIR} "${SERVER_PATH}*/*.cpp" "${SERVER_PATH}*.cpp" "${SECURITY_PATH}security.cpp")
+file(GLOB_RECURSE BABEL_CLIENT RELATIVE ${CMAKE_SOURCE_DIR} "${CLIENT_PATH}*/*.cpp" "${CLIENT_PATH}*.cpp" "${SECURITY_PATH}security.cpp")
 
 add_executable(babel_server ${BABEL_SERVER})
 add_executable(babel_client ${BABEL_CLIENT})
-
-
 
 find_package(asio)
 find_package(portaudio)

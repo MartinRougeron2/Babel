@@ -13,3 +13,4 @@ Testing/Temporary/LastTest.log
 *.db
 babel_client
 Makefile
+moc*.cpp

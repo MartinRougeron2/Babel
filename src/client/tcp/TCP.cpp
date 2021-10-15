@@ -30,6 +30,7 @@ TCP::TCP()
 
 TCP::~TCP()
 {
+    return;
 }
 
 void TCP::doConnect()
@@ -53,16 +54,26 @@ void TCP::doConnect()
 
 std::string TCP::sendCommand(std::string command)
 {
-    boost::array<char, 128> buf;
+    boost::array<std::bitset<6>, max_length> buf = {0};
+    boost::array<std::bitset<6>, max_length> encoded = security::encoder(command);
     boost::system::error_code error;
-    try {
-        socket->send(boost::asio::buffer(command));
-    } catch (std::exception &e) {
-        this->_connected = false;
-        socket->close();
-        return "not connected";
-    }
-    size_t len = socket->read_some(boost::asio::buffer(buf), error);
-    std::string data(reinterpret_cast<const char*>(buf.data()), len);
-    return data;
+    std::string raw;
+
+    socket->send(
+        boost::asio::buffer(
+            encoded,
+            max_length
+        )
+    );
+    socket->read_some(
+        boost::asio::buffer(
+            buf,
+            max_length
+        ),
+        error
+    );
+    raw = security::decoder(buf);
+    buf.assign(0);
+
+    return raw;
 }
