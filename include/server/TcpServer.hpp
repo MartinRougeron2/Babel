@@ -63,31 +63,6 @@
                 { "/check", &TcpSession::check_user },
                 { "/linked", &TcpSession::check_linked },
                 { "/exit", &TcpSession::close_server },
-<<<<<<< HEAD
-                { "/guic", &TcpSession::get_users_in_call },
-                { "/getcontacts", &TcpSession::get_contacts }
-            };
-
-            std::map<std::string, int> encoder = {
-                { "/login", 0b00000001 },
-                { "/logout", 0b00000010 },
-                { "/join", 0b00000011 },
-                { "/hangup", 0b00000100 },
-                { "/accept", 0b00000101 },
-                { "/refuse", 0b00000111 },
-                { "/add", 0b00001000 },
-                { "/remove", 0b00001001 },
-                { "/call", 0b00001011 },
-                { "/ping", 0b00001111 },
-                { "/check", 0b00010000 },
-                { "/linked", 0b00010011 },
-                { "/exit", 0b00010111 },
-                { "/guic", 0b00011111 }
-            };
-
-            // DONE get_users_in_call
-            // userapp get_user(user_name)
-=======
                 { "/getcontacts", &TcpSession::get_contacts },
                 { "/getusersincall", &TcpSession::get_users_in_call }
             };
@@ -98,7 +73,6 @@
 
             // DONE get_users_in_call
             // DONE userapp get_user(user_name)
->>>>>>> rebase Protocol
             // accept
             // refuse
             // DONE add contact

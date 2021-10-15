@@ -118,8 +118,4 @@ void UdpServer::handle_receive(const shared_session session, const boost::system
 std::map<int, Group> UdpServer::getAllGroups()
 {
     return this->groups;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> rebase Protocol
