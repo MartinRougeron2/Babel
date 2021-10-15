@@ -79,7 +79,7 @@ void TcpSession::start()
 {
     socket.async_read_some(
         //boost::asio::buffer(this->recv, max_length),
-        boost::asio::buffer(this->buffer, max_length),
+        boost::asio::buffer(this->buffer),
         boost::bind(
             &TcpSession::handleRead,
             this,
@@ -109,15 +109,15 @@ boost::system::error_code &err, std::size_t bytes_transferred)
             std::cout << colors::yellow << FAIL << "command not found: " << this->recv_commands.command << colors::reset << std::endl;
         }
         */
-       std::cout << this->buffer << std::endl;
-        response = TcpSession::decode(this->buffer);
+        response = TcpSession::decode(std::string(reinterpret_cast<const char*>(buffer.data())));
         if (this->mapped.find(response.command.command) != this->mapped.end()) {
             (this->*this->mapped.at(response.command.command))(response.command.arguments, response.user);
         } else {
             TcpSession::send(set_string("command not found"));
         }
         socket.async_read_some(
-            boost::asio::buffer(this->buffer, max_length),
+            //boost::asio::buffer(this->recv, max_length),
+            boost::asio::buffer(this->buffer),
             boost::bind(
                 &TcpSession::handleRead,
                 this,
@@ -136,6 +136,7 @@ boost::system::error_code &err, std::size_t bytes_transferred)
 
 S_Protocol TcpSession::decode(std::string recv)
 {
+    std::cout << recv << std::endl;
     std::string delimiter = ";";
     std::string full(socket.local_endpoint().address().to_string() + ":" + std::to_string(socket.local_endpoint().port()));
     S_Protocol protocol;
@@ -162,7 +163,7 @@ S_Protocol TcpSession::decode(std::string recv)
     protocol.command.arguments = recv.erase(0, recv.find(delimiter) + delimiter.length());
 
     TcpSession::display(protocol.user);
-
+    this->buffer.assign(0);
     return (protocol);
 }
 
@@ -202,6 +203,7 @@ bool TcpSession::login(std::string arguments, UserApp user)
 {
     this->database.uploadData(user);
     if (this->database.login(user) == this->database.SUCCESS) {
+        this->users[user.id] = user;
         TcpSession::send(set_string(std::to_string(user.id).c_str()));
         return (true);
     }
@@ -286,7 +288,7 @@ bool TcpSession::call(std::string arguments, UserApp user)
     }
     TcpSession::send(set_string("user not found"));
     this->mtx->lock();
-    this->voiceServer->join(user.address);
+    this->voiceServer->join(user.address, user.id);
     this->mtx->unlock();
 
     return (false);
@@ -328,7 +330,7 @@ bool TcpSession::add(std::string arguments, struct UserApp user)
             TcpSession::send(set_string("true"));
             return (true);
         }
-        TcpSession::send(set_string("false"));
+        TcpSession::send(set_string("false1"));
         return (false);
     }
     TcpSession::send(set_string("false"));
@@ -341,7 +343,7 @@ bool TcpSession::remove(std::string arguments, struct UserApp user)
     TcpSession::display(user);
 
     if (TcpSession::check_linked(arguments, user) == true) {
-        // this->database.unlinkUser(user.username, arguments);
+        this->database.unlinkUser(user.username, arguments);
         TcpSession::send(set_string("true"));
         return (true);
     }
@@ -353,14 +355,69 @@ bool TcpSession::check_user(std::string arguments, struct UserApp user)
 {
     TcpSession::display(user);
 
-    if (this->database.login(user) == this->database.SUCCESS) {
+    if (this->database.checkUser(arguments)) {
         TcpSession::send(set_string("true"));
         return (true);
     }
-
     TcpSession::send(set_string("false"));
+    return (false);
+}
+
+bool TcpSession::get_users_in_call(std::string arguments, struct UserApp user)
+{
+    TcpSession::display(user);
+    std::string userAddress = user.address.erase(user.address.find(':'), user.address.length());
+    std::vector<shared_session> sessionsInCommon;
+    std::vector<UserApp> usersInSession;
+
+    for (auto const &group : voiceServer->getAllGroups()) {
+        for (auto const &session: group.second.sessions) {
+            if (session.get()->remoteEndpoint.address().to_string() == user.address)
+                sessionsInCommon = group.second.sessions;
+        }
+    }
+
+    for (const auto &session : sessionsInCommon) {
+        usersInSession.push_back(this->users[session->id]);
+    }
+
+    this->usersincall = usersInSession;
 
     return (false);
+}
+
+UserApp TcpSession::get_username_by_id(int address)
+{
+    UserApp failed;
+
+    failed.address = EMPTY;
+    failed.id = -1;
+    failed.password = EMPTY;
+    failed.username = EMPTY;
+
+    for (auto i = this->users.begin(); i != this->users.end(); i++) {
+        if (i->first == address)
+            return (i->second);
+    }
+
+    return (failed);
+}
+
+UserApp TcpSession::get_user(std::string username)
+{
+    UserApp failed;
+
+    failed.address = EMPTY;
+    failed.id = -1;
+    failed.password = EMPTY;
+    failed.username = EMPTY;
+
+    for (auto i = this->users.begin(); i != this->users.end(); i++) {
+        if (i->second.username == username)
+            return (i->second);
+    }
+
+    return (failed);
 }
 
 bool TcpSession::check_linked(std::string arguments, struct UserApp user)
@@ -371,12 +428,10 @@ bool TcpSession::check_linked(std::string arguments, struct UserApp user)
     if (linked.size() > 0) {
         for (auto i = linked.begin(); i != linked.end(); i++) {
             if (i->username == arguments) {
-                TcpSession::send(set_string("true"));
                 return (true);
             }
         }
     }
-    TcpSession::send(set_string("false"));
 
     return (false);
 }
@@ -393,4 +448,17 @@ bool TcpSession::close_server(std::string arguments, UserApp user)
     }
 
     return (false);
+}
+
+bool TcpSession::get_contacts(std::string param, UserApp user)
+{
+    std::vector<UserApp> contacts = database.getLinkedUser(user.username);
+    std::string answer;
+
+    for (auto &contact : contacts) {
+        answer += contact.username + ";" + contact.address + ";" + contact.password + ";" + std::to_string(contact.id) + "\n";
+    }
+    if (answer == "")
+        answer = "none";
+    TcpSession::send(set_string(answer.data()));
 }

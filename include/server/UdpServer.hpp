@@ -40,6 +40,7 @@ struct UdpSession : boost::enable_shared_from_this<UdpSession> {
     boost::array<unsigned char, 120> recvBuffer;
     std::string message;
     UdpServer *Server;
+    int id = -1;
 
     bool operator==(const UdpSession &other) const
     {
@@ -57,7 +58,7 @@ class Group {
         Group(std::vector<shared_session> sessions);
         ~Group();
 
-        int  addSession(const std::string address,
+        int  addSession(const std::string address, int id,
                         std::vector<shared_session> allSessions);
         void addSession(const shared_session &session);
         void addSession(const std::vector<shared_session> sessions);
@@ -71,8 +72,10 @@ class UdpServer {
         int  createGroup(shared_session session);
         int  addToGroup(int groupId, shared_session sessionToAdd);
         bool removeFromGroup(int groupId, shared_session sessionToRemove);
-        int join(std::string addressPort);
         int join(std::string addressPort, int id);
+        int join(std::string addressPort, int id, int idUser);
+        std::map<int, Group> getAllGroups();
+
 
     private:
 

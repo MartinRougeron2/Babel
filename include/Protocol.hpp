@@ -9,6 +9,7 @@
     #define PROTOCOL_HPP
 
     #include <iostream>
+    #include <string>
     #include "common/User.hpp"
 
     struct Commands

@@ -17,14 +17,13 @@
 App::App(QWidget *parent) : QWidget(parent)
 {
     setWindowTitle("Babel");
-    boost::asio::io_context io_context;
-    this->client = new TCP(io_context);
+    this->client = new TCP;
     update();
 }
 
 std::vector<UserApp> App::getUserInCall() const
 {
-    std::string response = this->client->sendCommand(std::string(USERCMD("/getusersincall")));
+    std::string response = this->client->sendCommand(std::string(USERCMD("/guic")));
     std::stringstream ss(response);
     std::string item;
     std::vector<UserApp> elems;
@@ -71,13 +70,13 @@ void App::hangup()
 
 void App::acceptCall()
 {
-    this->client->sendCommand(USERCMD("/acceptcall"));
+    this->client->sendCommand(USERCMD("/accept"));
     updateCall();
 }
 
 void App::refuseCall()
 {
-    this->client->sendCommand(USERCMD("/refusecall"));
+    this->client->sendCommand(USERCMD("/refuse"));
 }
 
 void App::addContactToCall(UserApp contact_to_add)
@@ -93,18 +92,18 @@ void App::removeContactToCall(UserApp contact_to_remove)
     //NEED TO CHECK IF USER IS IN THE CALL
 }
 
-bool App::addContact(UserApp user)
+bool App::addContact(std::string user)
 {
-    std::string response = this->client->sendCommand(std::string(USERCMDPARAM("/add", user.username)));
+    std::string response = this->client->sendCommand(std::string(USERCMDPARAM("/add", user)));
 
     if (response == "true")
         return true;
     return false;
 }
 
-bool App::removeContact(UserApp user)
+bool App::removeContact(std::string user)
 {
-    std::string response = this->client->sendCommand(std::string(USERCMDPARAM("/remove", user.username)));
+    std::string response = this->client->sendCommand(std::string(USERCMDPARAM("/remove", user)));
 
     if (response == "true")
         return true;
@@ -123,7 +122,6 @@ bool App::checkUser(std::string username)
 std::vector<UserApp> App::fetchContact() const
 {
     std::string response = this->client->sendCommand(std::string(USERCMD("/getcontacts")));
-    std::cout << response << std::endl;
     std::stringstream ss(response);
     std::string item;
     std::vector<UserApp> elems;
@@ -139,8 +137,11 @@ std::vector<UserApp> App::fetchContact() const
 loginCode App::login(std::string username, std::string password)
 {
     std::string response = this->client->sendCommand(std::string(username + ";" + password + ";" + "/login"));
+    std::cout << response << std::endl;
     if (response == "BAD_PASSWORD")
         return BAD_PASSWORD;
+    if (response == "not connected" || response == "")
+        return NOT_CONNECTED;
     this->app_state = Menu_;
     this->user = UserApp(username, "", password, std::atoi(response.c_str()));
     return SUCCESS;

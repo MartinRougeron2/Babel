@@ -113,7 +113,7 @@ void Call::updateCall()
     QLayoutItem *wItem;
     while ((wItem = contactList->takeAt(0)) != 0)
         delete wItem;
-    std::vector<UserApp> linkeds = app->fetchContact();
+    std::vector<UserApp> linkeds = app->getUserInCall();
     for (auto &contact : linkeds) {
         ContactLabel *label = new ContactLabel(contact);
         label->setText(QString::fromStdString(label->getUser().username));

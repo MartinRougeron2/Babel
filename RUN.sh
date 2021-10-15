@@ -6,7 +6,6 @@ function build()
     cd build
     conan install ..
     cmake .. -G "Unix Makefiles"
-    clear
     cmake -build .
     make
     printf "BUILT\n"

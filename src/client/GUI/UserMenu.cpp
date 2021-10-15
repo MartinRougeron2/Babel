@@ -13,7 +13,7 @@ UserMenu::UserMenu(QWidget *parent)
     this->app = static_cast<App *>(parent);
     QLabel *nameLabel = new QLabel(this);
     nameLabel->setFrameStyle(QFrame::Panel);
-    nameLabel->setText(QString::fromStdString(app->getContext().username + " : " + app->getContext().address));
+    nameLabel->setText(QString::fromStdString(app->getContext().username));
 
     QLabel *addressLabel = new QLabel(tr("Contact:"));
     contactDraw = QList<ContactLabel *>();
@@ -21,6 +21,8 @@ UserMenu::UserMenu(QWidget *parent)
     addButton = new QPushButton(tr("&Add"));
 
     removeButton = new QPushButton(tr("&Remove"));
+    reconnectButton = new QPushButton(tr("&Reconnect"));
+    reconnectButton->hide();
     removeButton->setEnabled(false);
     callButon = new QPushButton(tr("&Call"));
     callButon->setEnabled(false);
@@ -30,6 +32,7 @@ UserMenu::UserMenu(QWidget *parent)
     connect(addButton, SIGNAL(clicked()), this, SLOT(addContact()));
     connect(removeButton, SIGNAL(clicked()), this, SLOT(removeContact()));
     connect(callButon, SIGNAL(clicked()), this, SLOT(call()));
+    connect(reconnectButton, SIGNAL(clicked()), this, SLOT(reconnect()));
 
     QVBoxLayout *buttonLayout1 = new QVBoxLayout;
     buttonLayout1->addWidget(addButton);
@@ -40,10 +43,11 @@ UserMenu::UserMenu(QWidget *parent)
     contactLayout = new QVBoxLayout;
     contactLayout->addWidget(addressLabel);
 
-    callWidget = new Call;
+    callWidget = new Call(app);
 
     mainLayout = new QGridLayout;
     mainLayout->addWidget(nameLabel, 0, 0);
+    mainLayout->addWidget(reconnectButton, 0, 1);
     mainLayout->addLayout(contactLayout, 2, 0, Qt::AlignTop);
     mainLayout->addLayout(buttonLayout1, 2, 2);
     mainLayout->addLayout(callWidget->getLayout(), 0, 4, 3, 3);
@@ -52,13 +56,24 @@ UserMenu::UserMenu(QWidget *parent)
     fetchContact();
 }
 
+void UserMenu::reconnect()
+{
+    this->app->getTcp()->doConnect();
+    if (this->app->getTcp()->isConnected())
+        this->reconnectButton->hide();
+}
+
 void UserMenu::fetchContact()
 {
+    if (!this->app->getTcp()->isConnected()) {
+        this->reconnectButton->show();
+        return;
+    }
     for (auto a : contactDraw)
         delete a;
     this->contactDraw.clear();
     std::vector<UserApp> linkeds = app->fetchContact();
-    for (auto &contact : linkeds) {
+    for (auto contact : linkeds) {
         ContactLabel *label = new ContactLabel(contact);
         label->setText(QString::fromStdString(contact.username));
         contactLayout->addWidget(label);
@@ -91,14 +106,17 @@ void UserMenu::setSelectioned(UserApp user)
 
 void UserMenu::addContact()
 {
+    if (!this->app->getTcp()->isConnected()) {
+        this->reconnectButton->show();
+        return;
+    }
     if (this->callWidget->getScene() != Call::Scene::NOCALL)
         return;
     dialog->show();
     if (dialog->exec() == 1) {
         std::string contactName = dialog->getUserAdded();
         if (app->checkUser(contactName)) {
-            UserApp user = app->getUser(contactName);
-            if (app->addContact(user))
+            if (app->addContact(contactName))
                 fetchContact();
             else
                 QMessageBox::information(this, tr("Contact Add Error"),
@@ -115,6 +133,10 @@ void UserMenu::addContact()
 
 void UserMenu::removeContact()
 {
+    if (!this->app->getTcp()->isConnected()) {
+        this->reconnectButton->show();
+        return;
+    }
     if (this->selection.id == -1)
         return;
     if (this->callWidget->getScene() != Call::Scene::NOCALL)
@@ -122,7 +144,7 @@ void UserMenu::removeContact()
     int index = 0;
     for (auto label : contactDraw) {
         if (this->selection.id == label->getUser().id) {
-            app->removeContact(label->getUser());
+            app->removeContact(label->getUser().username);
             delete label;
             contactDraw.erase(contactDraw.begin() + index);
             this->selection.id = -1;
@@ -136,6 +158,10 @@ void UserMenu::removeContact()
 
 void UserMenu::call()
 {
+    if (!this->app->getTcp()->isConnected()) {
+        this->reconnectButton->show();
+        return;
+    }
     if (this->selection.id == -1)
         return;
     if (this->callWidget->getScene() != Call::Scene::NOCALL)

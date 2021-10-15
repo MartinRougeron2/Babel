@@ -27,6 +27,7 @@ class UserMenu : public QWidget
         void call();
         void setSelectioned(UserApp usr);
         Call *getCallW() const { return this->callWidget;};
+        void reconnect();
 
     private:
         void fetchContact();
@@ -35,6 +36,7 @@ class UserMenu : public QWidget
         QPushButton *addButton;
         QPushButton *removeButton;
         QPushButton *callButon;
+        QPushButton *reconnectButton;
         QLineEdit *nameLine;
         QList<ContactLabel *> contactDraw = {};
         Call *callWidget;
