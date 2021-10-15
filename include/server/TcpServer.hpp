@@ -47,6 +47,7 @@
                 boost::system::error_code &, std::size_t);
 
             typedef bool (TcpSession::*function_type)(std::string, struct UserApp);
+            typedef UserApp (TcpSession::*function_get)(std::string);
 
             std::map<std::string, function_type> mapped = {
                 { "/login", &TcpSession::login },
@@ -62,6 +63,7 @@
                 { "/check", &TcpSession::check_user },
                 { "/linked", &TcpSession::check_linked },
                 { "/exit", &TcpSession::close_server },
+<<<<<<< HEAD
                 { "/guic", &TcpSession::get_users_in_call },
                 { "/getcontacts", &TcpSession::get_contacts }
             };
@@ -85,6 +87,18 @@
 
             // DONE get_users_in_call
             // userapp get_user(user_name)
+=======
+                { "/getcontacts", &TcpSession::get_contacts },
+                { "/getusersincall", &TcpSession::get_users_in_call }
+            };
+
+            std::map<std::string, function_get> getter = {
+                { "/getuser", &TcpSession::get_user }
+            };
+
+            // DONE get_users_in_call
+            // DONE userapp get_user(user_name)
+>>>>>>> rebase Protocol
             // accept
             // refuse
             // DONE add contact
@@ -92,6 +106,7 @@
             // DONE check if users are linked
             // DONE check if user exists
 
+            // MAPPED
             bool login(std::string, struct UserApp);
             bool logout(std::string, struct UserApp);
             bool join(std::string, struct UserApp);
@@ -101,10 +116,10 @@
             bool close_server(std::string, struct UserApp);
             bool check_user(std::string, struct UserApp);
             bool check_linked(std::string, struct UserApp);
-
+            bool get_contacts(std::string, struct UserApp);
+            bool get_users_in_call(std::string, struct UserApp);
             bool accept(std::string, struct UserApp);
             bool refuse(std::string, struct UserApp);
-
             bool add(std::string, struct UserApp);
             bool remove(std::string, struct UserApp);
             bool get_contacts(std::string, struct UserApp);
@@ -114,13 +129,13 @@
             UserApp get_username_by_id(int);
             UserApp get_user(std::string);
 
+            // GETTER
+            UserApp get_user(std::string);
+
             void display(UserApp);
-            UserApp C_user_to_user(C_User);
-            Commands C_command_to_commands(C_Commands);
 
             S_Protocol decode(std::string);
-            bool send(char *);
-            char *set_string(char const *);
+            bool send(const char *);
 
             std::vector<UserApp> usersincall;
 
@@ -137,6 +152,8 @@
             void close_socket();
             UdpServer *voiceServer;
             std::mutex *mtx;
+            std::vector<UserApp> usersincall;
+            std::map<std::string, UserApp> users_index;
     };
 
     class TcpServer

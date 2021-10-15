@@ -104,12 +104,21 @@ boost::system::error_code &err, std::size_t bytes_transferred)
         response = TcpSession::decode(raw);
         if (this->mapped.find(response.command.command) != this->mapped.end()) {
             (this->*this->mapped.at(response.command.command))(response.command.arguments, response.user);
+        } else if (this->getter.find(response.command.command) != this->getter.end()) {
+            (this->*this->getter.at(response.command.command))(response.command.arguments);
         } else {
-            TcpSession::send(set_string("command not found"));
+            TcpSession::send("command not found");
         }
         socket.async_read_some(
+<<<<<<< HEAD
             //boost::asio::buffer(this->recv, max_length),
             boost::asio::buffer(this->buffer),
+=======
+            boost::asio::buffer(
+                this->buffer,
+                max_length
+            ),
+>>>>>>> rebase Protocol
             boost::bind(
                 &TcpSession::handleRead,
                 this,
@@ -118,6 +127,7 @@ boost::system::error_code &err, std::size_t bytes_transferred)
                 boost::asio::placeholders::bytes_transferred
             )
         );
+        this->buffer.assign(0);
     } else if (err == boost::asio::error::eof) {
         std::cerr << colors::magenta << DONE << "A client left" << colors::reset << std::endl;
     } else {
@@ -154,89 +164,60 @@ S_Protocol TcpSession::decode(std::string recv)
     return (protocol);
 }
 
-void TcpSession::display(UserApp  user)
-{
-    std::cout << "-----------" << std::endl;
-    std::cout << "Username:  " << user.username << std::endl;
-    std::cout << "Password:  " << user.password << std::endl;
-    std::cout << "LHost:     " << socket.local_endpoint() << std::endl;
-    std::cout << "Socket:    " << socket.remote_endpoint() << std::endl;
-    std::cout << "-----------" << std::endl;
-}
-
-UserApp  TcpSession::C_user_to_user(C_User c_user)
-{
-    UserApp user;
-
-    user.username = std::string(c_user.username);
-    user.password = std::string(c_user.password);
-    user.address = std::string(c_user.address);
-    user.id = c_user.id;
-    TcpSession::display(user);
-    return (user);
-}
-
-Commands TcpSession::C_command_to_commands(C_Commands c_commands)
-{
-    Commands commands;
-
-    commands.command = std::string(c_commands.command);
-    commands.arguments = std::string(c_commands.arguments);
-
-    return (commands);
-}
-
-bool TcpSession::login(std::string arguments, UserApp user)
-{
-    this->database.uploadData(user);
-    if (this->database.login(user) == this->database.SUCCESS) {
-        this->users[user.id] = user;
-        TcpSession::send(set_string(std::to_string(user.id).c_str()));
-        return (true);
-    }
-    if (this->database.login(user) == this->database.BAD_PASSWORD) {
-        TcpSession::send(set_string("BAD_PASSWORD"));
-        return (false);
-    }
-    TcpSession::send(set_string("login failed"));
-    return (false);
-}
-
-bool TcpSession::logout(std::string arguments, UserApp user)
-{
-    TcpSession::display(user);
-    TcpSession::send(set_string("EXIT"));
-
-    return (false);
-}
-
-char *TcpSession::set_string(char const *data)
-{
-    char *result = new char[std::strlen(data) + 1];
-
-    result[std::strlen(data)] = '\0';
-    for (int i = 0; i < std::strlen(data); i++) {
-        result[i] = data[i];
-    }
-
-    return (result);
-}
-
-bool TcpSession::send(char *data)
+bool TcpSession::send(const char *data)
 {
     boost::system::error_code ignored_ec;
-    boost::array<std::bitset<6>, max_length> encoded = security::encoder(data);
+    boost::array<std::bitset<6>, max_length> encoded = security::encoder(std::string(data));
 
     socket.send(
         boost::asio::buffer(
             encoded,
-            security::get_size(encoded)
+            max_length
         ),
         0,
         ignored_ec
     );
 
     return (true);
+}
+
+void TcpSession::display(UserApp user)
+{
+    std::cout << "-----------" << std::endl;
+    std::cout << "Username:  " << user.username << std::endl;
+    std::cout << "Password:  " << user.password << std::endl;
+    std::cout << "Address:   " << user.address << std::endl;
+    std::cout << "LHost:     " << socket.local_endpoint() << std::endl;
+    std::cout << "Socket:    " << socket.remote_endpoint() << std::endl;
+    std::cout << "-----------" << std::endl;
+}
+
+bool TcpSession::login(std::string arguments, UserApp user)
+{
+    this->database.uploadData(user);
+    if (this->database.login(user) == this->database.SUCCESS) {
+<<<<<<< HEAD
+        this->users[user.id] = user;
+        TcpSession::send(set_string(std::to_string(user.id).c_str()));
+=======
+        TcpSession::send(std::to_string(user.id).c_str());
+>>>>>>> rebase Protocol
+        return (true);
+    }
+    if (this->database.login(user) == this->database.BAD_PASSWORD) {
+        TcpSession::send("BAD_PASSWORD");
+        return (false);
+    }
+    TcpSession::send("login failed");
+    return (false);
+}
+
+bool TcpSession::logout(std::string arguments, UserApp user)
+{
+    TcpSession::display(user);
+    TcpSession::send("EXIT");
+
+    return (false);
 }
 
 bool TcpSession::join(std::string arguments, UserApp user)
@@ -252,7 +233,7 @@ bool TcpSession::hangup(std::string arguments, struct UserApp user)
 {
     TcpSession::display(user);
 
-    TcpSession::send(set_string("EXIT"));
+    TcpSession::send("EXIT");
 
     return (false);
 }
@@ -262,10 +243,10 @@ bool TcpSession::call(std::string arguments, UserApp user)
     TcpSession::display(user);
 
     if (this->database.login(user) == this->database.SUCCESS) {
-        TcpSession::send(set_string("calling..."));
+        TcpSession::send("calling...");
         return (true);
     }
-    TcpSession::send(set_string("user not found"));
+    TcpSession::send("user not found");
     this->mtx->lock();
     this->voiceServer->join(user.address, user.id);
     this->mtx->unlock();
@@ -277,7 +258,7 @@ bool TcpSession::ping(std::string arguments, UserApp user)
 {
     TcpSession::display(user);
 
-    TcpSession::send(set_string("pong"));
+    TcpSession::send("pong");
 
     return (false);
 }
@@ -286,7 +267,7 @@ bool TcpSession::accept(std::string arguments, struct UserApp user)
 {
     TcpSession::display(user);
 
-    TcpSession::send(set_string("accepted"));
+    TcpSession::send("accepted");
 
     return (false);
 }
@@ -295,7 +276,7 @@ bool TcpSession::refuse(std::string arguments, struct UserApp user)
 {
     TcpSession::display(user);
 
-    TcpSession::send(set_string("refused"));
+    TcpSession::send("refused");
 
     return (false);
 }
@@ -306,13 +287,17 @@ bool TcpSession::add(std::string arguments, struct UserApp user)
 
     if (TcpSession::check_linked(arguments, user) == false) {
         if (this->database.linkUser(user.username, arguments) == true) {
-            TcpSession::send(set_string("true"));
+            TcpSession::send("true");
             return (true);
         }
+<<<<<<< HEAD
         TcpSession::send(set_string("false1"));
+=======
+        TcpSession::send("false");
+>>>>>>> rebase Protocol
         return (false);
     }
-    TcpSession::send(set_string("false"));
+    TcpSession::send("false");
 
     return (false);
 }
@@ -322,11 +307,16 @@ bool TcpSession::remove(std::string arguments, struct UserApp user)
     TcpSession::display(user);
 
     if (TcpSession::check_linked(arguments, user) == true) {
+<<<<<<< HEAD
         this->database.unlinkUser(user.username, arguments);
         TcpSession::send(set_string("true"));
+=======
+        // this->database.unlinkUser(user.username, arguments);
+        TcpSession::send("true");
+>>>>>>> rebase Protocol
         return (true);
     }
-    TcpSession::send(set_string("false"));
+    TcpSession::send("false");
     return (false);
 }
 
@@ -334,6 +324,7 @@ bool TcpSession::check_user(std::string arguments, struct UserApp user)
 {
     TcpSession::display(user);
 
+<<<<<<< HEAD
     if (this->database.checkUser(arguments)) {
         TcpSession::send(set_string("true"));
         return (true);
@@ -361,6 +352,14 @@ bool TcpSession::get_users_in_call(std::string arguments, struct UserApp user)
     }
 
     this->usersincall = usersInSession;
+=======
+    if (this->database.login(user) == this->database.SUCCESS) {
+        TcpSession::send("true");
+        return (true);
+    }
+
+    TcpSession::send("false");
+>>>>>>> rebase Protocol
 
     return (false);
 }
@@ -407,10 +406,18 @@ bool TcpSession::check_linked(std::string arguments, struct UserApp user)
     if (linked.size() > 0) {
         for (auto i = linked.begin(); i != linked.end(); i++) {
             if (i->username == arguments) {
+<<<<<<< HEAD
+=======
+                TcpSession::send("true");
+>>>>>>> rebase Protocol
                 return (true);
             }
         }
     }
+<<<<<<< HEAD
+=======
+    TcpSession::send("false");
+>>>>>>> rebase Protocol
 
     return (false);
 }
@@ -420,16 +427,58 @@ bool TcpSession::close_server(std::string arguments, UserApp user)
     TcpSession::display(user);
 
     if (user.username == "admin" && user.password == "admin") {
-        TcpSession::send(set_string("user authorized"));
+        TcpSession::send("user authorized");
         TcpSession::close_socket();
     } else {
-        TcpSession::send(set_string("user not authorized"));
+        TcpSession::send("user not authorized");
     }
 
     return (false);
 }
 
+bool TcpSession::get_users_in_call(std::string arguments, struct UserApp user)
+{
+    TcpSession::display(user);
+    std::string userAddress = user.address.erase(user.address.find(':'), user.address.length());
+    std::vector<shared_session> sessionsInCommon;
+    std::vector<UserApp> usersInSession;
+
+    for (auto const &group : voiceServer->getAllGroups()) {
+        for (auto const &session: group.second.sessions) {
+            if (session.get()->remoteEndpoint.address().to_string() == user.address)
+                sessionsInCommon = group.second.sessions;
+        }
+    }
+
+    for (const auto &session : sessionsInCommon) {
+        usersInSession.push_back(this->users[session.id]);
+    }
+
+    this->usersincall = usersInSession;
+
+    std::string users(this->usersincall.begin(), this->usersincall.end());
+    TcpSession::send(users);
+
+    return (false);
+}
+
+<<<<<<< HEAD
 bool TcpSession::get_contacts(std::string param, UserApp user)
+=======
+UserApp TcpSession::get_user(std::string username)
+{
+    UserApp failed = new UserApp;
+
+    for (auto i = this->users_index.begin(); i != this->users_index.end(); i++) {
+        if (i->second->username == username)
+            return (i->second);
+    }
+
+    return (failed);
+}
+
+bool TcpSession::get_contacts(std::string arguments, struct UserApp user)
+>>>>>>> rebase Protocol
 {
     std::vector<UserApp> contacts = database.getLinkedUser(user.username);
     std::string answer;
@@ -439,5 +488,11 @@ bool TcpSession::get_contacts(std::string param, UserApp user)
     }
     if (answer == "")
         answer = "none";
+<<<<<<< HEAD
     TcpSession::send(set_string(answer.data()));
+=======
+    TcpSession::send(answer);
+
+    return (true);
+>>>>>>> rebase Protocol
 }
