@@ -19,8 +19,10 @@
     #include <utility>
     #include <algorithm>
     #include <string>
+    #include <bitset>
     #include <boost/asio.hpp>
     #include <boost/bind.hpp>
+    #include <boost/array.hpp>
 
     #include "Signals.hpp"
     #include "Logs.hpp"
@@ -45,6 +47,7 @@
                 boost::system::error_code &, std::size_t);
 
             typedef bool (TcpSession::*function_type)(std::string, struct UserApp);
+            typedef UserApp (TcpSession::*function_get)(std::string);
 
             std::map<std::string, function_type> mapped = {
                 { "/login", &TcpSession::login },
@@ -60,36 +63,16 @@
                 { "/check", &TcpSession::check_user },
                 { "/linked", &TcpSession::check_linked },
                 { "/exit", &TcpSession::close_server },
-                { "/guic", &TcpSession::get_users_in_call },
-                { "/getcontacts", &TcpSession::get_contacts }
+                { "/getcontacts", &TcpSession::get_contacts },
+                { "/getusersincall", &TcpSession::get_users_in_call }
             };
 
-            std::map<std::string, int> encoder = {
-                { "/login", 0b00000001 },
-                { "/logout", 0b00000010 },
-                { "/join", 0b00000011 },
-                { "/hangup", 0b00000100 },
-                { "/accept", 0b00000101 },
-                { "/refuse", 0b00000111 },
-                { "/add", 0b00001000 },
-                { "/remove", 0b00001001 },
-                { "/call", 0b00001011 },
-                { "/ping", 0b00001111 },
-                { "/check", 0b00010000 },
-                { "/linked", 0b00010011 },
-                { "/exit", 0b00010111 },
-                { "/guic", 0b00011111 }
+            std::map<std::string, function_get> getter = {
+                { "/getuser", &TcpSession::get_user },
+                { "/getuserbyid", &TcpSession::get_user_by_id }
             };
 
-            // DONE get_users_in_call
-            // userapp get_user(user_name)
-            // accept
-            // refuse
-            // DONE add contact
-            // DONE remove contact
-            // DONE check if users are linked
-            // DONE check if user exists
-
+            // MAPPED
             bool login(std::string, struct UserApp);
             bool logout(std::string, struct UserApp);
             bool join(std::string, struct UserApp);
@@ -99,38 +82,29 @@
             bool close_server(std::string, struct UserApp);
             bool check_user(std::string, struct UserApp);
             bool check_linked(std::string, struct UserApp);
-
+            bool get_contacts(std::string, struct UserApp);
+            bool get_users_in_call(std::string, struct UserApp);
             bool accept(std::string, struct UserApp);
             bool refuse(std::string, struct UserApp);
-
             bool add(std::string, struct UserApp);
             bool remove(std::string, struct UserApp);
-            bool get_contacts(std::string, struct UserApp);
 
-            bool get_users_in_call(std::string, struct UserApp);
-
-            UserApp get_username_by_id(int);
+            // GETTER
             UserApp get_user(std::string);
+            UserApp get_user_by_id(std::string);
 
             void display(UserApp);
-            UserApp C_user_to_user(C_User);
-            Commands C_command_to_commands(C_Commands);
+            bool send(const char *);
 
             S_Protocol decode(std::string);
-            bool send(char *);
-            char *set_string(char const *);
 
-            std::vector<UserApp> usersincall;
+            std::string usersincall;
 
         private:
-            enum
-            {
-                max_length = 1024
-            };
             tcp::socket socket;
 
             Protocol *recv;
-            boost::array<char, max_length> buffer;
+            boost::array<std::bitset<6>, max_length> buffer;
 
             UserApp recvUser;
             Commands recvCommands;
@@ -139,6 +113,7 @@
             void close_socket();
             UdpServer *voiceServer;
             std::mutex *mtx;
+            std::map<std::string, UserApp> users_index;
     };
 
     class TcpServer

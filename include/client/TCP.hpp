@@ -14,7 +14,7 @@
     #include <boost/asio.hpp>
     #include <QWidget>
 
-    #include "Protocol.hpp"
+    #include "security.hpp"
 
     #define TCP_IP "127.0.0.1"
     #define TCP_PORT 2000
@@ -26,7 +26,7 @@
             ~TCP();
 
             std::string sendCommand(std::string command);
-            bool isConnected() { sendCommand("/ping"); return this->_connected;};
+            bool isConnected() { sendCommand("EMPTY;EMPTY;/ping"); return this->_connected;};
             void doConnect();
         private:
             boost::asio::io_context io_context;
