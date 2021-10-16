@@ -22,10 +22,10 @@ int main(int argc, char **argv)
     // ClientUdp voiceClient = ClientUdp("127.0.0.1", ios, player);
 
 
-   QApplication app(argc, argv);
-   App main_app;
+    QApplication app(argc, argv);
+    App main_app;
 
-   main_app.show(); //show the widget and its children
+    main_app.show(); //show the widget and its children
     return app.exec(); // execute the application
 }
 

@@ -59,12 +59,18 @@ std::string TCP::sendCommand(std::string command)
     boost::system::error_code error;
     std::string raw;
 
+    try {
     socket->send(
         boost::asio::buffer(
             encoded,
             max_length
         )
     );
+    } catch(std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        this->_connected = false;
+        return "not connected";
+    }
     socket->read_some(
         boost::asio::buffer(
             buf,
@@ -74,6 +80,5 @@ std::string TCP::sendCommand(std::string command)
     );
     raw = security::decoder(buf);
     buf.assign(0);
-
     return raw;
 }
