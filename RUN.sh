@@ -50,8 +50,9 @@ function main()
             run_debug_server
         elif [[ $1 == "debug" && $2 == "client" ]]; then
             run_debug_client
+        else
+            build
         fi
-        build
     fi
 }
 

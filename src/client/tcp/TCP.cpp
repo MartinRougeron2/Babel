@@ -54,8 +54,8 @@ void TCP::doConnect()
 
 std::string TCP::sendCommand(std::string command)
 {
-    boost::array<std::bitset<6>, max_length> buf = {0};
-    boost::array<std::bitset<6>, max_length> encoded = security::encoder(command);
+    boost::array<std::bitset<16>, max_length> buf = {0};
+    boost::array<std::bitset<16>, max_length> encoded = security::encoder(command);
     boost::system::error_code error;
     std::string raw;
 
