@@ -162,6 +162,7 @@ S_Protocol TcpSession::decode(std::string recv)
 bool TcpSession::send(const char *data)
 {
     boost::system::error_code ignored_ec;
+    std::cout << "preprocess: " << data << std::endl;
     boost::array<std::bitset<6>, max_length> encoded = security::encoder(std::string(data));
 
     socket.send(
