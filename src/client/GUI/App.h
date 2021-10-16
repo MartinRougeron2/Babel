@@ -38,6 +38,7 @@ class App : public QWidget
         void updateCall() const;
 
         void receiveCall(std::string caller);
+        UserMenu *getUserMenu() const { return this->usermenu;};
 
         void initVoiceClient();
 

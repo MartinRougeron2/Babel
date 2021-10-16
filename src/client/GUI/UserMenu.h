@@ -20,6 +20,7 @@ class UserMenu : public QWidget
     Q_OBJECT
     public:
         UserMenu(QWidget *parent = 0);
+        QPushButton *reconnectButton;
 
     public slots:
         void addContact();
@@ -36,7 +37,6 @@ class UserMenu : public QWidget
         QPushButton *addButton;
         QPushButton *removeButton;
         QPushButton *callButon;
-        QPushButton *reconnectButton;
         QLineEdit *nameLine;
         QList<ContactLabel *> contactDraw = {};
         Call *callWidget;
