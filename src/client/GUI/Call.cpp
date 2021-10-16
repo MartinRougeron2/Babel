@@ -6,6 +6,7 @@
 */
 
 #include "Call.h"
+#include "UserMenu.h"
 
 Call::Call(QWidget *parent)
 {
@@ -65,7 +66,7 @@ void Call::setScene(Scene scene, std::string context)
 void Call::refuseCall()
 {
     if (!this->app->getTcp()->isConnected()) {
-        this->app->layout()->takeAt(1)->widget()->show();
+        this->app->getUserMenu()->reconnectButton->show();
         return;
     }
     this->app->refuseCall();
@@ -75,7 +76,7 @@ void Call::refuseCall()
 void Call::takeCall()
 {
     if (!this->app->getTcp()->isConnected()) {
-        this->app->layout()->takeAt(1)->widget()->show();
+        this->app->getUserMenu()->reconnectButton->show();
         return;
     }
     this->app->acceptCall();
@@ -85,7 +86,7 @@ void Call::takeCall()
 void Call::addToCall()
 {
     if (!this->app->getTcp()->isConnected()) {
-        this->app->layout()->takeAt(1)->widget()->show();
+        this->app->getUserMenu()->reconnectButton->show();
         return;
     }
     dialog->show();
@@ -106,7 +107,7 @@ void Call::addToCall()
 void Call::removeFromCall()
 {
     if (!this->app->getTcp()->isConnected()) {
-        this->app->layout()->takeAt(1)->widget()->show();
+        this->app->getUserMenu()->reconnectButton->show();
         return;
     }
     dialog->show();

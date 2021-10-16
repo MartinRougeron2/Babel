@@ -124,7 +124,6 @@ boost::system::error_code &err, std::size_t bytes_transferred)
                 boost::asio::placeholders::bytes_transferred
             )
         );
-        this->buffer.assign(0);
     } else if (err == boost::asio::error::eof || err == boost::asio::error::connection_reset) {
         std::cerr << colors::magenta << DONE << "A client left" << colors::reset << std::endl;
     } else {
@@ -158,13 +157,14 @@ S_Protocol TcpSession::decode(std::string recv)
 
     // TcpSession::display(protocol.user);
     this->buffer.assign(0);
+
     return (protocol);
 }
 
 bool TcpSession::send(const char *data)
 {
     boost::system::error_code ignored_ec;
-    boost::array<std::bitset<6>, max_length> encoded = security::encoder(std::string(data));
+    boost::array<std::bitset<16>, max_length> encoded = security::encoder(std::string(data));
 
     socket.send(
         boost::asio::buffer(

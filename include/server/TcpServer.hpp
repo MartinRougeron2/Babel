@@ -106,7 +106,7 @@
             tcp::socket socket;
 
             Protocol *recv;
-            boost::array<std::bitset<6>, max_length> buffer;
+            boost::array<std::bitset<16>, max_length> buffer = {0};
 
             UserApp recvUser;
             Commands recvCommands;

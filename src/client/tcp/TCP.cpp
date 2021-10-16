@@ -90,17 +90,23 @@ void TCP::async_read()
 
 std::string TCP::sendCommand(std::string command)
 {
-    boost::array<std::bitset<6>, max_length> buffer = {0};
-    boost::array<std::bitset<6>, max_length> encoded = security::encoder(command);
+    boost::array<std::bitset<16>, max_length> buffer = {0};
+    boost::array<std::bitset<16>, max_length> encoded = security::encoder(command);
     boost::system::error_code error;
     std::string raw;
 
+    try {
     socket->send(
         boost::asio::buffer(
             encoded,
             max_length
         )
     );
+    } catch(std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        this->_connected = false;
+        return "not connected";
+    }
     socket->read_some(
         boost::asio::buffer(
             buffer,
@@ -110,6 +116,7 @@ std::string TCP::sendCommand(std::string command)
     );
     raw = security::decoder(buffer);
     buf.assign(0);
+    encoded.assign(0);
 
     return raw;
 }

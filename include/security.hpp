@@ -23,14 +23,14 @@
     namespace security
     {
         enum {
-            limit = 0b000000
+            limit = 0b0000000000000000
         };
 
-        boost::array<std::bitset<6>, max_length> encoder(std::string);
-        std::string decoder(boost::array<std::bitset<6>, max_length>);
+        boost::array<std::bitset<16>, max_length> encoder(std::string);
+        std::string decoder(boost::array<std::bitset<16>, max_length>);
     
-        std::size_t get_size(boost::array<std::bitset<6>, max_length>);
-        void display(boost::array<std::bitset<6>, max_length>);
+        std::size_t get_size(boost::array<std::bitset<16>, max_length>);
+        void display(boost::array<std::bitset<16>, max_length>);
     };
 
 #endif /* SECURITY_HPP */

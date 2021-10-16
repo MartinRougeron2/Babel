@@ -3,6 +3,11 @@
 function build()
 {
     printf "BUILDING\n"
+    if [[ -d "build" ]]; then
+        printf "BUILD FOLDER FOUND\n"
+    else
+        mkdri build
+    fi
     cd build
     conan install ..
     cmake .. -G "Unix Makefiles"
@@ -50,8 +55,9 @@ function main()
             run_debug_server
         elif [[ $1 == "debug" && $2 == "client" ]]; then
             run_debug_client
+        else
+            build
         fi
-        build
     fi
 }
 

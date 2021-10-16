@@ -18,7 +18,6 @@
 #define WHERE_QUERY(x) static_cast<std::string>("WHERE ") + x
 #define INNERJOIN_QUERY(x) static_cast<std::string>("INNER JOIN ") + x
 
-
 class Asqlite3 {
     public:
         Asqlite3();

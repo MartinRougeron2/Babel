@@ -55,7 +55,14 @@ UserApp App::convertUserFromString(std::string response)
     while (std::getline(ss, item, ';')) {
         elems.push_back(item);
     }
-    return UserApp(elems[0], elems[1], elems[2], std::stoi(elems[3]));
+    int id;
+    try {
+        id = std::stoi(elems[3]);
+    } catch (std::exception &e) {
+        std::cout << e.what() << " : " << "bad id in convertUserFromString" << std::endl;
+        return UserApp();
+    }
+    return UserApp(elems[0], elems[1], elems[2], id);
 }
 
 UserApp App::getUser(std::string username) const
@@ -176,6 +183,11 @@ void App::update()
 void App::updateCall() const
 {
     usermenu->getCallW()->updateCall();
+}
+
+void App::receiveCall(std::string caller)
+{
+    this->usermenu->getCallW()->setScene(Call::Scene::RECEIVECALL, caller);
 }
 
 void App::setGroupId(int newId)
