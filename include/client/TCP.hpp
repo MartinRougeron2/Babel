@@ -38,7 +38,7 @@ class App;
             boost::asio::ip::tcp::socket *socket;
             bool _connected = true;
             boost::asio::io_service::strand strand;
-            boost::array<std::bitset<6>, max_length> buf = {0};
+            boost::array<std::bitset<16>, max_length> buf = {0};
             App *copy;
 
     };
