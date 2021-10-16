@@ -162,8 +162,7 @@ S_Protocol TcpSession::decode(std::string recv)
 bool TcpSession::send(const char *data)
 {
     boost::system::error_code ignored_ec;
-    std::cout << "preprocess: " << data << std::endl;
-    boost::array<std::bitset<6>, max_length> encoded = security::encoder(std::string(data));
+    boost::array<std::bitset<16>, max_length> encoded = security::encoder(std::string(data));
 
     socket.send(
         boost::asio::buffer(
@@ -235,12 +234,12 @@ bool TcpSession::call(std::string arguments, UserApp user)
 
     if (this->database.login(user) == this->database.SUCCESS) {
         TcpSession::send("calling...");
+        this->mtx->lock();
+        this->voiceServer->join(user.address, user.id, TcpSession::get_user(arguments).id);
+        this->mtx->unlock();
         return (true);
     }
     TcpSession::send("user not found");
-    this->mtx->lock();
-    this->voiceServer->join(user.address, user.id);
-    this->mtx->unlock();
 
     return (false);
 }

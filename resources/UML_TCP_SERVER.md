@@ -41,10 +41,10 @@ class TcpSession {
 	+remove(std::string, struct UserApp) : bool
 	+send(char*) : bool
 	+set_string(char const*) : char*
-	-buffer : std::array<std::vector<std::bitset<6>, max_length>
+	-buffer : std::array<std::vector<std::bitset<16>, max_length>
 	-mtx : std::mutex*
-	+decoder(std::vector<std::bitset<6>>) : std::string
-	+encoder(std::string) : std::vector<std::bitset<6>>
+	+decoder(std::vector<std::bitset<16>>) : std::string
+	+encoder(std::string) : std::vector<std::bitset<16>>
 	-users : std::vector<std::string>
 	-socket : tcp::socket
 	+getSocket() : tcp::socket&
