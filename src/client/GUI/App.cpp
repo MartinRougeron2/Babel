@@ -194,3 +194,8 @@ void App::setGroupId(int newId)
 {
     this->idGroup = newId;
 }
+
+UserMenu *App::getUsermenu()
+{
+    return usermenu;
+}

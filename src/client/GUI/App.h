@@ -9,6 +9,10 @@
 #ifndef BABEL_APP_H
 #define BABEL_APP_H
 
+#include "common/User.hpp"
+#include "client/protocol/ClientUdp.hpp"
+#include "client/TCP.hpp"
+
 class UserMenu;
 
 #include <QWidget>
@@ -16,9 +20,6 @@ class UserMenu;
 #include <QList>
 #include <QLineEdit>
 #include <string>
-#include "common/User.hpp"
-#include "client/TCP.hpp"
-#include "client/protocol/ClientUdp.hpp"
 
 enum loginCode {SUCCESS, USER_NOT_EXIST, NOT_CONNECTED, BAD_PASSWORD};
 //TODO REMOVEAND USE SQLITE
@@ -62,6 +63,7 @@ class  App : public QWidget
 
         static UserApp convertUserFromString(std::string username);
         void setGroupId(int newId);
+        UserMenu *getUsermenu();
 
     private:
         enum AppState {ToLog, Menu_};

@@ -5,6 +5,10 @@
 ** TCP.hpp
 */
 
+#include "security.hpp"
+
+class App;
+
 #ifndef TCP_HPP
     #define TCP_HPP
 
@@ -14,9 +18,6 @@
     #include <boost/asio.hpp>
     #include <QWidget>
 
-    #include "security.hpp"
-
-class App;
 
     #define TCP_IP "127.0.0.1"
     #define TCP_PORT 2000

@@ -7,6 +7,7 @@
 
 #include "client/TCP.hpp"
 #include "../GUI/App.h"
+#include "../GUI/UserMenu.h"
 
 using boost::asio::ip::tcp;
 
@@ -69,6 +70,8 @@ void TCP::read(const boost::system::error_code &error, size_t bytes_recvd)
     buf.assign(0);
     if (raw.substr(0, raw.find('?')) == "accept") {
         this->copy->setGroupId(std::atoi(raw.substr(raw.find('?')).c_str()));
+        UserMenu *menu = this->copy->getUsermenu();
+        menu->getCallW()->setScene(Call::RECEIVECALL, "On vous appelle");
     }
     async_read();
 }
