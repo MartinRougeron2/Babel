@@ -6,16 +6,21 @@
 */
 
 #include "client/TCP.hpp"
+#include "../GUI/App.h"
 
 using boost::asio::ip::tcp;
 
-TCP::TCP()
+#include <boost/asio.hpp>
+#include <boost/bind.hpp>
+
+TCP::TCP(App *appCopy) : strand(io_context)
 {
     try
     {
         io_context.run();
         tcp::endpoint ep(boost::asio::ip::address::from_string("127.0.0.1"), 2000);
         socket = new tcp::socket(io_context);
+
         socket->connect(ep);
     }
     catch (std::exception &e)
@@ -26,6 +31,8 @@ TCP::TCP()
         return;
     }
     this->_connected = true;
+    this->copy = appCopy;
+    this->async_read();
 }
 
 TCP::~TCP()
@@ -52,9 +59,38 @@ void TCP::doConnect()
     std::cout << "yes" << std::endl;
 }
 
+void TCP::read(const boost::system::error_code &error, size_t bytes_recvd)
+{
+    if (error) {
+        std::cout << error.message();
+        return;
+    }
+    auto raw = security::decoder(buf);
+    buf.assign(0);
+    if (raw.substr(0, raw.find('?')) == "accept") {
+        this->copy->setGroupId(std::atoi(raw.substr(raw.find('?')).c_str()));
+    }
+    async_read();
+}
+
+void TCP::async_read()
+{
+    this->socket->async_receive(
+        boost::asio::buffer(buf),
+        strand.wrap(
+            boost::bind(
+                &TCP::read,
+                this,
+                boost::asio::placeholders::error,
+                boost::asio::placeholders::bytes_transferred
+            )
+        )
+    );
+}
+
 std::string TCP::sendCommand(std::string command)
 {
-    boost::array<std::bitset<6>, max_length> buf = {0};
+    boost::array<std::bitset<6>, max_length> buffer = {0};
     boost::array<std::bitset<6>, max_length> encoded = security::encoder(command);
     boost::system::error_code error;
     std::string raw;
@@ -67,12 +103,12 @@ std::string TCP::sendCommand(std::string command)
     );
     socket->read_some(
         boost::asio::buffer(
-            buf,
+            buffer,
             max_length
         ),
         error
     );
-    raw = security::decoder(buf);
+    raw = security::decoder(buffer);
     buf.assign(0);
 
     return raw;

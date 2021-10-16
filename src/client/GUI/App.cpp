@@ -18,7 +18,7 @@
 App::App(QWidget *parent) : QWidget(parent)
 {
     setWindowTitle("Babel");
-    this->client = new TCP;
+    this->client = new TCP(this);
     std::thread voiceT(&App::initVoiceClient, this);
     voiceT.detach();
     update();
@@ -81,14 +81,14 @@ void App::hangup()
 
 void App::acceptCall()
 {
-    std::string response = this->client->sendCommand(USERCMD("/accept"));
-    std::cout << response << "\n";
+    std::string response = this->client->sendCommand(USERCMD("/accept;" + std::to_string(this->idGroup)));
     idGroup = std::atoi(response.c_str());
     updateCall();
 }
 
 void App::refuseCall()
 {
+    this->idGroup = -1;
     this->client->sendCommand(USERCMD("/refuse"));
 }
 
@@ -176,4 +176,9 @@ void App::update()
 void App::updateCall() const
 {
     usermenu->getCallW()->updateCall();
+}
+
+void App::setGroupId(int newId)
+{
+    this->idGroup = newId;
 }

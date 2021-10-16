@@ -242,7 +242,7 @@ bool TcpSession::call(std::string arguments, UserApp user)
         UserApp userToCall = TcpSession::get_user(arguments);
         for (auto const &session : this->allSessions)
             if (session->get_user().id == userToCall.id) {
-                session->send(&"calling..." [id]);
+                session->send(&"accept?" [id]);
                 break;
             }
         return (true);

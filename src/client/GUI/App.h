@@ -58,6 +58,7 @@ class  App : public QWidget
         void update();
 
         static UserApp convertUserFromString(std::string username);
+        void setGroupId(int newId);
 
     private:
         enum AppState {ToLog, Menu_};
