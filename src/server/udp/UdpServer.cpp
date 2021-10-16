@@ -56,16 +56,16 @@ void UdpServer::receive_session()
                  boost::asio::placeholders::bytes_transferred)));
 }
 
-int UdpServer::join(std::string addressPort, int id)
+int UdpServer::join(std::string addressPort, int idUser)
 {
-    this->groups[this->id++].addSession(addressPort, id, this->allSessions);
+    this->groups[this->id++].addSession(addressPort, idUser, this->allSessions);
     return this->id;
 }
 
-int UdpServer::join(std::string addressPort, int _id, int idUser)
+int UdpServer::join(std::string addressPort, int idGroup, int idUser)
 {
-    this->groups[_id].addSession(addressPort, idUser, this->allSessions);
-    return _id;
+    this->groups[idGroup].addSession(addressPort, idUser, this->allSessions);
+    return idGroup;
 }
 
 std::vector<shared_session> UdpServer::get_related(const shared_session session)
@@ -95,33 +95,37 @@ void UdpServer::handle_receive(const shared_session session, const boost::system
 {
     std::vector<shared_session> others_sessions = get_related(session);
 
-    socket.async_send_to(
-        boost::asio::buffer(session->recvBuffer),
-        session->remoteEndpoint,
-        strand.wrap(
-            bind(
-                &UdpSession::handle_sent,
-                session,
-                boost::asio::placeholders::error,
-                boost::asio::placeholders::bytes_transferred
-            )
-        )
-    );
-//    );
-//    for (const auto& others_session : others_sessions) {
-//        socket_.async_send_to(
-//            boost::asio::buffer(session->recv_buffer_),
-//            others_session->remote_endpoint_,
-//            strand_.wrap(
-//                bind(
-//                    &UdpSession::handle_sent,
-//                    others_session,
-//                    boost::asio::placeholders::error,
-//                    boost::asio::placeholders::bytes_transferred
-//                )
+    for (auto i : session->recvBuffer)
+        std::cout << int(i) << ",";
+    std::cout << std::endl;
+
+//    socket.async_send_to(
+//        boost::asio::buffer(session->recvBuffer),
+//        session->remoteEndpoint,
+//        strand.wrap(
+//            bind(
+//                &UdpSession::handle_sent,
+//                session,
+//                boost::asio::placeholders::error,
+//                boost::asio::placeholders::bytes_transferred
 //            )
-//        );
-//    }
+//        )
+//    );
+//    );
+    for (const auto& others_session : others_sessions) {
+        socket.async_send_to(
+            boost::asio::buffer(session->recvBuffer),
+            others_session->remoteEndpoint,
+            strand.wrap(
+                bind(
+                    &UdpSession::handle_sent,
+                    others_session,
+                    boost::asio::placeholders::error,
+                    boost::asio::placeholders::bytes_transferred
+                )
+            )
+        );
+    }
     session->recvBuffer.assign(0);
 
     receive_session();

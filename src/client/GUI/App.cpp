@@ -69,17 +69,21 @@ UserApp App::getUser(std::string username) const
 void App::call(UserApp user)
 {
     std::string response = this->client->sendCommand(std::string(USERCMDPARAM("/call", user.username)));
-    //TODO SERV CHECK USER ONLINE
+    std::cout << response << "\n";
+    idGroup = std::atoi(response.c_str());
 }
 
 void App::hangup()
 {
+    idGroup = -1;
     this->client->sendCommand(USERCMD("/hangup"));
 }
 
 void App::acceptCall()
 {
-    this->client->sendCommand(USERCMD("/accept"));
+    std::string response = this->client->sendCommand(USERCMD("/accept"));
+    std::cout << response << "\n";
+    idGroup = std::atoi(response.c_str());
     updateCall();
 }
 

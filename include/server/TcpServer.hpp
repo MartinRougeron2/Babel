@@ -90,6 +90,7 @@
             bool remove(std::string, struct UserApp);
 
             // GETTER
+            UserApp get_user();
             UserApp get_user(std::string);
             UserApp get_user_by_id(std::string);
 
@@ -99,6 +100,7 @@
             S_Protocol decode(std::string);
 
             std::string usersincall;
+            std::vector<std::shared_ptr<TcpSession>> allSessions;
 
         private:
             tcp::socket socket;
@@ -129,6 +131,7 @@
             tcp::acceptor acceptor;
             UdpServer *voiceServer;
             std::mutex mtx;
+            std::vector<std::shared_ptr<TcpSession>> allSessions;
     };
 
 #endif // CHAT_MESSAGE_HPP

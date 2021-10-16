@@ -30,7 +30,7 @@ TCP::TCP()
 
 TCP::~TCP()
 {
-    return;
+    this->socket->close();
 }
 
 void TCP::doConnect()

@@ -23,7 +23,7 @@ class UserMenu;
 enum loginCode {SUCCESS, USER_NOT_EXIST, NOT_CONNECTED, BAD_PASSWORD};
 //TODO REMOVEAND USE SQLITE
 
-class App : public QWidget
+class  App : public QWidget
 {
     Q_OBJECT
 
@@ -69,6 +69,7 @@ class App : public QWidget
         UserMenu *usermenu;
         TCP *client;
         ClientUdp *clientudp;
+        int idGroup = -1;
 };
 
 #endif //BABEL_APP_H
