@@ -3,6 +3,11 @@
 function build()
 {
     printf "BUILDING\n"
+    if [[ -d "build" ]]; then
+        printf "BUILD FOLDER FOUND\n"
+    else
+        mkdri build
+    fi
     cd build
     conan install ..
     cmake .. -G "Unix Makefiles"
