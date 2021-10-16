@@ -37,6 +37,8 @@ class App : public QWidget
         std::vector<UserApp> getUserInCall() const;
         void updateCall() const;
 
+        void initVoiceClient();
+
         TCP *getTcp() const { return this->client;};
     public slots:
 

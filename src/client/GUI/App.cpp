@@ -19,9 +19,15 @@ App::App(QWidget *parent) : QWidget(parent)
 {
     setWindowTitle("Babel");
     this->client = new TCP;
+    std::thread voiceT(&App::initVoiceClient, this);
+    voiceT.detach();
+    update();
+}
+
+void App::initVoiceClient()
+{
     boost::asio::io_service ioService;
     this->clientudp = new ClientUdp("127.0.0.1", ioService, Sound::RecorderPlayer());
-    update();
 }
 
 std::vector<UserApp> App::getUserInCall() const
