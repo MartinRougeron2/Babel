@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: get libs
-      run: apt-get install conan
+      run: sudo apt-get install -y conan
     - name: compile
       run: ./RUN.sh
     - name: run
