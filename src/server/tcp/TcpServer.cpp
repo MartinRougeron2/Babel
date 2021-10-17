@@ -142,7 +142,7 @@ S_Protocol TcpSession::decode(std::string recv)
 {
     std::cout << recv << std::endl;
     std::string delimiter = ";";
-    std::string full(socket.local_endpoint().address().to_string() + ":" + std::to_string(socket.local_endpoint().port()));
+    std::string full(socket.remote_endpoint().address().to_string() + ":" + std::to_string(socket.remote_endpoint().port()));
     S_Protocol protocol;
 
     recv = recv.substr(0, recv.find('\n'));
@@ -200,6 +200,7 @@ void TcpSession::display(UserApp user)
 
 bool TcpSession::login(std::string arguments, UserApp user)
 {
+
     this->database.uploadData(user);
     if (this->database.login(user) == this->database.SUCCESS) {
         this->recvUser.id = std::atoi(
@@ -301,7 +302,9 @@ bool TcpSession::accept(std::string arguments, UserApp user)
             ).c_str());
 
     this->mtx->lock();
-    this->voiceServer->join(user.address, groupId ,user.id);
+    std::string adressPort(socket.remote_endpoint().address().to_string());
+    adressPort += ":" + std::to_string(socket.remote_endpoint().port());
+    this->voiceServer->join(adressPort, groupId ,user.id);
     this->mtx->unlock();
 
     return (false);

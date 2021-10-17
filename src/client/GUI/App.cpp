@@ -32,7 +32,7 @@ void App::initVoiceClient(std::string ip)
 
 std::vector<UserApp> App::getUserInCall() const
 {
-    std::string response = this->client->sendCommand(std::string(USERCMD("/guic")));
+    std::string response = this->client->sendCommand(std::string(USERCMD("/getusersincall")));
     std::cout << response << "\n";
     std::stringstream ss(response);
     std::string item;

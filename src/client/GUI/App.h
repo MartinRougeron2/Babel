@@ -44,10 +44,6 @@ class  App : public QWidget
         UserMenu *getUserMenu() const { return this->usermenu;};
 
         void initVoiceClient(std::string ip);
-
-        TCP *getTcp() const { return this->client;};
-    public slots:
-
         void call(UserApp user_to_call);
         void acceptCall();
         void refuseCall();
