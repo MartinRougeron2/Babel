@@ -319,13 +319,11 @@ bool TcpSession::check_user(std::string arguments, UserApp user)
 {
     // TcpSession::display(user);
 
-    if (this->database.login(user) == this->database.SUCCESS) {
+    if (this->database.checkUser(arguments)) {
         this->send("true");
         return (true);
     }
-
     this->send("false");
-
     return (false);
 }
 
@@ -373,16 +371,12 @@ bool TcpSession::check_linked(std::string arguments, UserApp user)
     // TcpSession::display(user);
     std::vector<UserApp> linked = this->database.getLinkedUser(user.username);
 
-    if (linked.size() > 0) {
-        for (auto i = linked.begin(); i != linked.end(); i++) {
-            if (i->username == arguments) {
-                this->send("true");
-                return (true);
-            }
+
+    for (auto i : linked) {
+        if (i.username == arguments) {
+            return (true);
         }
     }
-    this->send("false");
-
     return (false);
 }
 

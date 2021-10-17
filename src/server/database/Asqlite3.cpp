@@ -107,7 +107,6 @@ bool Asqlite3::linkUser(std::string from, std::string to)
 			return false;
 	}
 	std::string sql = "INSERT INTO contact(idfrom, idto) VALUES(" + idfrom + ", " + idto + ");";
-	std::cout << sql << std::endl;
 	if (!executeQuery(sql, NULL, 0)) {
 		std::cerr << "Error in linkUser function." << std::endl;
 		return false;
