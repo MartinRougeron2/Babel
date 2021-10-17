@@ -264,7 +264,7 @@ bool TcpSession::call(std::string arguments, UserApp user)
         for (auto const &session : *this->allSessions) {
             std::cout << "session->get_user().username " << session->get_user
             ().username <<"\n";
-            if (session->get_user().id == userToCall.id) {
+            if (session->get_user().id != userToCall.id) {
                 std::cout << "finf !\n";
                 std::string accpet = "accept?";
                 str.append(std::to_string(id));
