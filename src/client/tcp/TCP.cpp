@@ -15,12 +15,12 @@ using boost::asio::ip::tcp;
 #include <boost/bind.hpp>
 #include <thread>
 
-TCP::TCP(App *appCopy) : strand(io_context)
+TCP::TCP(App *appCopy, std::string ip) : strand(io_context)
 {
     try
     {
         io_context.run();
-        tcp::endpoint ep(boost::asio::ip::address::from_string("127.0.0.1"), 2000);
+        tcp::endpoint ep(boost::asio::ip::address::from_string(ip), 2000);
         socket = new tcp::socket(io_context);
         socket->connect(ep);
         std::thread reader(&TCP::async_read, this);
@@ -29,7 +29,6 @@ TCP::TCP(App *appCopy) : strand(io_context)
     catch (std::exception &e)
     {
         std::cerr << e.what() << std::endl;
-        socket->close();
         this->_connected = false;
         return;
     }

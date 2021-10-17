@@ -14,14 +14,14 @@ using boost::asio::ip::tcp;
 
 int main(int argc, char **argv)
 {
-    // boost::asio::io_service ios;
-    // Sound::RecorderPlayer player;
-    // ClientUdp voiceClient = ClientUdp("127.0.0.1", ios, player);
-
-
     QApplication app(argc, argv);
-    App main_app;
+    std::string ip;
 
-    main_app.show(); //show the widget and its children
-    return app.exec(); // execute the application
+    if (argc == 2)
+        ip = std::string(argv[1]);
+    else
+        ip = std::string(TCP_IP);
+    App main_app(NULL, ip);
+    main_app.show();
+    return app.exec();
 }

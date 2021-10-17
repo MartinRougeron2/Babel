@@ -29,7 +29,7 @@ class  App : public QWidget
     Q_OBJECT
 
     public:
-        App(QWidget *parent=NULL);
+        App(QWidget *parent=NULL, std::string ip = TCP_IP);
         virtual ~App() {
             delete voiceThread;
         };
@@ -43,7 +43,7 @@ class  App : public QWidget
         void receiveCall(std::string caller);
         UserMenu *getUserMenu() const { return this->usermenu;};
 
-        void initVoiceClient();
+        void initVoiceClient(std::string ip);
 
         TCP *getTcp() const { return this->client;};
     public slots:
