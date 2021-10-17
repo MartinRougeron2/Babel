@@ -62,6 +62,7 @@ class  App : public QWidget
         static UserApp convertUserFromString(std::string username);
         void setGroupId(int newId);
         UserMenu *getUsermenu();
+        TCP *getTcp() const { return this->client;};
 
     private:
         enum AppState {ToLog, Menu_};
