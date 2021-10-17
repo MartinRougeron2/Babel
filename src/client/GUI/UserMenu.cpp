@@ -75,7 +75,7 @@ void UserMenu::fetchContact()
     std::vector<UserApp> linkeds = app->fetchContact();
     for (auto contact : linkeds) {
         ContactLabel *label = new ContactLabel(contact);
-        label->setText(QString::fromStdString(contact.username));
+        label->setText(QString::fromStdString("- " + contact.username));
         contactLayout->addWidget(label);
         connect(label, SIGNAL(clicked(UserApp)), this, SLOT(setSelectioned(UserApp)));
         contactDraw.push_back(label);

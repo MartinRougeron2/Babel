@@ -14,13 +14,13 @@ using boost::asio::ip::tcp;
 
 int main(int argc, char **argv)
 {
-    // boost::asio::io_service ios;
-    // Sound::RecorderPlayer player;
-    // ClientUdp voiceClient = ClientUdp("127.0.0.1", ios, player);
 
-
+    if (argc != 2) {
+        std::cerr <<  "No ip adress provided" << std::endl;
+        return 84;
+    }
     QApplication app(argc, argv);
-    App main_app;
+    App main_app(nullptr, std::string(argv[1]));
 
     main_app.show(); //show the widget and its children
     return app.exec(); // execute the application

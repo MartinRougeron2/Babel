@@ -26,7 +26,7 @@ class App;
     class TCP
     {
         public:
-            TCP(App *appcopy);
+            TCP(App *appcopy, std::string ip);
             ~TCP();
 
             std::string sendCommand(std::string command);

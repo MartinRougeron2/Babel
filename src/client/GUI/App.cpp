@@ -15,19 +15,19 @@
 #define USERCMDPARAM(cmd, param) this->user.username + ";" + this->user.password + ";" + cmd + ";" + param
 #define USERCMD(cmd) this->user.username + ";" + this->user.password + ";" + cmd
 
-App::App(QWidget *parent) : QWidget(parent)
+App::App(QWidget *parent, std::string ip) : QWidget(parent)
 {
     setWindowTitle("Babel");
-    this->client = new TCP(this);
-    std::thread voiceT(&App::initVoiceClient, this);
+    this->client = new TCP(this, ip);
+    std::thread voiceT(&App::initVoiceClient, this, ip);
     voiceT.detach();
     update();
 }
 
-void App::initVoiceClient()
+void App::initVoiceClient(std::string ip)
 {
     boost::asio::io_service ioService;
-    this->clientudp = new ClientUdp("127.0.0.1", ioService, Sound::RecorderPlayer());
+    this->clientudp = new ClientUdp(ip, ioService, Sound::RecorderPlayer());
 }
 
 std::vector<UserApp> App::getUserInCall() const

@@ -200,6 +200,7 @@ void TcpSession::display(UserApp user)
 
 bool TcpSession::login(std::string arguments, UserApp user)
 {
+
     this->database.uploadData(user);
     if (this->database.login(user) == this->database.SUCCESS) {
         this->recvUser.id = std::atoi(
