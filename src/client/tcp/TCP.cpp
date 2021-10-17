@@ -80,18 +80,26 @@ void TCP::read(const boost::system::error_code &error, size_t bytes_recvd)
 
 void TCP::async_read()
 {
-    this->socket->receive(
-        boost::asio::buffer(buf)
-    );
-    auto raw = security::decoder(buf);
-    if (raw.substr(0, raw.find('?')) == "accept") {
-        std::cout << "find ?" << std::endl;
-        this->copy->setGroupId(std::atoi(raw.substr(raw.find('?')).c_str()));
-        UserMenu *menu = this->copy->getUsermenu();
-        menu->getCallW()->setScene(Call::RECEIVECALL, "On vous appelle");
+    while (true) {
+        try {
+        this->socket->receive(
+            boost::asio::buffer(buf)
+        );
+        } catch(std::exception &e) {
+            this->_connected = false;
+            continue;
+        }
+        auto raw = security::decoder(buf);
         buf.assign(0);
+        if (raw.substr(0, raw.find('?')) == "accept") {
+            std::cout << "find ?" << std::endl;
+            this->copy->setGroupId(std::atoi(raw.substr(raw.find('?')).c_str()));
+            UserMenu *menu = this->copy->getUsermenu();
+            menu->getCallW()->setScene(Call::RECEIVECALL, "On vous appelle");
+        }
+        queue.push(raw);
     }
-    async_read();
+    std::cout << "out" << std::endl;
 }
 
 std::string TCP::sendCommand(std::string command)
@@ -113,8 +121,8 @@ std::string TCP::sendCommand(std::string command)
         return "not connected";
     }
     usleep(10000);
-    raw = security::decoder(buf);
-    buf.assign(0);
+    raw = queue.front();
+    queue.pop();
     encoded.assign(0);
     return raw;
 }

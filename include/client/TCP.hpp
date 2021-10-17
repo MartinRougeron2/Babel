@@ -17,6 +17,7 @@ class App;
     #include <boost/array.hpp>
     #include <boost/asio.hpp>
     #include <QWidget>
+    #include <queue>
 
 
     #define TCP_IP "127.0.0.1"
@@ -41,6 +42,7 @@ class App;
             boost::asio::io_service::strand strand;
             boost::array<std::bitset<16>, max_length> buf = {0};
             App *copy;
+            std::queue<std::string> queue;
 
     };
 
