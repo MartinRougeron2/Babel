@@ -107,12 +107,10 @@ bool Asqlite3::linkUser(std::string from, std::string to)
 			return false;
 	}
 	std::string sql = "INSERT INTO contact(idfrom, idto) VALUES(" + idfrom + ", " + idto + ");";
-	std::cout << sql << std::endl;
 	if (!executeQuery(sql, NULL, 0)) {
 		std::cerr << "Error in linkUser function." << std::endl;
 		return false;
 	}
-	std::cout << "ddd" << std::endl;
 	return true;
 }
 
@@ -180,7 +178,6 @@ bool Asqlite3::checkUser(std::string username)
 		FROM_QUERY("user ") +
 		WHERE_QUERY("pseudo = '" + username + "'");
 	this->_res.clear();
-	std::cout << sql << std::endl;
 	if (!executeQuery(sql, callbackUserExist, this))
 		std::cerr << "Error in getlinkeduser function." << std::endl;
 	if (this->_res.empty())
