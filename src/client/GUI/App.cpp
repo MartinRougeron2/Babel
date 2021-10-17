@@ -88,6 +88,7 @@ void App::hangup()
 
 void App::acceptCall()
 {
+    // idGroup is get in the async part on "accept?[groupId]" command
     std::string response = this->client->sendCommand(USERCMD("/accept;" + std::to_string(this->idGroup)));
     idGroup = std::atoi(response.c_str());
     updateCall();

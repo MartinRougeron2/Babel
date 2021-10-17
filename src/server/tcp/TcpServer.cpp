@@ -267,7 +267,7 @@ bool TcpSession::accept(std::string arguments, UserApp user)
 
     this->send("accepted");
 
-    int groupId = std::atoi(arguments.c_str());
+    int groupId = std::atoi(arguments.substr(arguments.find(";")).c_str());
 
     this->mtx->lock();
     this->voiceServer->join(user.address, groupId ,user.id);
