@@ -90,8 +90,8 @@ const
     return others;
 }
 
-void UdpServer::handle_receive(const shared_session session, const boost::system::error_code &ec,
-                    std::size_t)
+void UdpServer::handle_receive(const shared_session session,
+                               const boost::system::error_code &ec, std::size_t)
 {
     std::vector<shared_session> others_sessions = get_related(session);
 

@@ -37,10 +37,10 @@ std::vector<UserApp> App::getUserInCall() const
     std::string item;
     std::vector<UserApp> elems;
     while (std::getline(ss, item, '\n')) {
-        UserApp user = convertUserFromString(item);
-        if (user.username == "")
+        UserApp user_from_string = convertUserFromString(item);
+        if (user_from_string.username == "")
             continue;
-        elems.push_back(user);
+        elems.push_back(user_from_string);
     }
     return elems;
 }
@@ -76,6 +76,8 @@ UserApp App::getUser(std::string username) const
 void App::call(UserApp user)
 {
     std::string response = this->client->sendCommand(std::string(USERCMDPARAM("/call", user.username)));
+    std::cout << "-->" << response << "\n";
+    response = response.substr(response.find("..."));
     std::cout << response << "\n";
     idGroup = std::atoi(response.c_str());
 }

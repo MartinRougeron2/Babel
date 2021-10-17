@@ -33,7 +33,6 @@ TCP::TCP(App *appCopy) : strand(io_context)
     }
     this->_connected = true;
     this->copy = appCopy;
-    this->async_read();
 }
 
 TCP::~TCP()
@@ -67,6 +66,7 @@ void TCP::read(const boost::system::error_code &error, size_t bytes_recvd)
         return;
     }
     auto raw = security::decoder(buf);
+    std::cout << "->" << raw;
     buf.assign(0);
     if (raw.substr(0, raw.find('?')) == "accept") {
         this->copy->setGroupId(std::atoi(raw.substr(raw.find('?')).c_str()));

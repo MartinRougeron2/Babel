@@ -30,7 +30,9 @@ class  App : public QWidget
 
     public:
         App(QWidget *parent=NULL);
-        virtual ~App() {};
+        virtual ~App() {
+            delete voiceThread;
+        };
         std::vector<UserApp> fetchContact() const;
         bool checkUser(std::string usr);
         void hangup();
@@ -76,6 +78,7 @@ class  App : public QWidget
         TCP *client;
         ClientUdp *clientudp;
         int idGroup = -1;
+        std::thread *voiceThread;
 };
 
 #endif //BABEL_APP_H
