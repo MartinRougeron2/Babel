@@ -6,7 +6,7 @@ function build()
     if [[ -d "build" ]]; then
         printf "BUILD FOLDER FOUND\n"
     else
-        mkdri build
+        mkdir build
     fi
     cd build
     conan install ..
