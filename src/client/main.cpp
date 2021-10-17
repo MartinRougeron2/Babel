@@ -14,14 +14,14 @@ using boost::asio::ip::tcp;
 
 int main(int argc, char **argv)
 {
-
-    if (argc != 2) {
-        std::cerr <<  "No ip adress provided" << std::endl;
-        return 84;
-    }
     QApplication app(argc, argv);
-    App main_app(nullptr, std::string(argv[1]));
+    std::string ip;
 
-    main_app.show(); //show the widget and its children
-    return app.exec(); // execute the application
+    if (argc == 2)
+        ip = std::string(argv[1]);
+    else
+        ip = std::string(TCP_IP);
+    App main_app(NULL, ip);
+    main_app.show();
+    return app.exec();
 }

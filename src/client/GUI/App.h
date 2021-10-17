@@ -29,7 +29,7 @@ class  App : public QWidget
     Q_OBJECT
 
     public:
-        App(QWidget *parent=NULL, std::string ip="127.0.0.1");
+        App(QWidget *parent=NULL, std::string ip = TCP_IP);
         virtual ~App() {
             delete voiceThread;
         };
@@ -43,11 +43,7 @@ class  App : public QWidget
         void receiveCall(std::string caller);
         UserMenu *getUserMenu() const { return this->usermenu;};
 
-        void initVoiceClient(std::string ipAddress);
-
-        TCP *getTcp() const { return this->client;};
-    public slots:
-
+        void initVoiceClient(std::string ip);
         void call(UserApp user_to_call);
         void acceptCall();
         void refuseCall();
@@ -66,6 +62,7 @@ class  App : public QWidget
         static UserApp convertUserFromString(std::string username);
         void setGroupId(int newId);
         UserMenu *getUsermenu();
+        TCP *getTcp() const { return this->client;};
 
     private:
         enum AppState {ToLog, Menu_};

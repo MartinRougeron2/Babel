@@ -29,7 +29,6 @@ TCP::TCP(App *appCopy, std::string ip) : strand(io_context)
     catch (std::exception &e)
     {
         std::cerr << e.what() << std::endl;
-        socket->close();
         this->_connected = false;
         return;
     }
