@@ -121,6 +121,8 @@ std::string TCP::sendCommand(std::string command)
         return "not connected";
     }
     usleep(10000);
+    if (queue.empty())
+        return "";
     raw = queue.front();
     queue.pop();
     encoded.assign(0);
