@@ -301,7 +301,9 @@ bool TcpSession::accept(std::string arguments, UserApp user)
             ).c_str());
 
     this->mtx->lock();
-    this->voiceServer->join(user.address, groupId ,user.id);
+    std::string adressPort(socket.remote_endpoint().address().to_string());
+    adressPort += ":" + std::to_string(socket.remote_endpoint().port());
+    this->voiceServer->join(adressPort, groupId ,user.id);
     this->mtx->unlock();
 
     return (false);

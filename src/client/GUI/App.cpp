@@ -19,8 +19,8 @@ App::App(QWidget *parent) : QWidget(parent)
 {
     setWindowTitle("Babel");
     this->client = new TCP(this);
-    //std::thread voiceT(&App::initVoiceClient, this);
-    //voiceT.detach();
+    std::thread voiceT(&App::initVoiceClient, this);
+    voiceT.detach();
     update();
 }
 
@@ -32,7 +32,7 @@ void App::initVoiceClient()
 
 std::vector<UserApp> App::getUserInCall() const
 {
-    std::string response = this->client->sendCommand(std::string(USERCMD("/guic")));
+    std::string response = this->client->sendCommand(std::string(USERCMD("/getusersincall")));
     std::cout << response << "\n";
     std::stringstream ss(response);
     std::string item;
