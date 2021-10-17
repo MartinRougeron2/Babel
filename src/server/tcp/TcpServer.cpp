@@ -17,7 +17,10 @@ acceptor(ios, tcp::endpoint(tcp::v4(), port))
     this->voiceServer = new UdpServer(ios);
     std::shared_ptr<TcpSession> session = std::make_shared<TcpSession>(ios,
                                                                        this->voiceServer,
-                                                                       &this->mtx);
+                                                                       &this->mtx,
+                                                                       &allSessions,
+                                                                       &users);
+    this->allSessions.push_back(session);
     acceptor.async_accept(
         session->getSocket(),
         boost::bind(
@@ -34,9 +37,9 @@ boost::system::error_code &err)
 {
     if (!err) {
         session->start();
-        session = std::make_shared<TcpSession>(ios, voiceServer, &mtx);
+        session = std::make_shared<TcpSession>(ios, voiceServer, &mtx,
+                                               &allSessions, &users);
         this->allSessions.push_back(session);
-        session->allSessions = this->allSessions;
         acceptor.async_accept(
             session->getSocket(),
             boost::bind(
@@ -52,13 +55,17 @@ boost::system::error_code &err)
     }
 }
 
-TcpSession::TcpSession(boost::asio::io_service &ios, UdpServer *voiceServer_, std::mutex *mtx_) :
+TcpSession::TcpSession(boost::asio::io_service &ios, UdpServer *voiceServer_,
+                       std::mutex *mtx_,
+                       std::vector<std::shared_ptr<TcpSession>> *allSessions,
+                       std::map<int, UserApp> *allUsers) :
 socket(ios)
 {
     this->database = Asqlite3();
     this->voiceServer = voiceServer_;
     this->mtx = mtx_;
-    return;
+    this->allSessions = allSessions;
+    this->users = allUsers;
 }
 
 tcp::socket &TcpSession::getSocket()
@@ -193,6 +200,11 @@ bool TcpSession::login(std::string arguments, UserApp user)
 {
     this->database.uploadData(user);
     if (this->database.login(user) == this->database.SUCCESS) {
+        user.id = std::atoi(
+            database.getIdByUsername(
+                std::string(user.username.c_str()))
+                .c_str());
+        this->users->insert(std::pair<int, UserApp>(user.id, user));
         this->send(std::to_string(user.id).c_str());
         return (true);
     }
@@ -235,16 +247,30 @@ bool TcpSession::call(std::string arguments, UserApp user)
     // TcpSession::display(user);
 
     if (this->database.login(user) == this->database.SUCCESS) {
+
         this->mtx->lock();
+        std::cout << user.address << "\n";
         int id = this->voiceServer->join(user.address, user.id);
         this->mtx->unlock();
-        this->send(&"calling..." [id]);
-        UserApp userToCall = TcpSession::get_user(arguments);
-        for (auto const &session : this->allSessions)
+
+        std::string str = "calling...";
+        str.append(std::to_string(id));
+        this->send(str.c_str()); // calling...{id}
+
+        UserApp userToCall = this->get_user(arguments);
+        std::cout << "id " << userToCall.id <<"\n";
+        std::cout << "username " << userToCall.username <<"\n";
+
+        for (auto const &session : *this->allSessions) {
+            std::cout << "session->get_user().username " << session->get_user
+            ().username <<"\n";
             if (session->get_user().id == userToCall.id) {
-                session->send(&"accept?" [id]);
-                break;
+                std::cout << "finf !\n";
+                std::string accpet = "accept?";
+                str.append(std::to_string(id));
+                session->send(accpet.c_str());
             }
+        }
         return (true);
     }
     this->send("user not found");
@@ -327,7 +353,7 @@ bool TcpSession::check_user(std::string arguments, UserApp user)
     return (false);
 }
 
-UserApp TcpSession::get_user_by_id(std::string address)
+UserApp TcpSession::get_user_by_address(std::string address)
 {
     UserApp failed;
 
@@ -336,7 +362,7 @@ UserApp TcpSession::get_user_by_id(std::string address)
     failed.password = EMPTY;
     failed.username = EMPTY;
 
-    for (auto i = this->users.begin(); i != this->users.end(); i++) {
+    for (auto i = this->users->begin(); i != this->users->end(); i++) {
         if (i->first == std::stoi(address))
             return (i->second);
     }
@@ -353,9 +379,9 @@ UserApp TcpSession::get_user(std::string username)
     failed.password = EMPTY;
     failed.username = EMPTY;
 
-    for (auto i = this->users.begin(); i != this->users.end(); i++) {
-        if (i->second.username == username)
-            return (i->second);
+    for (auto const &user : *this->users) {
+        if (user.second.username == username)
+            return (user.second);
     }
 
     return (failed);
@@ -409,7 +435,7 @@ bool TcpSession::get_users_in_call(std::string arguments, UserApp user)
     }
 
     for (const auto &session : sessionsInCommon) {
-        usersInSession += this->users[session->id].username;
+        usersInSession += (*this->users).at(session->id).username;
         usersInSession += "\n";
     }
 

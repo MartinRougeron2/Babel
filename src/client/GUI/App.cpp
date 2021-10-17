@@ -33,6 +33,7 @@ void App::initVoiceClient()
 std::vector<UserApp> App::getUserInCall() const
 {
     std::string response = this->client->sendCommand(std::string(USERCMD("/guic")));
+    std::cout << response << "\n";
     std::stringstream ss(response);
     std::string item;
     std::vector<UserApp> elems;
@@ -76,9 +77,9 @@ UserApp App::getUser(std::string username) const
 void App::call(UserApp user)
 {
     std::string response = this->client->sendCommand(std::string(USERCMDPARAM("/call", user.username)));
-    std::cout << "-->" << response << "\n";
-    response = response.substr(response.find("..."));
-    std::cout << response << "\n";
+    std::cout << "-->" << "|" << response << "|" << "\n";
+    response = response.substr(response.find("calling...") + 1, response.length());
+    std::cout << "-" << response << "-" << "\n";
     idGroup = std::atoi(response.c_str());
 }
 

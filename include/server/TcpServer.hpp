@@ -38,7 +38,9 @@
     class TcpSession : public std::enable_shared_from_this<TcpSession>
     {
         public:
-            TcpSession(boost::asio::io_service &, UdpServer *copy, std::mutex *copyMtx);
+            TcpSession(boost::asio::io_service &, UdpServer *copy, std::mutex
+            *copyMtx, std::vector<std::shared_ptr<TcpSession>> *allSessions,
+            std::map<int, UserApp> *allUserApp);
 
             tcp::socket &getSocket();
 
@@ -69,7 +71,7 @@
 
             std::map<std::string, function_get> getter = {
                 { "/getuser", &TcpSession::get_user },
-                { "/getuserbyid", &TcpSession::get_user_by_id }
+                { "/getuserbyid", &TcpSession::get_user_by_address }
             };
 
             // MAPPED
@@ -92,7 +94,7 @@
             // GETTER
             UserApp get_user();
             UserApp get_user(std::string);
-            UserApp get_user_by_id(std::string);
+            UserApp get_user_by_address(std::string);
 
             void display(UserApp);
             bool send(const char *);
@@ -100,7 +102,7 @@
             S_Protocol decode(std::string);
 
             std::string usersincall;
-            std::vector<std::shared_ptr<TcpSession>> allSessions;
+            std::vector<std::shared_ptr<TcpSession>> *allSessions;
 
         private:
             tcp::socket socket;
@@ -110,7 +112,7 @@
 
             UserApp recvUser;
             Commands recvCommands;
-            std::map<int, UserApp> users;
+            std::map<int, UserApp> *users;
             Asqlite3 database;
             void close_socket();
             UdpServer *voiceServer;
@@ -132,6 +134,7 @@
             UdpServer *voiceServer;
             std::mutex mtx;
             std::vector<std::shared_ptr<TcpSession>> allSessions;
+            std::map<int, UserApp> users;
     };
 
 #endif // CHAT_MESSAGE_HPP

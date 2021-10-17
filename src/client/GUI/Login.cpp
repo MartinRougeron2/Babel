@@ -38,6 +38,7 @@ Login::Login(QWidget *parent)
     login_layout->addWidget(reconnect_button, 8, 0, 1, 2);
     parent->setLayout(login_layout);
     connect(login_button, SIGNAL(clicked()), this, SLOT(proceed_login()));
+    connect(login_button, SIGNAL(key_enter), this, SLOT(proceed_login()));
     connect(reconnect_button, SIGNAL(clicked()), this, SLOT(reconnect()));
     this->parent = static_cast<App *>(parent);
     if (this->parent->getTcp()->isConnected())

@@ -26,7 +26,7 @@ class TcpSession {
 	-voiceServer : UdpServer*
 	+get_user() : UserApp
 	+get_user(std::string) : UserApp
-	+get_user_by_id(std::string) : UserApp
+	+get_user_by_address(std::string) : UserApp
 	-recvUser : UserApp
 	+accept(std::string, struct UserApp) : bool
 	+add(std::string, struct UserApp) : bool
