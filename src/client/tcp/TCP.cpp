@@ -93,6 +93,7 @@ void TCP::async_read()
 
 std::string TCP::sendCommand(std::string command)
 {
+    std::cout << command << std::endl;
     boost::array<std::bitset<16>, max_length> buffer = {0};
     boost::array<std::bitset<16>, max_length> encoded = security::encoder(command);
     boost::system::error_code error;

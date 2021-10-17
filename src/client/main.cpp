@@ -21,7 +21,6 @@ int main(int argc, char **argv)
 
     QApplication app(argc, argv);
     App main_app;
-    std::cout << security::decoder(security::encoder(std::string("z;127.0.0.1:2000;;3\n"))) << std::endl;
 
     main_app.show(); //show the widget and its children
     return app.exec(); // execute the application

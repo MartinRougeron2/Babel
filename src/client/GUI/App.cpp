@@ -19,8 +19,8 @@ App::App(QWidget *parent) : QWidget(parent)
 {
     setWindowTitle("Babel");
     this->client = new TCP(this);
-    std::thread voiceT(&App::initVoiceClient, this);
-    voiceT.detach();
+    //std::thread voiceT(&App::initVoiceClient, this);
+    //voiceT.detach();
     update();
 }
 
@@ -117,6 +117,7 @@ bool App::addContact(std::string user)
 {
     std::string response = this->client->sendCommand(std::string(USERCMDPARAM("/add", user)));
 
+    std::cout << response << std::endl;
     if (response == "true")
         return true;
     return false;

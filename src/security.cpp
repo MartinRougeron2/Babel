@@ -11,10 +11,8 @@ boost::array<std::bitset<16>, max_length> security::encoder(std::string data)
 {
     boost::array<std::bitset<16>, max_length> payload;
 
-    std::cout << "ENCODED: " << std::endl;
     for (std::size_t i = 0; i < data.size(); i++) {
         payload[i] = (std::bitset<16>(data.c_str()[i]));
-        std::cout << std::bitset<16>(data.c_str()[i]) << std::endl;
     }
 
     return (payload);
@@ -29,15 +27,11 @@ std::string security::decoder(boost::array<std::bitset<16>, max_length> data)
         { '{', ';' },
         { '`', ' ' }
     };
-
-
-    std::cout << "DECODED: " << std::endl;
     for (std::size_t i = 0; data[i] != security::limit && i < max_length; i++) {
         tmp = static_cast<char>(data[i].to_ulong());
         dump.push_back(tmp);
     }
     std::string payload(dump.begin(), dump.end());
-    std::cout << payload << std::endl;
 
     return (payload);
 }
