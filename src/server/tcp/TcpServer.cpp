@@ -20,7 +20,6 @@ acceptor(ios, tcp::endpoint(tcp::v4(), port))
                                                                        &this->mtx,
                                                                        &allSessions,
                                                                        &users);
-    this->allSessions.push_back(session);
     acceptor.async_accept(
         session->getSocket(),
         boost::bind(
@@ -156,6 +155,9 @@ S_Protocol TcpSession::decode(std::string recv)
     protocol.user.password = recv.substr(0, recv.find(delimiter));
     recv = recv.erase(0, recv.find(delimiter) + delimiter.length());
 
+    try {
+        protocol.user.id = std::stoi(database.getIdByUsername(protocol.user.username));
+    } catch(std::invalid_argument &e) {}
     protocol.user.address = full;
 
     // GET COMMAND
@@ -200,7 +202,7 @@ bool TcpSession::login(std::string arguments, UserApp user)
 {
     this->database.uploadData(user);
     if (this->database.login(user) == this->database.SUCCESS) {
-        user.id = std::atoi(
+        this->recvUser.id = std::atoi(
             database.getIdByUsername(
                 std::string(user.username.c_str()))
                 .c_str());
@@ -257,14 +259,13 @@ bool TcpSession::call(std::string arguments, UserApp user)
         str.append(std::to_string(id));
         this->send(str.c_str()); // calling...{id}
 
-        UserApp userToCall = this->get_user(arguments);
-        std::cout << "id " << userToCall.id <<"\n";
-        std::cout << "username " << userToCall.username <<"\n";
+        int userToCallid = std::stoi(this->database.getIdByUsername(arguments));
+        std::cout << "id " << userToCallid <<"\n";
 
         for (auto const &session : *this->allSessions) {
             std::cout << "session->get_user().username " << session->get_user
             ().username <<"\n";
-            if (session->get_user().id == userToCall.id) {
+            if (session->get_user().id == userToCallid) {
                 std::cout << "finf !\n";
                 std::string accpet = "accept?";
                 str.append(std::to_string(id));
@@ -293,7 +294,11 @@ bool TcpSession::accept(std::string arguments, UserApp user)
 
     this->send("accepted");
 
-    int groupId = std::atoi(arguments.substr(arguments.find(";")).c_str());
+    int groupId = std::atoi(
+        arguments.substr(arguments.find(
+            ";",
+            arguments.length()) + 1
+            ).c_str());
 
     this->mtx->lock();
     this->voiceServer->join(user.address, groupId ,user.id);

@@ -27,6 +27,7 @@ class UserApp {
             password(password_),
             id(id_) {
             };
+        ~UserApp() {};
 };
 
 
