@@ -18,7 +18,7 @@ class App;
     #include <boost/asio.hpp>
     #include <QWidget>
     #include <queue>
-
+    #include <mutex>
 
     #define TCP_IP "127.0.0.1"
     #define TCP_PORT 2000
@@ -43,7 +43,7 @@ class App;
             boost::array<std::bitset<16>, max_length> buf = {0};
             App *copy;
             std::queue<std::string> queue;
-
+            std::mutex mutex;
     };
 
 #endif /* TCP_HPP */

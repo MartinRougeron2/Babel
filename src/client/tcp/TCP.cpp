@@ -88,6 +88,7 @@ void TCP::async_read()
             this->_connected = false;
             continue;
         }
+        this->mutex.lock();
         auto raw = security::decoder(buf);
         buf.assign(0);
         if (raw.substr(0, raw.find('?')) == "accept") {
@@ -97,6 +98,7 @@ void TCP::async_read()
             menu->getCallW()->setScene(Call::RECEIVECALL, "On vous appelle");
         }
         queue.push(raw);
+        this->mutex.unlock();
     }
     std::cout << "out" << std::endl;
 }
@@ -120,10 +122,12 @@ std::string TCP::sendCommand(std::string command)
         return "not connected";
     }
     usleep(10000);
+    this->mutex.lock();
     if (queue.empty())
         return "";
     raw = queue.front();
     queue.pop();
+    this->mutex.unlock();
     encoded.assign(0);
     return raw;
 }

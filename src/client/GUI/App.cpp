@@ -19,8 +19,8 @@ App::App(QWidget *parent, std::string ip) : QWidget(parent)
 {
     setWindowTitle("Babel");
     this->client = new TCP(this, ip);
-    std::thread voiceT(&App::initVoiceClient, this, ip);
-    voiceT.detach();
+    // std::thread voiceT(&App::initVoiceClient, this, ip);
+    // voiceT.detach();
     update();
 }
 
